@@ -35,10 +35,12 @@
     margin:0;
     padding:18px;
     font-family:"Segoe UI", Roboto, Arial, sans-serif;
+
+    /* ✅ Igual ao sistema principal */
     background: linear-gradient(90deg, var(--bgA) 0%, var(--bgB) 60%, var(--bgC) 100%);
   }
 
-  /* ✅ Marca d’água */
+  /* ✅ Marca d’água igual ao sistema */
   .watermark{
     position:fixed;
     top:88px;
@@ -53,10 +55,21 @@
     filter: saturate(.9) contrast(1.05);
   }
 
-  .shell{max-width:1180px;margin:0 auto;position:relative;z-index:1;}
+  /* ✅ Shell premium (parecido com o principal) */
+  .shell{
+    max-width:1180px;
+    margin:0 auto;
+    position:relative;
+    z-index:1;
+  }
 
+  /* ✅ Header estilo sistema */
   .hdr{
-    height:84px;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;
+    height:84px;
+    padding:14px 22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
     border-bottom:1px solid rgba(255,255,255,.12);
     background: linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.00));
     border-radius: var(--r22);
@@ -65,9 +78,15 @@
   }
 
   .brand{display:flex;align-items:center;gap:14px;min-width:320px;}
-  .brand img{width:170px;max-height:52px;height:auto;object-fit:contain;display:block;filter: drop-shadow(0 10px 16px rgba(0,0,0,.35));}
+  .brand img{
+    width:170px;max-height:52px;height:auto;object-fit:contain;display:block;
+    filter: drop-shadow(0 10px 16px rgba(0,0,0,.35));
+  }
   .brand-info{display:flex;flex-direction:column;line-height:1.05;color:var(--txt);}
-  .brand-info strong{font-size:14px;letter-spacing:.20em;text-transform:uppercase;font-weight:900;color: rgba(255,255,255,.92);}
+  .brand-info strong{
+    font-size:14px;letter-spacing:.20em;text-transform:uppercase;font-weight:900;
+    color: rgba(255,255,255,.92);
+  }
   .brand-info span{margin-top:6px;font-size:12px;color:rgba(255,255,255,.68);}
 
   .pill{
@@ -78,23 +97,12 @@
     letter-spacing:.04em;user-select:none;
     backdrop-filter: blur(10px);
     box-shadow: var(--shadow2);
-    display:flex;align-items:center;gap:10px;
   }
 
-  /* ✅ botão de fullscreen */
-  .fs-btn{
-    border:none;
-    background: rgba(255,255,255,.16);
-    color:#fff;
-    font-weight:900;
-    border-radius:999px;
-    padding:8px 12px;
-    cursor:pointer;
-  }
-  .fs-btn:hover{ background: rgba(255,255,255,.24); }
-
+  /* ✅ Card principal estilo sistema */
   .card{
-    margin-top:14px;border-radius: var(--r22);
+    margin-top:14px;
+    border-radius: var(--r22);
     border:1px solid var(--line);
     background: linear-gradient(180deg, var(--glass), var(--glass2));
     box-shadow: var(--shadow);
@@ -102,11 +110,20 @@
   }
 
   .card-h{
-    padding:14px 16px;display:flex;align-items:center;justify-content:space-between;
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
     border-bottom:1px solid rgba(255,255,255,.10);
     color:var(--txt);
   }
-  .card-h h1{margin:0;font-size:14px;letter-spacing:.16em;text-transform:uppercase;font-weight:900;}
+  .card-h h1{
+    margin:0;
+    font-size:14px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    font-weight:900;
+  }
 
   .card-b{
     padding:16px;
@@ -115,18 +132,21 @@
     gap:16px;
   }
 
+  /* ✅ “folha” agora fica mais elegante dentro do card */
   .folha{
     width: 100%;
     min-height: 297mm;
     margin:0;
     background:#fff;
     box-shadow: none;
+    box-sizing:border-box;
     padding:14mm 18mm;
     position:relative;
     border-radius:18px;
     overflow:hidden;
   }
 
+  /* ✅ controles na lateral (bem parecido com software) */
   .controles{
     position: sticky;
     top: 16px;
@@ -139,84 +159,231 @@
     box-shadow: var(--shadow2);
   }
 
-  .btn{width:100%;padding:12px;font-weight:900;cursor:pointer;border:none;border-radius:14px;}
+  .btn{
+    width:100%;
+    padding:12px;
+    font-weight:900;
+    cursor:pointer;
+    border:none;
+    border-radius:14px;
+  }
   .btn-print{ background:#28a745;color:#fff; }
   .btn-word{ margin-top:10px;background:#1f6feb;color:#fff; }
   .btn-clear{ margin-top:10px;background:#eee; }
 
-  /* ===== FORMULÁRIO (INALTERADO) ===== */
-  .titulo-laudo{text-align:center;font-weight:800;font-size:12pt;margin: 8px 0 14px;text-transform:uppercase;font-family:"Arial Narrow", Arial, sans-serif;}
-  .painel{background:var(--panel);border: 2px solid #7aa4c7;border-radius:10px;padding:14px 14px 8px;}
-  .sec{border-top: 2px solid #b5cbe0;padding-top:10px;margin-top:10px;}
+  /* ===== SEU FORMULÁRIO (INTACTO) ===== */
+  .titulo-laudo{
+    text-align:center;
+    font-weight:800;
+    font-size:12pt;
+    margin: 8px 0 14px;
+    text-transform:uppercase;
+    font-family:"Arial Narrow", Arial, sans-serif;
+  }
+
+  .painel{
+    background:var(--panel);
+    border: 2px solid #7aa4c7;
+    border-radius:10px;
+    padding:14px 14px 8px;
+  }
+
+  .sec{
+    border-top: 2px solid #b5cbe0;
+    padding-top:10px;
+    margin-top:10px;
+  }
   .sec:first-child{ border-top:none; padding-top:0; margin-top:0; }
-  .sec-title{color:var(--blue);font-weight:900;font-size:10pt;text-transform:uppercase;margin:0 0 8px;font-family:"Arial Narrow", Arial, sans-serif;}
-  .linha{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;align-items:center;font-family:"Arial Narrow", Arial, sans-serif;font-size:11pt;}
-  .lbl{font-weight:900;text-transform:uppercase;min-width:160px;}
-  .op-row{display:flex;gap:16px;flex-wrap:wrap;}
-  .op-row label,.op-col label{display:flex;gap:8px;cursor:pointer;font-weight:400;align-items:flex-start;}
-  .op-col{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
-  .grupo{margin-left:18px;display:flex;flex-direction:column;gap:8px;margin-top:6px;}
 
-  .obs-wrap{margin-top:12px;background:#e9eff7;border: 2px dashed #9cb6cf;border-radius:14px;padding:12px;}
-  .obs-title{font-weight:900;font-family:"Arial Narrow", Arial, sans-serif;font-size:12pt;margin-bottom:8px;}
-  #obs_texto_tela{width:100%;min-height:110px;resize:vertical;padding:10px;border-radius:12px;border:1px solid #b6c7d8;font-family:"Arial Narrow", Arial, sans-serif;font-size:11pt;}
+  .sec-title{
+    color:var(--blue);
+    font-weight:900;
+    font-size:10pt;
+    text-transform:uppercase;
+    margin:0 0 8px;
+    font-family:"Arial Narrow", Arial, sans-serif;
+  }
 
-  /* ===== PRINT ===== */
+  .linha{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+    align-items:center;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:11pt;
+  }
+
+  .lbl{
+    font-weight:900;
+    text-transform:uppercase;
+    min-width:160px;
+  }
+
+  .op-row{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .op-row label,
+  .op-col label{
+    display:flex;
+    gap:8px;
+    cursor:pointer;
+    font-weight:400;
+    align-items:flex-start;
+  }
+
+  .op-col{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:8px;
+  }
+  .grupo{
+    margin-left:18px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:6px;
+  }
+
+  .obs-wrap{
+    margin-top:12px;
+    background:#e9eff7;
+    border: 2px dashed #9cb6cf;
+    border-radius:14px;
+    padding:12px;
+  }
+  .obs-title{
+    font-weight:900;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:12pt;
+    margin-bottom:8px;
+  }
+  #obs_texto_tela{
+    width:100%;
+    min-height:110px;
+    resize:vertical;
+    padding:10px;
+    border-radius:12px;
+    border:1px solid #b6c7d8;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:11pt;
+    box-sizing:border-box;
+  }
+
+  /* ===== PRINT (INTACTO) ===== */
   .print-only{ display:none; }
 
   @media print{
     body{ background:#fff; padding:0; margin:0; }
     .hdr, .card, .controles, .watermark{ display:none !important; }
+
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
 
-    .print-bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
-    .print-bg img{width:100%;height:100%;object-fit:cover;}
-    .print-page{
-      position:relative;z-index:2;margin: 0;
-      padding: 50mm 18mm 22mm 18mm;
-      box-sizing:border-box;font-family:"Arial Narrow", Arial, sans-serif;
+    .print-bg{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:0;
+      pointer-events:none;
     }
+    .print-bg img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .print-page{
+      position:relative;
+      z-index:2;
+      margin: 0;
+      padding: 50mm 18mm 22mm 18mm;
+      box-sizing:border-box;
+      font-family:"Arial Narrow", Arial, sans-serif;
+    }
+
     .folha{ box-shadow:none; width:auto; min-height:auto; padding:0; border-radius:0; }
     @page{ size:A4; margin:0; }
   }
 
-  /* ✅ MODO PRINT FORÇADO (não depende do @media print) */
-  body.force-print{
-    background:#fff !important;
-    padding:0 !important;
-    margin:0 !important;
-  }
-  body.force-print .hdr,
-  body.force-print .card,
-  body.force-print .controles,
-  body.force-print .watermark,
-  body.force-print .no-print{ display:none !important; }
-
-  body.force-print .print-only{ display:block !important; }
-  body.force-print .print-page{ padding: 50mm 18mm 22mm 18mm !important; }
-
   /* ===== PRINT LAYOUT (INTACTO) ===== */
-  .cab-paciente{border-top: 3px solid #00a651;border-bottom: 3px solid #00a651;padding: 10px 0;margin: 0 0 14px;}
+  .cab-paciente{
+    border-top: 3px solid #00a651;
+    border-bottom: 3px solid #00a651;
+    padding: 10px 0;
+    margin: 0 0 14px;
+  }
   .cab-row1{ display:flex; justify-content:space-between; gap:20px; }
   .cab-left{ flex:1; }
   .cab-right{ min-width:220px; text-align:right; }
-  .cab-lbl2{font-size:13pt;font-weight:700;text-transform:uppercase;font-family:"Arial Narrow", Arial, sans-serif;}
-  .cab-nome, .cab-exame{font-size:12.6pt;font-weight:700;text-transform:uppercase;font-family:"Arial Narrow", Arial, sans-serif;line-height:1.2;}
-  .cab-row2{margin-top:10px;display:grid;grid-template-columns: 1.2fr 0.8fr;gap: 6px 60px;font-family:"Arial Narrow";font-size:8pt;text-transform:uppercase;font-weight:400;}
-  .linha-identificacao{font-family:"Arial Narrow", Arial, sans-serif;font-size:11.5pt;text-transform:uppercase;margin-bottom:4px;display:flex;gap:6px;align-items:baseline;white-space:nowrap;}
-  .secao-print{margin-bottom:12px;line-height:1.55;font-family:"Arial Narrow", sans-serif;font-size:11.5pt;text-align:justify;}
+
+  .cab-lbl2{
+    font-size:13pt;
+    font-weight:700;
+    text-transform:uppercase;
+    font-family:"Arial Narrow", Arial, sans-serif;
+  }
+
+  .cab-nome, .cab-exame{
+    font-size:12.6pt;
+    font-weight:700;
+    text-transform:uppercase;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    line-height:1.2;
+  }
+
+  .cab-row2{
+    margin-top:10px;
+    display:grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 6px 60px;
+    font-family:"Arial Narrow";
+    font-size:8pt;
+    text-transform:uppercase;
+    font-weight:400;
+  }
+
+  .linha-identificacao{
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:11.5pt;
+    text-transform:uppercase;
+    margin-bottom:4px;
+    display:flex;
+    gap:6px;
+    align-items:baseline;
+    white-space:nowrap;
+  }
+
+  .secao-print{
+    margin-bottom:12px;
+    line-height:1.55;
+    font-family:"Arial Narrow", sans-serif;
+    font-size:11.5pt;
+    text-align:justify;
+  }
+
   .tit-negrito{ font-weight:800; text-transform:uppercase; }
   .tit-normal-caps{ font-weight:400; text-transform:uppercase; }
   .concl-resposta-bloco{ white-space:pre-line; font-weight:400; display:block; margin-top:2px; }
+
   #obs_print{ white-space: pre-line; }
   #obs_print_wrap{ display:block; }
   #obs_print_wrap.vazio{ display:none; }
-  .rodape-prof{margin-top:18px;text-align:center;font-family:"Arial Narrow", Arial, sans-serif;font-size:11.5pt;}
+
+  .rodape-prof{
+    margin-top:18px;
+    text-align:center;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:11.5pt;
+  }
 
   @media (max-width: 1100px){
     body{padding:12px;}
-    .card-b{grid-template-columns:1fr;}
+    .card-b{grid-template-columns:1fr; }
     .controles{position:static;}
   }
 </style>
@@ -234,11 +401,7 @@
         <span>Laudo • Digitação e Impressão</span>
       </div>
     </div>
-
-    <div class="pill">
-      <span>Formulário do Laudo</span>
-      <button class="fs-btn" onclick="entrarTelaCheia()" type="button">TELA CHEIA</button>
-    </div>
+    <div class="pill">Formulário do Laudo</div>
   </div>
 
   <div class="card">
@@ -248,6 +411,7 @@
     </div>
 
     <div class="card-b">
+      <!-- ====== SUA FOLHA (mantida) ====== -->
       <div class="folha">
 
         <!-- =========================
@@ -471,23 +635,6 @@
 </div>
 
 <script>
-  /* ✅ FULLSCREEN */
-  function entrarTelaCheia(){
-    const el = document.documentElement;
-    try{
-      if(!document.fullscreenElement){
-        (el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen).call(el);
-      }
-    }catch(e){}
-  }
-
-  // tenta entrar em fullscreen ao abrir (pode ser bloqueado)
-  window.addEventListener("load", () => {
-    setTimeout(() => {
-      try{ entrarTelaCheia(); }catch(e){}
-    }, 350);
-  });
-
   function up(v){ return (v||"").toUpperCase().trim(); }
   function sanitizeFileName(name){
     return (name||"").replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim();
@@ -498,11 +645,14 @@
     void document.body.offsetHeight;
   }
 
+  /* ✅ Observação sincronizada (mantida) */
   function syncObservacao(){
     const txt = (document.getElementById("obs_texto_tela")?.value || "").trim();
     const wrap = document.getElementById("obs_print_wrap");
     const el = document.getElementById("obs_print");
+
     if(el) el.textContent = txt;
+
     if(wrap){
       if(txt) wrap.classList.remove("vazio");
       else wrap.classList.add("vazio");
@@ -556,6 +706,7 @@
   function atualizar(){
     const checksEpi = document.querySelectorAll('.epi:checked');
 
+    /* ✅ AUTO-ZONA (mantido) */
     if(checksEpi.length >= 2){
       const zSim = document.getElementById("zona_sim");
       if(zSim && !zSim.checked) zSim.checked = true;
@@ -615,7 +766,7 @@
     syncObservacao();
   }
 
-  /* exportação (mantida) */
+  /* ===== Exportação no padrão do sistema (MANTIDA) ===== */
   function mesChaveAtual(){
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -662,10 +813,24 @@
 
   function voltarSistema(){
     const returnUrl = params.get("return");
+
+    // ✅ se foi aberto como popup, fecha ao voltar (não duplica)
+    if(window.opener && !window.opener.closed){
+      try{
+        if(returnUrl) window.opener.location.href = returnUrl;
+        window.close();
+        return;
+      }catch(e){
+        // fallback
+      }
+    }
+
+    // fallback normal
     if(returnUrl){ window.location.href = returnUrl; return; }
     if(window.history.length > 1){ window.history.back(); return; }
   }
 
+  /* ✅ IMPRESSÃO DEFINITIVA: via IFRAME invisível (NUNCA imprime branco) */
   function imprimirLaudo(){
     atualizar();
     syncObservacao();
@@ -693,25 +858,78 @@
       }
     }catch(e){ console.error(e); }
 
-    /* ✅ CORREÇÃO FORTE: força layout de impressão antes do print */
-    document.body.classList.add("force-print");
-    forceReflow();
+    const printContainer = document.querySelector(".print-only");
+    if(!printContainer){
+      alert("Erro: bloco de impressão não encontrado (.print-only).");
+      document.title = tituloOriginal;
+      return;
+    }
+
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("aria-hidden", "true");
+    iframe.style.position = "fixed";
+    iframe.style.left = "-99999px";
+    iframe.style.top = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+    let allCSS = "";
+    for(const ss of document.styleSheets){
+      try{
+        const rules = ss.cssRules;
+        if(!rules) continue;
+        for(const r of rules) allCSS += r.cssText + "\n";
+      }catch(e){
+        // normal: ignora stylesheets bloqueadas
+      }
+    }
+
+    doc.open();
+    doc.write(`
+      <!DOCTYPE html>
+      <html lang="pt-br">
+        <head>
+          <meta charset="UTF-8"/>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+          <title>${nomeFinal}</title>
+          <style>
+            ${allCSS}
+            html, body { margin:0 !important; padding:0 !important; background:#fff !important; }
+            .no-print{ display:none !important; }
+            .print-only{ display:block !important; }
+          </style>
+        </head>
+        <body>
+          ${printContainer.innerHTML}
+        </body>
+      </html>
+    `);
+    doc.close();
 
     setTimeout(() => {
-      window.print();
-
+      const win = iframe.contentWindow;
+      win.focus();
       setTimeout(() => {
-        document.body.classList.remove("force-print");
-        document.title = tituloOriginal;
-      }, 900);
+        win.print();
 
-      setTimeout(() => voltarSistema(), 700);
-    }, 350);
+        setTimeout(() => {
+          document.title = tituloOriginal;
+          iframe.remove();
+          voltarSistema();
+        }, 900);
+
+      }, 120);
+    }, 650);
   }
 
   function buildWordHTML(){
     atualizar();
     syncObservacao();
+
     const bloco = document.querySelector(".print-only .print-page");
     const clone = bloco.cloneNode(true);
     clone.style.display = "block";
@@ -755,12 +973,15 @@
     setTimeout(() => voltarSistema(), 700);
   }
 
+  // ✅ init
   preencherCabecalhoPrint();
 
   (function initObs(){
     const obs = document.getElementById("obs_texto_tela");
     if(!obs) return;
+
     if(init.observacao && !obs.value) obs.value = init.observacao;
+
     obs.addEventListener("input", () => syncObservacao());
     syncObservacao();
   })();
