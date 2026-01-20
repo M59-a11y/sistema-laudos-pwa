@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SI - Sistema de Informação . Laudos.</title>
+  <title>SI - SISTEMA DE INFORMAÇÃO . LAUDOS.</title>
 
   <style>
     :root{
@@ -13,10 +13,7 @@
       --azul2:#06233f;
 
       --ink:#06243f;
-      --muted: rgba(6,36,63,.72);
 
-      --glass: rgba(255,255,255,.14);
-      --glass2: rgba(255,255,255,.10);
       --stroke: rgba(255,255,255,.28);
 
       --shadow: 0 18px 55px rgba(0,0,0,.16);
@@ -47,10 +44,10 @@
     header, main{ position:relative; z-index:1; }
 
     /* ===========================
-       TOPO
+       TOPO (somente SI...)
     =========================== */
     header{
-      padding: 18px 24px 8px;
+      padding: 16px 24px 6px;
     }
 
     .headRow{
@@ -61,34 +58,21 @@
     }
 
     .topLogo{
-      height: 52px;
-      width: auto;
+      height: 48px;
+      width:auto;
       object-fit: contain;
       display:block;
       filter: drop-shadow(0 10px 18px rgba(0,0,0,.10));
     }
 
-    .headTitle{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-
-    .sysName{
+    .sysOnly{
       margin:0;
-      font-size: 34px;
+      font-size: 30px;
       font-weight: 900;
-      letter-spacing: .2px;
+      letter-spacing: 1px;
       color: var(--ink);
+      text-transform: uppercase;
       text-shadow: 0 14px 30px rgba(0,0,0,.08);
-    }
-
-    .sysSub{
-      margin:0;
-      font-size: 15px;
-      font-weight: 900;
-      letter-spacing: .6px;
-      color: rgba(6,36,63,.85);
     }
 
     /* ===========================
@@ -96,7 +80,7 @@
     =========================== */
     main{
       width:min(980px, 94vw);
-      margin: 12px auto 40px;
+      margin: 10px auto 40px;
     }
 
     .glass{
@@ -225,6 +209,9 @@
       border-color: rgba(6,36,63,.28);
       box-shadow: 0 0 0 4px rgba(6,36,63,.10), var(--shadow2);
     }
+
+    /* ✅ garante que não apareça “footHint” de versões antigas */
+    .footHint{ display:none !important; }
   </style>
 </head>
 
@@ -233,10 +220,7 @@
   <header>
     <div class="headRow">
       <img class="topLogo" src="logo/sesctopo.png" alt="SESC Topo">
-      <div class="headTitle">
-        <h1 class="sysName">Sistema de Laudos</h1>
-        <p class="sysSub">SI - Sistema de Informação . Laudos.</p>
-      </div>
+      <h1 class="sysOnly">SI - SISTEMA DE INFORMAÇÃO . LAUDOS.</h1>
     </div>
   </header>
 
