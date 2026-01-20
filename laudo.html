@@ -57,15 +57,13 @@
     overflow:hidden;
   }
 
-  /* ===== TIMBRE (IMAGEM DE FUNDO NA IMPRESSÃO) ===== */
-  .timbre-bg{
+  /* ✅ Timbre como imagem real (NUNCA some na impressão) */
+  .timbre-img{
     position:absolute;
     inset:0;
-    background-image:url("img/SESC_1.png");
-    background-repeat:no-repeat;
-    background-size:cover;
-    background-position:center;
-    opacity:1;
+    width:100%;
+    height:100%;
+    object-fit:cover;
     pointer-events:none;
     z-index:0;
   }
@@ -179,19 +177,19 @@
     box-sizing:border-box;
   }
 
-  /* ===== PRINT (LAUDO COMPLETO) ===== */
+  /* ===== PRINT ===== */
   .print-only{ display:none; }
 
-  /* ✅ CABEÇALHO DADOS (igual imagem) */
+  /* ✅ Cabeçalho com dados (igual seu modelo) */
   .cab-dados{
     position:absolute;
-    top:10mm;
+    top:16mm;          /* ✅ fixo no topo (não desce) */
     right:18mm;
     border-collapse:collapse;
     font-family:"Arial Narrow", Arial, sans-serif;
     font-size:7pt;
-    line-height:1.2;
-    z-index:2;
+    line-height:1.15;
+    z-index:3;         /* ✅ acima do timbre */
   }
   .cab-dados td{
     padding:0;
@@ -208,9 +206,9 @@
     white-space:nowrap;
   }
 
-  /* Conteúdo principal impresso precisa descer para não bater no timbre */
+  /* ✅ Conteúdo impresso desce para não invadir o timbre/cabeçalho */
   .print-body{
-    margin-top:34mm; /* ajustado para não colidir com logo */
+    margin-top:42mm;
   }
 
   .cab-paciente{
@@ -281,24 +279,24 @@
     font-size:10pt;
   }
 
-  /* ✅ PRINT PERFEITO + sem folha extra */
+  /* ✅ PRINT PERFEITO */
   @media print{
     body{ background:#fff; padding:0; }
     .controles{ display:none !important; }
 
     .folha{
       box-shadow:none;
-      width:100%;
+      width:210mm;
+      height:297mm;
       margin:0;
-      padding:10mm 18mm;
+      padding:0;          /* ✅ timbre ocupa a página toda */
       min-height:auto !important;
-      height:auto !important;
     }
 
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
 
-    @page{ size:A4; margin:0mm; }
+    @page{ size:A4; margin:0; }
   }
 </style>
 </head>
@@ -307,13 +305,13 @@
 
 <div class="folha">
 
-  <!-- ✅ Timbrado ao fundo -->
-  <div class="timbre-bg"></div>
+  <!-- ✅ Timbre -->
+  <img class="timbre-img" src="img/SESC_1.png" alt="Timbre">
 
   <div class="conteudo">
 
     <!-- =========================
-         ✅ TELA: SOMENTE PAINEL
+         ✅ TELA
          ========================= -->
     <div class="no-print">
       <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
@@ -421,6 +419,7 @@
             <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, SOE" value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
           </div>
         </div>
+
       </div><!-- painel -->
 
       <!-- Observação -->
@@ -441,11 +440,10 @@
     </div><!-- /no-print -->
 
     <!-- =========================
-         ✅ IMPRESSÃO: LAUDO COMPLETO
+         ✅ PRINT
          ========================= -->
     <div class="print-only">
 
-      <!-- ✅ DADOS DO CABEÇALHO (FORMATO ESPECÍFICO) -->
       <table class="cab-dados">
         <tr>
           <td class="cab-lbl">Emissão:</td>
@@ -606,6 +604,7 @@
   document.getElementById("cab_nasc").textContent = init.data_nascimento;
   document.getElementById("cab_sus").textContent = init.cartao_sus;
   document.getElementById("cab_tel").textContent = init.telefone;
+ARAMENTO ---
   document.getElementById("cab_rua").textContent = init.rua;
   document.getElementById("cab_bairro").textContent = init.bairro;
   document.getElementById("cab_cidade").textContent = init.cidade;
@@ -624,7 +623,7 @@
   const ano = hoje.getFullYear();
   document.getElementById("rodape_data").textContent = `João Pessoa, ${dia} de ${mes} de ${ano}`;
 
-  // ✅ Cabeçalho do timbre (Emissão/Hora)
+  // ✅ Cabeçalho timbre: Emissão/Hora
   (function setCabDados(){
     const now = new Date();
     const data = now.toLocaleDateString("pt-BR");
@@ -735,20 +734,19 @@
     if(window.history.length > 1){ window.history.back(); return; }
   }
 
-  // ✅ Gera Word (.doc) com conteúdo do PRINT
+  // ✅ Word (gera para abrir no Word e salvar PDF por lá)
   function buildWordHTML(){
     atualizar();
     const bloco = document.querySelector(".print-only");
     const clone = bloco.cloneNode(true);
     clone.style.display = "block";
-    // remove o timbre no Word (Word pode não renderizar bem fundo)
     return clone.innerHTML;
   }
 
   function baixarWordEVoltar(){
     atualizar();
 
-    // ✅ backup/exportação só para alterados (mantido igual PDF)
+    // ✅ backup/exportação para alterados (mantido igual)
     try{
       const concl = document.querySelector('input[name="c"]:checked');
       if(concl && concl.value !== "NEGATIVO"){
@@ -784,7 +782,6 @@
     a.remove();
     URL.revokeObjectURL(a.href);
 
-    // ✅ volta pro sistema e limpa
     setTimeout(() => voltarSistema(), 700);
   }
 
