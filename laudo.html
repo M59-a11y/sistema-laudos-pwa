@@ -59,7 +59,7 @@
   /* Timbre só no print */
   .timbre-print{ display:none; }
 
-  /* ===== TELA ===== */
+  /* ===== TELA (FORMULÁRIO) ===== */
   .titulo-laudo{
     text-align:center;
     font-weight:800;
@@ -136,7 +136,7 @@
     margin-top:6px;
   }
 
-  /* ===== OBS ===== */
+  /* ===== OBSERVAÇÃO (TELA) ===== */
   .obs-wrap{
     margin-top:12px;
     background:#e9eff7;
@@ -163,34 +163,33 @@
   }
 
   /* ===== PRINT ===== */
-  .print-only{ display:none; position:relative; z-index:2; }
+  .print-only{ display:none; }
+  .print-only{
+    position:relative;
+    z-index:2;
+    padding:0;
+  }
 
-  /* ✅ Cabeçalho Emissão/Hora - SUBIU (pra não invadir SUS/telefone) */
-  .cab-dados{
-    position:absolute;
-    top:11mm;         /* ✅ antes 16mm (isso estava invadindo no seu PDF) */
-    right:18mm;
-    border-collapse:collapse;
+  /* ✅ Aparência profissional / menos “condensado” */
+  .print-only *{
     font-family:"Arial Narrow", Arial, sans-serif;
-    font-size:7pt;
-    line-height:1.15;
-    z-index:3;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
   }
-  .cab-dados td{ padding:0; vertical-align:top; }
-  .cab-lbl{ text-align:left; padding-right:10px; white-space:nowrap; }
-  .cab-val{ text-align:right; min-width:70px; white-space:nowrap; }
 
-  /* ✅ corpo do laudo também sobe um pouco pra casar com o timbre */
   .print-body{
-    margin-top:40mm; /* antes 42mm */
+    /* ✅ desce pra não bater no logo SESC (seu timbre tem logo grande no topo) */
+    margin-top:32mm;
+    padding: 0 18mm;
+    box-sizing:border-box;
   }
 
+  /* Cabeçalho paciente */
   .cab-paciente{
     border-top: 3px solid #00a651;
     border-bottom: 3px solid #00a651;
     padding: 10px 0;
     margin: 0 0 14px;
-    background:transparent;
   }
   .cab-row1{ display:flex; justify-content:space-between; gap:20px; }
   .cab-left{ flex:1; }
@@ -198,17 +197,15 @@
 
   .cab-lbl2{
     font-size:12pt;
-    font-weight:400;
+    font-weight:700;
     text-transform:uppercase;
-    font-family:"Arial Narrow", Arial, sans-serif;
   }
 
   .cab-nome, .cab-exame{
-    font-size:11.5pt;
+    font-size:11.8pt;
     font-weight:700;
     text-transform:uppercase;
-    font-family:"Arial Narrow";
-    line-height:1.1;
+    line-height:1.15;
   }
 
   .cab-row2{
@@ -216,15 +213,13 @@
     display:grid;
     grid-template-columns: 1.2fr 0.8fr;
     gap: 6px 40px;
-    font-family:"Arial Narrow", Arial, sans-serif;
-    font-size:9.5pt;
+    font-size:10pt;
     text-transform:uppercase;
     font-weight:400;
   }
 
   .linha-identificacao{
-    font-family:"Arial Narrow", Arial, sans-serif;
-    font-size:10pt;
+    font-size:10.5pt;
     text-transform:uppercase;
     margin-bottom:4px;
     display:flex;
@@ -235,22 +230,27 @@
 
   .secao-print{
     margin-bottom:12px;
-    line-height:1.5;
-    font-family:"Arial Narrow", Arial, sans-serif;
-    font-size:10pt;
+    line-height:1.55;
+    font-size:10.5pt;
     text-align:justify;
   }
-  .tit-negrito{ font-weight:700; text-transform:uppercase; }
+
+  .tit-negrito{ font-weight:800; text-transform:uppercase; }
   .tit-normal-caps{ font-weight:400; text-transform:uppercase; }
-  .concl-resposta-bloco{ white-space:pre-line; font-weight:400; display:block; }
+
+  .concl-resposta-bloco{
+    white-space:pre-line;
+    font-weight:400;
+    display:block;
+    margin-top:2px;
+  }
 
   #obs_print_wrap{ display:none; }
 
   .rodape-prof{
     margin-top:18px;
     text-align:center;
-    font-family:"Arial Narrow", Arial, sans-serif;
-    font-size:10pt;
+    font-size:10.5pt;
   }
 
   @media print{
@@ -288,9 +288,13 @@
 <body>
 
 <div class="folha">
+
+  <!-- ✅ Timbre SOMENTE impressão -->
   <img class="timbre-print" src="img/SESC_1.png" alt="Timbre">
 
-  <!-- ===== TELA ===== -->
+  <!-- =========================
+       ✅ TELA
+       ========================= -->
   <div class="no-print">
     <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
 
@@ -397,13 +401,10 @@
           <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, SOE" value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
         </div>
       </div>
-
     </div><!-- painel -->
 
-    <!-- Observação -->
     <div class="obs-wrap">
       <div class="obs-title">Observação:</div>
-
       <div class="op-col" style="margin-bottom:10px;">
         <label><input type="radio" name="obs_opt" value="Tratar e repetir." onchange="aplicarObs(this.value)"> Tratar e repetir.</label>
         <label><input type="radio" name="obs_opt" value="Alterações celulares importantes. Tratar e repetir." onchange="aplicarObs(this.value)"> Alterações celulares importantes. Tratar e repetir.</label>
@@ -414,18 +415,14 @@
 
       <textarea id="obs_texto" placeholder="Caso necessário, digite a observação aqui..." oninput="setObsPrint(this.value)"></textarea>
     </div>
-  </div><!-- /no-print -->
+  </div>
 
-  <!-- ===== PRINT ===== -->
+  <!-- =========================
+       ✅ PRINT: LAUDO FINAL
+       ========================= -->
   <div class="print-only">
-    <table class="cab-dados">
-      <tr><td class="cab-lbl">Emissão:</td><td class="cab-val" id="cab_emissao"></td></tr>
-      <tr><td class="cab-lbl">Hora:</td><td class="cab-val" id="cab_hora"></td></tr>
-      <tr><td class="cab-lbl">Página:</td><td class="cab-val">1</td></tr>
-      <tr><td class="cab-lbl">UF.:</td><td class="cab-val">PB</td></tr>
-    </table>
-
     <div class="print-body">
+
       <div class="cab-paciente">
         <div class="cab-row1">
           <div class="cab-left">
@@ -505,7 +502,8 @@
       </div>
     </div>
   </div>
-</div>
+
+</div><!-- folha -->
 
 <div class="controles no-print">
   <button class="btn btn-print" onclick="imprimirLaudo()">IMPRIMIR / SALVAR PDF</button>
@@ -577,9 +575,6 @@
     setObsPrint(init.observacao);
 
     const now = new Date();
-    document.getElementById("cab_emissao").textContent = now.toLocaleDateString("pt-BR");
-    document.getElementById("cab_hora").textContent = now.toLocaleTimeString("pt-BR",{hour12:false});
-
     const dia = now.getDate();
     const mes = now.toLocaleDateString("pt-BR",{month:"long"});
     const ano = now.getFullYear();
@@ -596,9 +591,14 @@
     if (checksEpi.length > 1) zonaSim.checked = true;
     else if (checksEpi.length === 1) zonaNao.checked = true;
 
-    document.getElementById('p_adeq').textContent = document.querySelector('input[name="adeq"]:checked')?.value || '';
-    document.getElementById('p_epi').textContent = Array.from(checksEpi).map(c => c.value).join(", ");
-    document.getElementById('p_zona').textContent = document.querySelector('input[name="zona"]:checked')?.value || '';
+    document.getElementById('p_adeq').textContent =
+      document.querySelector('input[name="adeq"]:checked')?.value || '';
+
+    document.getElementById('p_epi').textContent =
+      Array.from(checksEpi).map(c => c.value).join(", ");
+
+    document.getElementById('p_zona').textContent =
+      document.querySelector('input[name="zona"]:checked')?.value || '';
 
     const norm = document.getElementById('chk_norm').checked;
     const alts = Array.from(document.querySelectorAll('.alt:checked')).map(c => c.value);
@@ -621,8 +621,11 @@
       pResDiag.textContent = "";
     }
 
-    const micros = Array.from(document.querySelectorAll('.micro:checked')).map(c => c.getAttribute('data-full') || c.value);
-    document.getElementById('p_res_micro').textContent = micros.join(", ") + (micros.length ? "." : "");
+    const micros = Array.from(document.querySelectorAll('.micro:checked'))
+      .map(c => c.getAttribute('data-full') || c.value);
+
+    document.getElementById('p_res_micro').textContent =
+      micros.join(", ") + (micros.length ? "." : "");
 
     const concl = document.querySelector('input[name="c"]:checked');
     const elTitConcl = document.getElementById('p_tit_concl');
@@ -632,24 +635,17 @@
       const categoria = concl.getAttribute('data-tit') || "CONCLUSÃO";
       const respostaTecnica = concl.getAttribute('data-full') || concl.value || "";
 
-      /* ✅ FIX: NEGATIVO também gera título+texto sempre */
       elTitConcl.textContent = (concl.value === "NEGATIVO") ? "CONCLUSÃO:" : (categoria + ":");
-
-      if(concl.value === "NEGATIVO"){
-        elResConcl.textContent = respostaTecnica;
-      }else{
-        elResConcl.textContent = respostaTecnica;
-      }
+      elResConcl.textContent = respostaTecnica;
     }else{
       elTitConcl.textContent = "CONCLUSÃO:";
       elResConcl.textContent = "";
     }
 
-    // mantém cabeçalho atualizado
     preencherCabecalhoPrint();
   }
 
-  // ===== Exportação =====
+  // ===== Exportação no padrão do sistema =====
   function mesChaveAtual(){
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -712,6 +708,7 @@
     const tituloOriginal = document.title;
     document.title = nomeFinal;
 
+    // exporta só se alterado
     try{
       const concl = document.querySelector('input[name="c"]:checked');
       if(concl && concl.value !== "NEGATIVO"){
@@ -730,7 +727,7 @@
     forceReflow();
 
     setTimeout(() => {
-      atualizar();      /* ✅ chama 2x (garante NEGATIVO não sair vazio) */
+      atualizar();
       forceReflow();
       window.print();
 
@@ -750,6 +747,7 @@
   function baixarWordEVoltar(){
     atualizar();
 
+    // exporta só se alterado
     try{
       const concl = document.querySelector('input[name="c"]:checked');
       if(concl && concl.value !== "NEGATIVO"){
