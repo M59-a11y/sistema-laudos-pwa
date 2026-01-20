@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sistema-Laudo (Principal)</title>
+
+<!-- ✅ PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0078d7">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<style>
+  body{font-family:Arial,sans-serif;margin:0;padding:24px;background:#f4f4f4;}
+  .card{max-width:980px;margin:auto;background:#fff;padding:22px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.12);}
+  h1{margin:0 0 14px;text-align:center;color:#003366;}
+
+  label{font-weight:900;display:block;margin-top:14px;}
+  input, textarea, select{
+    width:100%; box-sizing:border-box;
+    padding:10px; font-size:14px;
+    border:1px solid #cfd6dd; border-radius:8px;
+  }
+
+  textarea{resize:vertical;white-space:pre-wrap;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .btn{
+    margin-top:16px; width:100%;
+    padding:14px; border:none; border-radius:10px;
+    background:#0078d7; color:#fff; font-weight:900; font-size:16px;
+    cursor:pointer;
+  }
+  .btn:hover{background:#005fa3;}
+  .btn-green{background:#00a651;}
+  .btn-green:hover{background:#008f45;}
+
+  .muted{color:#444;font-size:13px;margin-top:8px;line-height:1.4;}
+  .box{
+    margin-top:14px;
+    background:#f7fbff;
+    border:1px dashed #8bb3db;
+    padding:12px;
+    border-radius:10px;
+  }
+  .subttl{
+    font-weight:900;
+    color:#003366;
+    margin-bottom:8px;
+    text-transform:uppercase;
+    font-size:13px;
+  }
+  .hint{font-size:12px;color:#444;margin-top:6px;line-height:1.4;}
+</style>
+</head>
+
+<body>
+<div class="card">
+  <h1>Sistema de Laudos</h1>
+
+  <div class="box">
+    <div class="subttl">DIGITAÇÃO RÁPIDA (COLE OU DIGITE NESSA ORDEM)</div>
+
+    <textarea id="entrada_rapida" rows="11" placeholder="MODELO:
+MARIA APARECIDA DA SILVA 000156/2026
+01/12/2025
+18/01/1976
+50037048449
+83985567895
+RUA: LINDOLFO GONÇALVES CHAVES, 900
+BAIRRO: JARDIM SÃO PAULO
+CIDADE: JOÃO PESSOA/PB
+CEP: 58051-200
+SNM"></textarea>
+
+    <button class="btn btn-green" style="margin-top:10px;" onclick="extrairEAbrir()">
+      EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO
+    </button>
+
+    <div class="hint">
+      ✅ Última linha pode ser: <b>SNM</b> ou <b>EAM</b> (Responsável).<br>
+      ✅ O nome não quebra: o exame é detectado por padrão <b>000156/2026</b>.
+    </div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <label>Paciente</label>
+      <input id="paciente" type="text" placeholder="NOME COMPLETO"/>
+    </div>
+    <div>
+      <label>Nº Exame</label>
+      <input id="exame" type="text" placeholder="000156/2026"/>
+    </div>
+
+    <div>
+      <label>Data da Coleta</label>
+      <input id="data_coleta" type="text" placeholder="DD/MM/AAAA" maxlength="10"/>
+    </div>
+    <div>
+      <label>Data de Nascimento</label>
+      <input id="data_nascimento" type="text" placeholder="DD/MM/AAAA" maxlength="10"/>
+    </div>
+
+    <div>
+      <label>Cartão SUS</label>
+      <input id="cartao_sus" type="text" placeholder="Somente números"/>
+    </div>
+    <div>
+      <label>Telefone</label>
+      <input id="telefone" type="text" placeholder="(83) 9 9999-9999"/>
+    </div>
+
+    <div>
+      <label>Rua</label>
+      <input id="rua" type="text" placeholder="RUA / AV"/>
+    </div>
+    <div>
+      <label>Bairro</label>
+      <input id="bairro" type="text" placeholder="BAIRRO"/>
+    </div>
+
+    <div>
+      <label>Cidade</label>
+      <input id="cidade" type="text" placeholder="CIDADE/UF"/>
+    </div>
+    <div>
+      <label>CEP</label>
+      <input id="cep" type="text" placeholder="00000-000"/>
+    </div>
+
+    <div style="grid-column: span 2;">
+      <label>Responsável</label>
+      <select id="responsavel">
+        <option value="">Selecione...</option>
+        <option value="SHEINA N. MORAIS RAMALHO">SHEINA N. MORAIS RAMALHO</option>
+        <option value="EDVÂNIA APARECIDA MENDES DE AZEVÊDO">EDVÂNIA APARECIDA MENDES DE AZEVÊDO</option>
+      </select>
+    </div>
+
+    <div style="grid-column: span 2;">
+      <label>Observação (opcional)</label>
+      <input id="observacao" type="text" placeholder="Se desejar, digite aqui..."/>
+    </div>
+  </div>
+
+  <div class="muted">
+    ✅ Após extrair, o laudo abre automaticamente em outra aba com todos os dados enviados.
+  </div>
+</div>
+
+<script>
+function onlyDigits(s){ return (s||"").replace(/\D/g,''); }
+function up(v){ return (v||"").toUpperCase().trim(); }
+
+function maskDate(v){
+  let d = onlyDigits(v).slice(0,8);
+  if(d.length >= 5) return d.replace(/(\d{2})(\d{2})(\d+)/,'$1/$2/$3');
+  if(d.length >= 3) return d.replace(/(\d{2})(\d+)/,'$1/$2');
+  return d;
+}
+
+function maskCep(v){
+  let c = onlyDigits(v).slice(0,8);
+  if(c.length > 5) return c.replace(/(\d{5})(\d+)/,'$1-$2');
+  return c;
+}
+
+function maskPhone(v){
+  let t = onlyDigits(v).slice(0,11);
+  if(t.length === 11){
+    return `(${t.slice(0,2)}) ${t.slice(2,3)} ${t.slice(3,7)}-${t.slice(7)}`;
+  }
+  if(t.length === 10){
+    return `(${t.slice(0,2)}) ${t.slice(2,6)}-${t.slice(6)}`;
+  }
+  return v;
+}
+
+function setVal(id,val){
+  const el = document.getElementById(id);
+  if(el) el.value = val;
+}
+
+/* ✅ EXTRAI + ABRE LAUDO AUTOMATICAMENTE */
+function extrairEAbrir(){
+  extrairRapidoOrdemCorrigido();
+  abrirLaudo(); // ✅ abre automaticamente
+}
+
+/* ✅ EXTRAÇÃO ROBUSTA (não quebra nome) */
+function extrairRapidoOrdemCorrigido(){
+  const raw = document.getElementById("entrada_rapida").value || "";
+  const linhas = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+  // Linha 1: "NOME COMPLETO 000156/2026"
+  const l1 = linhas[0] || "";
+  let nome = "";
+  let exame = "";
+
+  // Detecta exame por REGEX: 1-6 dígitos / 4 dígitos
+  const match = l1.match(/(\d{1,6}\/\d{4})\s*$/);
+  if(match){
+    exame = match[1];
+    nome = l1.replace(match[1],"").trim();
+  }else{
+    // fallback caso não tenha /2026
+    const parts = l1.split(/\s+/);
+    exame = parts.pop() || "";
+    nome = parts.join(" ");
+  }
+
+  const dataColeta = maskDate(linhas[1] || "");
+  const nasc = maskDate(linhas[2] || "");
+  const sus = onlyDigits(linhas[3] || "");
+  const tel = maskPhone(linhas[4] || "");
+
+  let rua="", bairro="", cidade="", cep="";
+  let resp="";
+
+  for(let i=5;i<linhas.length;i++){
+    const line = linhas[i];
+
+    if(/^rua\s*:/i.test(line)) rua = line.replace(/^rua\s*:\s*/i,"");
+    else if(/^bairro\s*:/i.test(line)) bairro = line.replace(/^bairro\s*:\s*/i,"");
+    else if(/^cidade\s*:/i.test(line)) cidade = line.replace(/^cidade\s*:\s*/i,"");
+    else if(/^cep\s*:/i.test(line)) cep = line.replace(/^cep\s*:\s*/i,"");
+    else {
+      // responsável: SNM / EAM
+      const t = up(line);
+      if(t === "SNM") resp = "SHEINA N. MORAIS RAMALHO";
+      if(t === "EAM") resp = "EDVÂNIA APARECIDA MENDES DE AZEVÊDO";
+    }
+  }
+
+  setVal("paciente", up(nome));
+  setVal("exame", up(exame));
+  setVal("data_coleta", dataColeta);
+  setVal("data_nascimento", nasc);
+  setVal("cartao_sus", sus);
+  setVal("telefone", up(tel));
+  setVal("rua", up(rua));
+  setVal("bairro", up(bairro));
+  setVal("cidade", up(cidade));
+  setVal("cep", maskCep(cep));
+
+  // responsável automático
+  if(resp) document.getElementById("responsavel").value = resp;
+}
+
+/* ✅ ABRIR LAUDO */
+function abrirLaudo(){
+  const paciente = up(document.getElementById('paciente').value);
+  const exame = up(document.getElementById('exame').value);
+  const dataColeta = maskDate(document.getElementById('data_coleta').value);
+  const dataNascimento = maskDate(document.getElementById('data_nascimento').value);
+  const cartaoSus = onlyDigits(document.getElementById('cartao_sus').value);
+  const telefone = up(document.getElementById('telefone').value);
+  const rua = up(document.getElementById('rua').value);
+  const bairro = up(document.getElementById('bairro').value);
+  const cidade = up(document.getElementById('cidade').value);
+  const cep = maskCep(document.getElementById('cep').value);
+  const responsavel = up(document.getElementById('responsavel').value);
+  const observacao = (document.getElementById('observacao').value || "").trim();
+
+  const params = new URLSearchParams({
+    paciente, exame,
+    data_coleta: dataColeta,
+    data_nascimento: dataNascimento,
+    cartao_sus: cartaoSus,
+    telefone, rua, bairro, cidade, cep,
+    responsavel,
+    observacao
+  });
+
+  /* ✅ AGORA ABRE A PWA DO LAUDO (index.html) */
+  window.open('index.html?' + params.toString(), '_blank');
+}
+
+/* ✅ REGISTRO SERVICE WORKER (PWA) */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => console.log("✅ PWA: Service Worker registrado no Sistema-Laudo!"))
+      .catch((err) => console.log("❌ PWA erro:", err));
+  });
+}
+</script>
+</body>
+</html>

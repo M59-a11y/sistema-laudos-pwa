@@ -1,0 +1,22 @@
+{
+  "name": "Sistema de Laudos - Citopatológico",
+  "short_name": "Laudos",
+  "start_url": "./sistema-laudo.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f4f4",
+  "theme_color": "#0078d7",
+  "description": "Sistema de Laudos Citopatológicos (PWA).",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
