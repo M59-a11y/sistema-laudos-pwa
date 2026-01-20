@@ -227,12 +227,21 @@
     font-size:10pt;
   }
 
+  /* ✅ IMPRESSÃO */
   @media print{
     body{ background:#fff; padding:0; }
     .controles{ display:none !important; }
     .folha{ box-shadow:none; width:100%; margin:0; padding:10mm; }
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
+
+    /* ✅ CORREÇÃO: impede folha em branco */
+    html, body{ height:auto !important; }
+    .folha{ min-height:auto !important; height:auto !important; }
+    .print-only{ page-break-after: avoid !important; break-after: avoid-page !important; }
+
+    /* ✅ ajuda extra */
+    @page{ margin:10mm; }
   }
 </style>
 </head>
@@ -242,13 +251,12 @@
 <div class="folha">
 
   <!-- =========================
-       ✅ TELA: FORM COMPLETO
+       ✅ TELA: SOMENTE PAINEL
        ========================= -->
   <div class="no-print">
     <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
 
     <div class="painel">
-
       <!-- 1 -->
       <div class="sec">
         <div class="sec-title">1. Avaliação Pré Analítica</div>
@@ -336,19 +344,19 @@
           <div class="lbl">ATIPIAS EM CÉLULAS ESCAMOSAS:</div>
         </div>
         <div class="grupo">
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Lesão intra-epitelial de baixo grau (compreendendo efeito citopático pelo vírus HPV e neoplasia intra-epitelial cervical grau I - NIC I)." value="NIC I" onchange="atualizar()"> BAIXO GRAU (HPV / NIC I)</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Lesão intra-epitelial de alto grau (NIC II e III)." value="NIC II / III" onchange="atualizar()"> ALTO GRAU (NIC II / III)</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Carcinoma epidermóide invasor." value="Carcinoma" onchange="atualizar()"> Carcinoma epidermóide invasor</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="— Lesão intra-epitelial de baixo grau (compreendendo efeito citopático pelo vírus HPV e neoplasia intra-epitelial cervical grau I - NIC I)." value="NIC I" onchange="atualizar()"> BAIXO GRAU (HPV / NIC I)</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="— Lesão intra-epitelial de alto grau (NIC II e III)." value="NIC II / III" onchange="atualizar()"> ALTO GRAU (NIC II / III)</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="— Carcinoma epidermóide invasor." value="Carcinoma" onchange="atualizar()"> Carcinoma epidermóide invasor</label>
         </div>
 
         <div class="linha" style="margin-top:10px;">
           <div class="lbl">ATIPIAS EM CÉLULAS GLANDULARES:</div>
         </div>
         <div class="grupo">
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma 'in situ'." value="Adenocarcinoma 'in situ'" onchange="atualizar()"> Adenocarcinoma "in situ"</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, cervical." value="Adenocarcinoma cervical" onchange="atualizar()"> Adenocarcinoma invasor, cervical</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, endometrial." value="Adenocarcinoma endometrial" onchange="atualizar()"> Adenocarcinoma invasor, endometrial</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, SOE." value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="— Adenocarcinoma 'in situ'." value="Adenocarcinoma 'in situ'" onchange="atualizar()"> Adenocarcinoma "in situ"</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="— Adenocarcinoma invasor, cervical." value="Adenocarcinoma cervical" onchange="atualizar()"> Adenocarcinoma invasor, cervical</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="— Adenocarcinoma invasor, endometrial." value="Adenocarcinoma endometrial" onchange="atualizar()"> Adenocarcinoma invasor, endometrial</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="— Adenocarcinoma invasor, SOE." value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
         </div>
       </div>
 
@@ -457,13 +465,13 @@
 
 </div>
 
+<!-- ✅ BOTÕES -->
 <div class="controles no-print">
   <button class="btn btn-print" onclick="imprimirSalvarPdf()">IMPRIMIR / SALVAR PDF</button>
   <button class="btn btn-clear" onclick="location.reload()">LIMPAR</button>
 </div>
 
 <script>
-  function onlyDigits(s){ return (s||"").replace(/\D/g,''); }
   function up(v){ return (v||"").toUpperCase().trim(); }
   function sanitizeFileName(name){
     return (name||"").replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim();
@@ -519,11 +527,9 @@
   document.getElementById("data_coleta_print").textContent = init.data_coleta;
   document.getElementById("nome_resp_print").textContent = init.responsavel;
 
-  // Observação inicial (se veio do sistema principal)
   document.getElementById("obs_texto").value = init.observacao;
   setObsPrint(init.observacao);
 
-  // Rodapé com data completa
   const hoje = new Date();
   const dia = hoje.getDate();
   const mes = hoje.toLocaleDateString("pt-BR",{month:"long"});
@@ -532,18 +538,20 @@
 
   function atualizar(){
     const checksEpi = document.querySelectorAll('.epi:checked');
-    const zonaSim = document.getElementById('zona_sim');
-    const zonaNao = document.getElementById('zona_nao');
 
-    if (checksEpi.length > 1) zonaSim.checked = true;
-    else if (checksEpi.length === 1) zonaNao.checked = true;
+    if (checksEpi.length > 1) document.getElementById('zona_sim').checked = true;
+    else if (checksEpi.length === 1) document.getElementById('zona_nao').checked = true;
 
-    document.getElementById('p_adeq').textContent = document.querySelector('input[name="adeq"]:checked')?.value || '';
-    document.getElementById('p_epi').textContent = Array.from(checksEpi).map(c => c.value).join(", ");
-    document.getElementById('p_zona').textContent = document.querySelector('input[name="zona"]:checked')?.value || '';
+    document.getElementById('p_adeq').textContent =
+      document.querySelector('input[name="adeq"]:checked')?.value || '';
+    document.getElementById('p_epi').textContent =
+      Array.from(checksEpi).map(c => c.value).join(", ");
+    document.getElementById('p_zona').textContent =
+      document.querySelector('input[name="zona"]:checked')?.value || '';
 
     const norm = document.getElementById('chk_norm').checked;
     const alts = Array.from(document.querySelectorAll('.alt:checked')).map(c => c.value);
+
     const pTitDiag = document.getElementById('p_tit_diag');
     const pSubtitDiag = document.getElementById('p_subtit_diag');
     const pResDiag = document.getElementById('p_res_diag');
@@ -562,8 +570,10 @@
       pResDiag.textContent = "";
     }
 
-    const micros = Array.from(document.querySelectorAll('.micro:checked')).map(c => c.getAttribute('data-full') || c.value);
-    document.getElementById('p_res_micro').textContent = micros.join(", ") + (micros.length ? "." : "");
+    const micros = Array.from(document.querySelectorAll('.micro:checked'))
+      .map(c => c.getAttribute('data-full') || c.value);
+    document.getElementById('p_res_micro').textContent =
+      micros.join(", ") + (micros.length ? "." : "");
 
     const concl = document.querySelector('input[name="c"]:checked');
     if(concl){
@@ -572,7 +582,8 @@
       if(concl.value === "NEGATIVO"){
         document.getElementById('p_res_concl').textContent = respostaTecnica;
       }else{
-        document.getElementById('p_res_concl').textContent = categoria + ":\n" + respostaTecnica;
+        document.getElementById('p_res_concl').textContent =
+          categoria + ":\n" + respostaTecnica;
       }
     }else{
       document.getElementById('p_res_concl').textContent = "";
@@ -589,10 +600,9 @@
   function keyPositivosMes(){ return `positivos_${mesChaveAtual()}`; }
 
   function salvarCasoPositivoNoStorage(payload){
-    const keyMes = keyPositivosMes();
-    const lista = JSON.parse(localStorage.getItem(keyMes) || "[]");
+    const lista = JSON.parse(localStorage.getItem(keyPositivosMes()) || "[]");
     lista.push({ ...payload, data: new Date().toISOString() });
-    localStorage.setItem(keyMes, JSON.stringify(lista));
+    localStorage.setItem(keyPositivosMes(), JSON.stringify(lista));
   }
 
   function gerarArquivoExportacaoMes(){
@@ -634,8 +644,16 @@
   function imprimirSalvarPdf(){
     atualizar();
 
-    // ✅ sugere nome do arquivo
-    document.title = nomeArquivoSugerido();
+    // ✅ você escolhe o nome do arquivo
+    const sugerido = nomeArquivoSugerido();
+    const digitado = prompt("Nome do arquivo (PDF):", sugerido);
+
+    if(digitado === null) return;
+    const nomeFinal = (digitado || sugerido).trim() || sugerido;
+
+    // ✅ título influencia sugestão do nome do PDF
+    const tituloOriginal = document.title;
+    document.title = nomeFinal;
 
     // ✅ exporta só se for positivo
     try{
@@ -657,6 +675,10 @@
 
     window.print();
 
+    // ✅ volta o título ao normal
+    setTimeout(() => { document.title = tituloOriginal; }, 1500);
+
+    // ✅ volta pro sistema
     setTimeout(() => limparEVoltarSistema(), 700);
   }
 
