@@ -45,7 +45,7 @@
     position:relative;
   }
 
-  /* ✅ Watermark discreta e no lugar certo */
+  /* ✅ Watermark (marca d'água) discreta e no lugar certo */
   .watermark{
     position:fixed;
     top:88px;
@@ -68,6 +68,7 @@
     z-index:1;
   }
 
+  /* ✅ Header */
   header{
     height:84px;
     padding:14px 22px;
@@ -134,18 +135,22 @@
     box-shadow: var(--shadow2);
   }
 
+  /* ✅ Layout geral: 1 coluna */
   main{
     flex:1;
     min-height:0;
     display:grid;
-    grid-template-columns: 1.22fr .78fr;
+    grid-template-columns: 1fr; /* ✅ sem lateral */
     gap:18px;
     padding:18px 22px 22px;
     height:calc(100vh - 84px);
     position:relative;
     z-index:1;
+    max-width: 1060px;
+    margin: 0 auto;
   }
 
+  /* ✅ Painel */
   .panel{
     min-height:0;
     border-radius: var(--r22);
@@ -181,6 +186,7 @@
     min-height:0;
   }
 
+  /* ✅ Digitação rápida */
   .quick{
     border-radius: var(--r22);
     border:1px solid rgba(255,255,255,.20);
@@ -207,6 +213,7 @@
     box-shadow: 0 0 0 4px rgba(23,227,166,.14);
   }
 
+  /* ✅ Guia fixa sempre visível */
   .guide{
     padding:10px 12px;
     border-radius:14px;
@@ -231,7 +238,7 @@
 
   textarea{
     width:100%;
-    height:220px;
+    height:260px; /* ✅ conforto e ainda zero scroll */
     resize:none;
     border-radius: var(--r22);
     border:1px solid rgba(255,255,255,.18);
@@ -250,10 +257,11 @@
     box-shadow: 0 0 0 3px rgba(23,227,166,.18), inset 0 0 0 1px rgba(0,0,0,.25);
   }
 
+  /* ✅ BOTÃO EVIDENTE */
   .btn{
     border:none;
     cursor:pointer;
-    padding:14px 16px;
+    padding:16px 18px;
     border-radius: 18px;
     font-weight:900;
     letter-spacing:.04em;
@@ -266,6 +274,7 @@
     color:#06242a;
     box-shadow: 0 18px 34px rgba(0,0,0,.24);
     transition: transform .06s ease, filter .2s ease;
+    margin-top:12px;
   }
 
   .btn:active{ transform:scale(.99) }
@@ -278,77 +287,11 @@
     user-select:none;
   }
 
-  .side{
-    display:flex;
-    flex-direction:column;
-    gap:18px;
-    min-height:0;
-  }
-
-  .card{
-    border-radius: var(--r22);
-    border:1px solid rgba(255,255,255,.18);
-    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-    box-shadow: var(--shadow);
-    overflow:hidden;
-  }
-
-  .card-h{
-    padding:12px 14px;
-    border-bottom:1px solid rgba(255,255,255,.12);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-  }
-
-  .card-h h2{
-    margin:0;
-    font-size:13px;
-    text-transform:uppercase;
-    letter-spacing:.10em;
-  }
-
-  .card-b{
-    padding:14px;
-    font-size:13px;
-    color:rgba(255,255,255,.82);
-    line-height:1.6;
-  }
-
-  .kpi{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-    margin-top:12px;
-  }
-
-  .kpi-box{
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.16);
-    background: rgba(0,0,0,.16);
-    padding:12px;
-  }
-
-  .kpi-box b{
-    display:block;
-    font-size:11px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:rgba(255,255,255,.72);
-    margin-bottom:6px;
-  }
-
-  .kpi-box span{
-    font-size:18px;
-    font-weight:900;
-    color:rgba(255,255,255,.92);
-  }
-
+  /* ✅ campos técnicos ocultos */
   .tech-hidden{ display:none !important; }
 
   @media (max-width: 980px){
-    main{ grid-template-columns: 1fr; }
-    textarea{ height:190px; }
+    textarea{ height:220px; }
     .brand img{ width:160px; max-height:46px; }
   }
 </style>
@@ -369,7 +312,7 @@
 
       <div class="hdr-right">
         <div class="pill">Modo Profissional</div>
-        <div class="pill">Popup Central</div>
+        <div class="pill">Janela Central</div>
       </div>
     </header>
 
@@ -382,7 +325,10 @@
 
         <div class="panel-b">
           <div class="quick">
-            <div class="q-label"><span class="dot"></span> Cole ou digite os dados no campo abaixo</div>
+            <div class="q-label">
+              <span class="dot"></span>
+              Cole ou digite os dados no campo abaixo
+            </div>
 
             <div class="guide">
               Ordem:
@@ -393,9 +339,11 @@
               <code>Rua</code>
             </div>
 
+            <!-- ✅ Campo principal -->
             <textarea id="entrada_rapida" rows="11"></textarea>
 
-            <button class="btn" style="margin-top:10px;" onclick="extrairEAbrir()">
+            <!-- ✅ Botão bem visível -->
+            <button class="btn" onclick="extrairEAbrir()">
               EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO
             </button>
 
@@ -404,57 +352,30 @@
               ✅ O nome não quebra: o exame é detectado por padrão <b>000156/2026</b>.
             </div>
           </div>
+
+          <!-- ✅ Campos técnicos (existem mas invisíveis) -->
+          <div class="tech-hidden">
+            <input id="paciente" type="text"/>
+            <input id="exame" type="text"/>
+            <input id="data_coleta" type="text" maxlength="10"/>
+            <input id="data_nascimento" type="text" maxlength="10"/>
+            <input id="cartao_sus" type="text"/>
+            <input id="telefone" type="text"/>
+            <input id="rua" type="text"/>
+            <input id="bairro" type="text"/>
+            <input id="cidade" type="text"/>
+            <input id="cep" type="text"/>
+
+            <select id="responsavel">
+              <option value="">Selecione...</option>
+              <option value="SHEINA N. MORAIS RAMALHO">SHEINA N. MORAIS RAMALHO</option>
+              <option value="EDVÂNIA APARECIDA MENDES DE AZEVÊDO">EDVÂNIA APARECIDA MENDES DE AZEVÊDO</option>
+            </select>
+
+            <input id="observacao" type="text"/>
+          </div>
         </div>
       </section>
-
-      <aside class="side">
-        <section class="card">
-          <div class="card-h">
-            <h2>Status do sistema</h2>
-            <div class="pill">Online</div>
-          </div>
-          <div class="card-b">
-            Laudo abre em janela central (compacta).  
-            Se popup for bloqueado, abre na mesma aba.
-            <div class="kpi">
-              <div class="kpi-box"><b>Janela</b><span>Central</span></div>
-              <div class="kpi-box"><b>Tamanho</b><span>Compacto</span></div>
-            </div>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="card-h">
-            <h2>Campos técnicos</h2>
-            <div class="pill">Ocultos</div>
-          </div>
-          <div class="card-b">
-            Os campos de destino continuam no código para envio ao laudo, porém ficam invisíveis ao usuário.
-          </div>
-        </section>
-      </aside>
-
-      <!-- ✅ Campos técnicos invisíveis -->
-      <div class="tech-hidden">
-        <input id="paciente" type="text"/>
-        <input id="exame" type="text"/>
-        <input id="data_coleta" type="text" maxlength="10"/>
-        <input id="data_nascimento" type="text" maxlength="10"/>
-        <input id="cartao_sus" type="text"/>
-        <input id="telefone" type="text"/>
-        <input id="rua" type="text"/>
-        <input id="bairro" type="text"/>
-        <input id="cidade" type="text"/>
-        <input id="cep" type="text"/>
-
-        <select id="responsavel">
-          <option value="">Selecione...</option>
-          <option value="SHEINA N. MORAIS RAMALHO">SHEINA N. MORAIS RAMALHO</option>
-          <option value="EDVÂNIA APARECIDA MENDES DE AZEVÊDO">EDVÂNIA APARECIDA MENDES DE AZEVÊDO</option>
-        </select>
-
-        <input id="observacao" type="text"/>
-      </div>
     </main>
   </div>
 
@@ -494,7 +415,7 @@ function extrairEAbrir(){
   abrirLaudo();
 }
 
-/* ✅ EXTRAÇÃO ROBUSTA */
+/* ✅ EXTRAÇÃO ROBUSTA (não quebra nome) */
 function extrairRapidoOrdemCorrigido(){
   const raw = document.getElementById("entrada_rapida").value || "";
   const linhas = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
@@ -546,7 +467,7 @@ function extrairRapidoOrdemCorrigido(){
   if(resp) document.getElementById("responsavel").value = resp;
 }
 
-/* ✅ ABRIR LAUDO EM POPUP CENTRAL */
+/* ✅ ABRIR LAUDO EM JANELA CENTRAL (compacta) */
 function abrirLaudo(){
   const paciente = up(document.getElementById('paciente').value);
   const exame = up(document.getElementById('exame').value);
@@ -577,11 +498,10 @@ function abrirLaudo(){
   const laudoPath = "laudo.html";
   const url = laudoPath + "?" + params.toString();
 
-  // ✅ tamanho compacto
-  const w = 920;
-  const h = 720;
+  /* ✅ janela no meio e menor */
+  const w = 900;
+  const h = 680;
 
-  // ✅ centralização perfeita
   const left = Math.max(0, (window.screen.width - w) / 2);
   const top = Math.max(0, (window.screen.height - h) / 2);
 
@@ -591,16 +511,15 @@ function abrirLaudo(){
 
   const popup = window.open(url, "LAUDO_POPUP", specs);
 
-  // ✅ fallback: se popup bloqueado, abre normal
   if(!popup){
-    window.location.href = url;
+    window.location.href = url; // fallback se popup bloqueado
     return;
   }
 
   popup.focus();
 }
 
-/* ✅ PWA */
+/* ✅ REGISTRO SERVICE WORKER (PWA) */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js")
