@@ -41,6 +41,7 @@
     border-radius:6px;
   }
   .btn-print{ background:#28a745;color:#fff; }
+  .btn-pdfreal{ margin-top:10px;background:#0078d7;color:#fff; }
   .btn-clear{ margin-top:10px;background:#eee; }
 
   /* ===== FOLHA ===== */
@@ -228,25 +229,13 @@
     font-size:10pt;
   }
 
-  /* ✅ PRINT PERFEITO (SEM CONDENSAR) */
+  /* ✅ PRINT PERFEITO */
   @media print{
     body{ background:#fff; padding:0; }
     .controles{ display:none !important; }
+    .folha{ box-shadow:none; width:100%; margin:0; padding:10mm; min-height:auto !important; height:auto !important; }
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
-
-    /* ✅ CORREÇÃO REAL: não deixar min-height causar folha extra */
-    .folha{
-      box-shadow:none;
-      width:100%;
-      margin:0;
-      padding:10mm;
-      min-height:auto !important;
-      height:auto !important;
-    }
-
-    /* ✅ Ajuda a evitar quebra sobrando */
-    .print-only{ page-break-after:auto; }
     @page{ size:A4; margin:10mm; }
   }
 </style>
@@ -263,6 +252,7 @@
     <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
 
     <div class="painel">
+
       <!-- 1 -->
       <div class="sec">
         <div class="sec-title">1. Avaliação Pré Analítica</div>
@@ -385,9 +375,7 @@
 
   </div><!-- /no-print -->
 
-  <!-- =========================
-       ✅ IMPRESSÃO: LAUDO COMPLETO
-       ========================= -->
+  <!-- ✅ PRINT ONLY (seu laudo completo perfeito - mantido) -->
   <div class="print-only">
 
     <div class="cab-paciente">
@@ -472,9 +460,13 @@
 </div>
 
 <div class="controles no-print">
-  <button class="btn btn-print" onclick="imprimirSalvarPdf()">IMPRIMIR / SALVAR PDF</button>
+  <button class="btn btn-print" onclick="imprimirSalvarPdf()">IMPRIMIR (LAYOUT PERFEITO)</button>
+  <button class="btn btn-pdfreal" onclick="gerarPdfRealEditavel()">GERAR PDF REAL (EDITÁVEL)</button>
   <button class="btn btn-clear" onclick="location.reload()">LIMPAR</button>
 </div>
+
+<!-- ✅ pdf-lib -->
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
 <script>
   function up(v){ return (v||"").toUpperCase().trim(); }
@@ -501,6 +493,7 @@
     setObsPrint(txt);
   }
 
+  // ===== INIT =====
   const params = new URLSearchParams(window.location.search);
   const init = {
     paciente: up(params.get("paciente")),
@@ -526,6 +519,7 @@
   document.getElementById("cab_bairro").textContent = init.bairro;
   document.getElementById("cab_cidade").textContent = init.cidade;
   document.getElementById("cab_cep").textContent = init.cep;
+
   document.getElementById("data_coleta_print").textContent = init.data_coleta;
   document.getElementById("nome_resp_print").textContent = init.responsavel;
 
@@ -533,8 +527,10 @@
   setObsPrint(init.observacao);
 
   const hoje = new Date();
-  document.getElementById("rodape_data").textContent =
-    `João Pessoa, ${hoje.getDate()} de ${hoje.toLocaleDateString("pt-BR",{month:"long"})} de ${hoje.getFullYear()}`;
+  const dia = hoje.getDate();
+  const mes = hoje.toLocaleDateString("pt-BR",{month:"long"});
+  const ano = hoje.getFullYear();
+  document.getElementById("rodape_data").textContent = `João Pessoa, ${dia} de ${mes} de ${ano}`;
 
   function atualizar(){
     const checksEpi = document.querySelectorAll('.epi:checked');
@@ -542,16 +538,12 @@
     if (checksEpi.length > 1) document.getElementById('zona_sim').checked = true;
     else if (checksEpi.length === 1) document.getElementById('zona_nao').checked = true;
 
-    document.getElementById('p_adeq').textContent =
-      document.querySelector('input[name="adeq"]:checked')?.value || '';
-    document.getElementById('p_epi').textContent =
-      Array.from(checksEpi).map(c => c.value).join(", ");
-    document.getElementById('p_zona').textContent =
-      document.querySelector('input[name="zona"]:checked')?.value || '';
+    document.getElementById('p_adeq').textContent = document.querySelector('input[name="adeq"]:checked')?.value || '';
+    document.getElementById('p_epi').textContent = Array.from(checksEpi).map(c => c.value).join(", ");
+    document.getElementById('p_zona').textContent = document.querySelector('input[name="zona"]:checked')?.value || '';
 
     const norm = document.getElementById('chk_norm').checked;
     const alts = Array.from(document.querySelectorAll('.alt:checked')).map(c => c.value);
-
     const pTitDiag = document.getElementById('p_tit_diag');
     const pSubtitDiag = document.getElementById('p_subtit_diag');
     const pResDiag = document.getElementById('p_res_diag');
@@ -570,11 +562,8 @@
       pResDiag.textContent = "";
     }
 
-    const micros = Array.from(document.querySelectorAll('.micro:checked'))
-      .map(c => c.getAttribute('data-full') || c.value);
-
-    document.getElementById('p_res_micro').textContent =
-      micros.join(", ") + (micros.length ? "." : "");
+    const micros = Array.from(document.querySelectorAll('.micro:checked')).map(c => c.getAttribute('data-full') || c.value);
+    document.getElementById('p_res_micro').textContent = micros.join(", ") + (micros.length ? "." : "");
 
     const concl = document.querySelector('input[name="c"]:checked');
     if(concl){
@@ -583,15 +572,14 @@
       if(concl.value === "NEGATIVO"){
         document.getElementById('p_res_concl').textContent = respostaTecnica;
       }else{
-        document.getElementById('p_res_concl').textContent =
-          categoria + ":\n" + respostaTecnica;
+        document.getElementById('p_res_concl').textContent = categoria + ":\n" + respostaTecnica;
       }
     }else{
       document.getElementById('p_res_concl').textContent = "";
     }
   }
 
-  // ✅ exportação (mesmo padrão do seu sistema)
+  // ✅ Storage positivos
   function mesChaveAtual(){
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -619,8 +607,8 @@
     }));
 
     const exportJSON = { [keySistema]: JSON.stringify(registros) };
-    const blob = new Blob([JSON.stringify(exportJSON)], { type:"application/json;charset=utf-8" });
 
+    const blob = new Blob([JSON.stringify(exportJSON)], { type:"application/json;charset=utf-8" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = `EXPORT_${mes}.json`;
@@ -642,6 +630,7 @@
     if(window.history.length > 1){ window.history.back(); return; }
   }
 
+  // ✅ Imprimir normal (layout perfeito)
   function imprimirSalvarPdf(){
     atualizar();
 
@@ -667,9 +656,7 @@
         salvarCasoPositivoNoStorage(payload);
         gerarArquivoExportacaoMes();
       }
-    }catch(e){
-      console.error(e);
-    }
+    }catch(e){ console.error(e); }
 
     window.print();
 
@@ -677,8 +664,130 @@
     setTimeout(() => limparEVoltarSistema(), 700);
   }
 
+  // ✅ PDF REAL (1 folha)
+  async function gerarPdfRealEditavel(){
+    atualizar();
+
+    const sugerido = nomeArquivoSugerido();
+    const digitado = prompt("Nome do arquivo (PDF REAL):", sugerido);
+    if(digitado === null) return;
+    const nomeFinal = (digitado || sugerido).trim() || sugerido;
+
+    // exporta positivo se for
+    try{
+      const concl = document.querySelector('input[name="c"]:checked');
+      if(concl && concl.value !== "NEGATIVO"){
+        const payload = {
+          exame: init.exame,
+          nome: init.paciente,
+          telefone: init.telefone,
+          categoria: concl.getAttribute("data-tit") || "",
+          subcategoria: (concl.getAttribute("data-full") || concl.value || "").trim()
+        };
+        salvarCasoPositivoNoStorage(payload);
+        gerarArquivoExportacaoMes();
+      }
+    }catch(e){ console.error(e); }
+
+    const { PDFDocument, StandardFonts } = PDFLib;
+
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([595.28, 841.89]); // A4
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+    let y = 810;
+    const x = 45;
+
+    function line(txt, size=10, gap=14){
+      page.drawText(txt, { x, y, size, font });
+      y -= gap;
+    }
+
+    // Cabeçalho
+    line(`PACIENTE: ${init.paciente}`, 12, 18);
+    line(`Nº DO EXAME: ${init.exame.replaceAll("/", ".")}`, 12, 18);
+    y -= 4;
+
+    line(`DATA DE NASCIMENTO: ${init.data_nascimento}`);
+    line(`CARTÃO SUS: ${init.cartao_sus}`);
+    line(`RUA: ${init.rua}`);
+    line(`TELEFONE: ${init.telefone}`);
+    line(`BAIRRO: ${init.bairro}`);
+    line(`CIDADE: ${init.cidade}`);
+    line(`CEP: ${init.cep}`);
+    y -= 8;
+
+    line("CONVÊNIO: UNIDADE MÓVEL SESC SAÚDE MULHER", 10);
+    line("EXAME REALIZADO: CITOPATOLÓGICO CÉRVICO-VAGINAL/MICROFLORA", 10);
+    line(`DATA DA COLETA: ${init.data_coleta}`, 10);
+    line(`RESPONSÁVEL: ${init.responsavel}`, 10);
+    y -= 12;
+
+    line("LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO", 12, 20);
+    y -= 8;
+
+    // Corpo do laudo (texto real)
+    line("AVALIAÇÃO PRÉ-ANALÍTICA", 11, 18);
+    line(`ADEQUABILIDADE DO MATERIAL: ${document.getElementById('p_adeq')?.textContent || ""}`);
+    line(`EPITÉLIOS REPRESENTADOS NA AMOSTRA: ${document.getElementById('p_epi')?.textContent || ""}`);
+    line(`REPRESENTATIVIDADE DA ZONA DE TRANSFORMAÇÃO: ${document.getElementById('p_zona')?.textContent || ""}`);
+    y -= 8;
+
+    line("DIAGNÓSTICO DESCRITIVO", 11, 18);
+    line(`${document.getElementById('p_res_diag')?.textContent || ""}`);
+    y -= 8;
+
+    line("MICROBIOLOGIA", 11, 18);
+    line(`${document.getElementById('p_res_micro')?.textContent || ""}`);
+    y -= 8;
+
+    line("CONCLUSÃO", 11, 18);
+    const conclTxt = (document.getElementById('p_res_concl')?.textContent || "").split("\n");
+    for(const c of conclTxt){
+      line(c);
+    }
+
+    const obs = (document.getElementById("obs_texto")?.value || "").trim();
+    if(obs){
+      y -= 8;
+      line("OBSERVAÇÃO", 11, 18);
+      // quebra simples
+      const words = obs.split(/\s+/);
+      let cur = "";
+      for(const w of words){
+        const test = (cur ? cur + " " : "") + w;
+        if(test.length > 90){
+          line(cur);
+          cur = w;
+        }else cur = test;
+      }
+      if(cur) line(cur);
+    }
+
+    y = 110;
+    line(`João Pessoa, ${dia} de ${mes} de ${ano}`, 10, 14);
+    y -= 10;
+    line("Dra. Daniele Carvalho Macêdo", 11, 14);
+    line("CRM 12077 PB", 10, 14);
+
+    // salva
+    const bytes = await pdfDoc.save();
+    const blob = new Blob([bytes], { type: "application/pdf" });
+
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${nomeFinal}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(a.href);
+
+    setTimeout(() => limparEVoltarSistema(), 700);
+  }
+
+  window.imprimirSalvarPdf = imprimirSalvarPdf;
+  window.gerarPdfRealEditavel = gerarPdfRealEditavel;
   window.atualizar = atualizar;
-  window.aplicarObs = aplicarObs;
 </script>
 
 </body>
