@@ -234,6 +234,7 @@
     body{ background:#fff; padding:0; }
     .controles{ display:none !important; }
 
+    /* ✅ remove min-height só no print pra não criar folha em branco */
     .folha{
       box-shadow:none;
       width:100%;
@@ -364,7 +365,6 @@
           <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, SOE" value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
         </div>
       </div>
-
     </div><!-- painel -->
 
     <!-- Observação -->
@@ -478,6 +478,7 @@
 </div>
 
 <script>
+  function onlyDigits(s){ return (s||"").replace(/\D/g,''); }
   function up(v){ return (v||"").toUpperCase().trim(); }
   function sanitizeFileName(name){
     return (name||"").replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim();
@@ -593,11 +594,11 @@
   }
 
   /* ==========================================================
-     ✅ POPUP WORD COM CÓPIA AUTOMÁTICA
+     ✅ POPUP WORD COM CÓPIA AUTOMÁTICA + FORMATAÇÃO (HTML clipboard)
   ========================================================== */
-  function abrirLaudoEmJanelaWord(laudoHTML, titulo = "Laudo - Copiar para Word"){
-    const w = window.open("", "_blank", "width=900,height=700,scrollbars=yes,resizable=yes");
-    if(!w){
+  function abrirLaudoEmJanelaWord(laudoHTML, titulo = "Laudo - Copiar para Word") {
+    const w = window.open("", "_blank", "width=950,height=750,scrollbars=yes,resizable=yes");
+    if (!w) {
       alert("Pop-up bloqueado! Permita pop-ups para este site.");
       return;
     }
@@ -624,16 +625,28 @@
             line-height:1.5;
             font-size:14px;
           }
-          .aviso{
-            margin-left:auto;
-            font-size:12px;
-            opacity:0.85;
-          }
+          .aviso{ margin-left:auto; font-size:12px; opacity:0.85; }
+
+          /* ✅ CSS do laudo dentro do popup */
+          .cab-paciente{ border-top:3px solid #00a651; border-bottom:3px solid #00a651; padding:10px 0; margin:0 0 14px; }
+          .cab-row1{ display:flex; justify-content:space-between; gap:20px; }
+          .cab-left{ flex:1; }
+          .cab-right{ min-width:220px; text-align:right; }
+          .cab-lbl{ font-size:12pt; font-weight:400; text-transform:uppercase; font-family:"Arial Narrow", Arial, sans-serif; }
+          .cab-nome,.cab-exame{ font-size:11.5pt; font-weight:700; text-transform:uppercase; font-family:"Arial Narrow"; line-height:1.1; }
+          .cab-row2{ margin-top:10px; display:grid; grid-template-columns:1.2fr 0.8fr; gap:6px 40px; font-family:"Arial Narrow", Arial, sans-serif; font-size:9.5pt; text-transform:uppercase; font-weight:400; }
+          .linha-identificacao{ font-family:"Arial Narrow", Arial, sans-serif; font-size:10pt; text-transform:uppercase; margin-bottom:4px; display:flex; gap:6px; align-items:baseline; white-space:nowrap; }
+          .titulo-laudo{ text-align:center; font-weight:800; font-size:12pt; margin:8px 0 14px; text-transform:uppercase; font-family:"Arial Narrow", Arial, sans-serif; }
+          .secao-print{ margin-bottom:12px; line-height:1.5; font-family:"Arial Narrow", Arial, sans-serif; font-size:10pt; text-align:justify; }
+          .tit-negrito{ font-weight:700; text-transform:uppercase; }
+          .tit-normal-caps{ font-weight:400; text-transform:uppercase; }
+          .concl-resposta-bloco{ white-space:pre-line; font-weight:400; display:block; }
+          .rodape-prof{ margin-top:20px; text-align:center; font-family:"Arial Narrow", Arial, sans-serif; font-size:10pt; }
         </style>
       </head>
       <body>
         <div class="topo">
-          <button class="btnCopiar" onclick="copiar()">📋 Copiar novamente</button>
+          <button class="btnCopiar" onclick="copiarHTML()">📋 Copiar laudo formatado</button>
           <button class="btnSelecionar" onclick="selecionar()">🖱️ Selecionar tudo</button>
           <button class="btnFechar" onclick="window.close()">✖ Fechar</button>
           <span class="aviso" id="msg"></span>
@@ -651,20 +664,38 @@
             sel.addRange(range);
           }
 
-          function copiar(){
-            selecionar();
+          async function copiarHTML(){
+            const el = document.getElementById('laudo');
+            const html = el.innerHTML;
+            const texto = el.innerText;
+
             try{
-              document.execCommand('copy');
-              window.getSelection().removeAllRanges();
-              document.getElementById('msg').textContent = "✅ Laudo copiado! Agora cole no Word (Ctrl+V).";
+              if(navigator.clipboard && window.ClipboardItem){
+                const blobHTML = new Blob([html], {type: "text/html"});
+                const blobTXT  = new Blob([texto], {type: "text/plain"});
+
+                await navigator.clipboard.write([
+                  new ClipboardItem({
+                    "text/html": blobHTML,
+                    "text/plain": blobTXT
+                  })
+                ]);
+
+                document.getElementById('msg').textContent = "✅ Copiado com formatação! Cole no Word (Ctrl+V).";
+              }else{
+                selecionar();
+                document.execCommand('copy');
+                window.getSelection().removeAllRanges();
+                document.getElementById('msg').textContent = "✅ Copiado! (fallback)";
+              }
             }catch(e){
-              document.getElementById('msg').textContent = "⚠️ Não consegui copiar automaticamente. Use Ctrl+C.";
+              console.error(e);
+              document.getElementById('msg').textContent = "⚠️ Não consegui copiar automaticamente. Selecione e use Ctrl+C.";
             }
           }
 
-          // ✅ copia automaticamente ao abrir
           window.onload = function(){
-            setTimeout(copiar, 250);
+            setTimeout(copiarHTML, 250);
           }
         <\/script>
       </body>
@@ -737,6 +768,7 @@
     if(window.history.length > 1){ window.history.back(); return; }
   }
 
+  // ✅ IMPRIMIR (sugere nome + exporta + volta)
   function imprimirLaudo(){
     atualizar();
 
@@ -776,5 +808,7 @@
 
 </body>
 </html>
+
+
 
 
