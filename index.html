@@ -7,22 +7,20 @@
 
   <style>
     :root{
-      --bg1:#061b2d;
-      --bg2:#0a2d45;
-      --bg3:#04304f;
+      --verde1:#73FF9A;
+      --verde2:#30E18B;
+      --azul1:#0e4d7d;
+      --azul2:#06233f;
 
-      --glass: rgba(255,255,255,.08);
-      --glass2: rgba(255,255,255,.05);
-      --stroke: rgba(255,255,255,.14);
-      --stroke2: rgba(255,255,255,.10);
+      --ink:#06243f;
+      --muted: rgba(6,36,63,.72);
 
-      --text:#eaf2ff;
-      --muted: rgba(234,242,255,.78);
+      --glass: rgba(255,255,255,.14);
+      --glass2: rgba(255,255,255,.10);
+      --stroke: rgba(255,255,255,.28);
 
-      --shadow: 0 18px 60px rgba(0,0,0,.30);
-      --shadow2: 0 10px 25px rgba(0,0,0,.20);
-
-      --ok:#22c55e;
+      --shadow: 0 18px 55px rgba(0,0,0,.16);
+      --shadow2: 0 10px 28px rgba(0,0,0,.12);
     }
 
     *{ box-sizing:border-box; }
@@ -31,414 +29,253 @@
       margin:0;
       font-family: Arial, sans-serif;
       min-height:100vh;
-      color: var(--text);
-      padding-top: 56px;
-      background:
-        radial-gradient(1200px 700px at 70% 10%, rgba(255,255,255,.06), transparent 55%),
-        radial-gradient(900px 600px at 10% 20%, rgba(255,255,255,.04), transparent 50%),
-        linear-gradient(135deg, var(--bg1), var(--bg2) 45%, var(--bg3));
-      position: relative;
-      overflow-x: hidden;
+      color: var(--ink);
+      background: linear-gradient(90deg, var(--verde1) 0%, var(--verde2) 22%, var(--azul1) 70%, var(--azul2) 100%);
+      overflow-x:hidden;
     }
 
-    /* watermark do logo */
     body::before{
       content:"";
       position: fixed;
       inset: 0;
-      background: url("logo/sesctopo.png") center 78% / min(820px, 92vw) no-repeat;
-      opacity: 0.09; /* intensidade */
-      pointer-events: none;
+      background: url("logo/sesctopo.png") center 72% / min(980px, 92vw) no-repeat;
+      opacity: 0.08;
+      pointer-events:none;
       z-index: 0;
     }
 
-    body::after{
-      content:"";
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.35));
-      pointer-events: none;
-      z-index: 0;
+    header, main{ position:relative; z-index:1; }
+
+    /* ===========================
+       TOPO
+    =========================== */
+    header{
+      padding: 18px 24px 8px;
     }
 
-    header, main, #roteiroTopo{ position: relative; z-index: 1; }
-
-    /* roteiro */
-    #roteiroTopo{
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 999999;
-      padding: 10px 14px;
-      font-size: 13px;
-      color: rgba(234,242,255,.92);
-      background: rgba(3,14,24,.55);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-    #roteiroTopo .linha{ display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
-    #roteiroTopo .rotulo{ font-weight: 900; opacity:.95; margin-right:6px; }
-    #roteiroTopo .item{
-      padding: 3px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.12);
-      white-space: nowrap;
-      font-weight: 800;
-    }
-    #roteiroTopo .sep{ opacity:.55; font-weight:900; margin: 0 2px; }
-
-    /* header */
-    header{ padding: 18px 22px 10px; }
-    .topbar{
+    .headRow{
       display:flex;
       align-items:center;
-      justify-content: space-between;
-      gap: 18px;
+      gap:14px;
       flex-wrap:wrap;
     }
-    .brand{ display:flex; align-items:center; gap: 14px; }
-    .logoBox{
-      width:64px;
-      height:64px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
-      box-shadow: var(--shadow2);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      padding: 10px;
-    }
-    .logoBox img{
-      width:100%;
-      height:100%;
+
+    .topLogo{
+      height: 52px;
+      width: auto;
       object-fit: contain;
       display:block;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.25));
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.10));
     }
-    .titulos h1{
+
+    .headTitle{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+
+    .sysName{
       margin:0;
       font-size: 34px;
-      letter-spacing: .3px;
-      line-height: 1.06;
-      text-shadow: 0 10px 22px rgba(0,0,0,.25);
-    }
-    .subtitulo{
-      margin-top: 5px;
       font-weight: 900;
+      letter-spacing: .2px;
+      color: var(--ink);
+      text-shadow: 0 14px 30px rgba(0,0,0,.08);
+    }
+
+    .sysSub{
+      margin:0;
       font-size: 15px;
-      opacity: 0.95;
-      letter-spacing: .6px;
-      color: rgba(234,242,255,.92);
-    }
-
-    /* botões topo */
-    .topActions{ display:flex; gap:10px; flex-wrap:wrap; }
-    .pill{
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
-      color: rgba(234,242,255,.92);
-      padding: 10px 14px;
-      border-radius: 999px;
       font-weight: 900;
-      cursor:pointer;
-      box-shadow: var(--shadow2);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-    }
-    .pill:hover{ filter: brightness(1.06); }
-    .pill.on{
-      border-color: rgba(34,197,94,.40);
-      box-shadow: 0 12px 30px rgba(0,0,0,.22), 0 0 0 3px rgba(34,197,94,.10);
+      letter-spacing: .6px;
+      color: rgba(6,36,63,.85);
     }
 
-    /* cards vidro */
+    /* ===========================
+       CONTEÚDO CENTRAL
+    =========================== */
     main{
-      width:min(1100px, 96vw);
-      margin: 10px auto 45px;
-      display:grid;
+      width:min(980px, 94vw);
+      margin: 12px auto 40px;
+    }
+
+    .glass{
+      border-radius: 28px;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow:hidden;
+    }
+
+    .panel{
+      padding: 22px;
+      display:flex;
+      flex-direction:column;
       gap: 16px;
     }
-    .glassCard{
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 18px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+
+    .panelTitle{
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: var(--ink);
+      margin: 0;
+      text-transform: uppercase;
     }
-    .row{
+
+    /* Guia “régua” */
+    .guideLine{
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.32);
+      background: rgba(255,255,255,.20);
+      box-shadow: var(--shadow2);
       display:flex;
       align-items:center;
-      justify-content: space-between;
-      gap: 12px;
+      justify-content:flex-start;
       flex-wrap:wrap;
-    }
-    .sectionTitle{
+      gap: 10px;
       font-weight: 900;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      opacity: .95;
+      color: rgba(6,36,63,.92);
+      letter-spacing: .7px;
     }
-    .chip{
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
-      padding: 10px 14px;
+
+    .guideLine .tag{
+      padding: 6px 10px;
       border-radius: 999px;
+      border: 1px solid rgba(6,36,63,.18);
+      background: rgba(255,255,255,.18);
+      box-shadow: 0 10px 20px rgba(0,0,0,.08);
+      white-space: nowrap;
+    }
+
+    .guideLine .sep{
+      opacity: .55;
       font-weight: 900;
-      color: rgba(234,242,255,.92);
-      min-width: 98px;
-      text-align:center;
     }
-    .desc{ margin-top: 10px; color: var(--muted); font-weight: 700; }
 
-    .grid2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 16px;
-    }
-    @media (max-width:820px){
-      .grid2{ grid-template-columns: 1fr; }
-    }
-    .box{
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: var(--shadow2);
-    }
-    .box small{ color: var(--muted); font-weight: 800; letter-spacing: 1px; }
-    .box b{ display:block; font-size: 30px; margin-top: 8px; }
-
-    /* textarea e botão */
     textarea{
       width:100%;
-      min-height: 220px;
+      min-height: 310px;
       resize: vertical;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.07);
-      color: rgba(234,242,255,.95);
-      padding: 14px;
-      font-size: 15px;
-      outline: none;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.34);
+      background: rgba(255,255,255,.16);
       box-shadow: var(--shadow2);
+      padding: 16px;
+      outline:none;
+      font-size: 16px;
+      color: var(--ink);
     }
-    textarea::placeholder{ color: rgba(234,242,255,.55); }
+
+    textarea::placeholder{ color: rgba(6,36,63,.55); }
+
     textarea:focus{
-      border-color: rgba(34,197,94,.40);
-      box-shadow: 0 0 0 3px rgba(34,197,94,.12), var(--shadow2);
+      border-color: rgba(6,36,63,.28);
+      box-shadow: 0 0 0 4px rgba(6,36,63,.10), var(--shadow2);
     }
+
     .btn{
       width:100%;
-      margin-top: 14px;
       border:none;
-      border-radius: 18px;
-      padding: 16px;
-      font-size: 20px;
-      font-weight: 900;
+      border-radius: 22px;
+      padding: 18px 18px;
       cursor:pointer;
-      color:#082012;
-      background: linear-gradient(90deg, #22c55e, #16a34a);
-      box-shadow: 0 18px 35px rgba(34,197,94,.25);
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .3px;
+      color:#fff;
+      background: linear-gradient(90deg, #0d3a66, #06243f);
+      box-shadow: 0 22px 38px rgba(6,36,63,.25);
+      transition: transform .08s ease, filter .2s ease;
     }
     .btn:hover{ filter: brightness(1.05); }
+    .btn:active{ transform: translateY(1px); }
 
-    /* inputs */
     .formRow{
       display:grid;
-      grid-template-columns: 1fr 260px;
+      grid-template-columns: 1fr 240px;
       gap: 14px;
-      margin-top: 14px;
     }
-    @media(max-width:820px){
+    @media(max-width:720px){
       .formRow{ grid-template-columns: 1fr; }
     }
-    label{ font-weight: 900; letter-spacing:.5px; }
+
+    label{
+      display:block;
+      font-weight: 900;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
     input{
       width:100%;
       padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.07);
-      color: rgba(234,242,255,.95);
-      outline: none;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.34);
+      background: rgba(255,255,255,.18);
+      box-shadow: var(--shadow2);
+      outline:none;
+      font-size: 15px;
+      color: var(--ink);
     }
     input:focus{
-      border-color: rgba(34,197,94,.40);
-      box-shadow: 0 0 0 3px rgba(34,197,94,.12);
+      border-color: rgba(6,36,63,.28);
+      box-shadow: 0 0 0 4px rgba(6,36,63,.10), var(--shadow2);
     }
   </style>
 </head>
 
 <body>
 
-  <!-- roteiro fixo -->
-  <div id="roteiroTopo">
-    <div class="linha">
-      <span class="rotulo">Ordem:</span>
-      <span class="item">Data da Coleta</span><span class="sep">|</span>
-      <span class="item">Data de Nascimento</span><span class="sep">|</span>
-      <span class="item">Cartão SUS</span><span class="sep">|</span>
-      <span class="item">Telefone</span><span class="sep">|</span>
-      <span class="item">Rua</span><span class="sep">|</span>
-      <span class="item">Bairro</span><span class="sep">|</span>
-      <span class="item">Cidade</span><span class="sep">|</span>
-      <span class="item">CEP</span><span class="sep">|</span>
-      <span class="item">Responsável (SNM/EAM)</span>
-    </div>
-  </div>
-
   <header>
-    <div class="topbar">
-      <div class="brand">
-        <div class="logoBox">
-          <img src="logo/logotipo.png" alt="Logotipo" />
-        </div>
-        <div class="titulos">
-          <h1>Sistema de Laudos</h1>
-          <div class="subtitulo">SI - Sistema de Informação . Laudos.</div>
-        </div>
-      </div>
-
-      <div class="topActions">
-        <button class="pill on" id="btnProf">Modo Profissional</button>
-        <button class="pill on" id="btnPopupCentral">Popup Central</button>
+    <div class="headRow">
+      <img class="topLogo" src="logo/sesctopo.png" alt="SESC Topo">
+      <div class="headTitle">
+        <h1 class="sysName">Sistema de Laudos</h1>
+        <p class="sysSub">SI - Sistema de Informação . Laudos.</p>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- STATUS -->
-    <section class="glassCard">
-      <div class="row">
-        <div class="sectionTitle">STATUS DO SISTEMA</div>
-        <div class="chip">Online</div>
-      </div>
-      <div class="desc">Laudo abre em janela central (compacta). Se popup for bloqueado, abre na mesma aba.</div>
+    <section class="glass panel" aria-label="Digitação rápida">
+      <h2 class="panelTitle">Digitação rápida</h2>
 
-      <div class="grid2">
-        <div class="box">
-          <small>JANELA</small>
-          <b id="txtJanela">Central</b>
-        </div>
-        <div class="box">
-          <small>TAMANHO</small>
-          <b id="txtTam">Compacto</b>
-        </div>
-      </div>
-    </section>
-
-    <!-- DIGITAÇÃO -->
-    <section class="glassCard">
-      <div class="sectionTitle">DIGITAÇÃO RÁPIDA</div>
-      <div class="desc" style="margin-top:8px;">
-        Cole os dados do paciente e clique para extrair e abrir o laudo.
+      <div class="guideLine" aria-label="Guia de digitação">
+        <span class="tag">DC</span><span class="sep">|</span>
+        <span class="tag">DN</span><span class="sep">|</span>
+        <span class="tag">CN</span><span class="sep">|</span>
+        <span class="tag">TEL</span><span class="sep">|</span>
+        <span class="tag">RUA</span><span class="sep">|</span>
+        <span class="tag">CEP</span><span class="sep">|</span>
+        <span class="tag">RES</span>
+        <span class="sep">=</span>
+        <span class="tag">SNM</span><span class="sep">|</span>
+        <span class="tag">EAM</span>
       </div>
 
       <textarea id="textoDigitacao" placeholder="Cole aqui os dados do paciente conforme a ordem acima..."></textarea>
 
-      <button class="btn" id="btnExtrair">EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO</button>
+      <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR</button>
 
       <div class="formRow">
         <div>
           <label>Paciente</label>
-          <input id="nome" placeholder="NOME COMPLETO"/>
+          <input id="nome" placeholder="NOME COMPLETO" />
         </div>
         <div>
           <label>Nº Exame</label>
-          <input id="exame" placeholder="000156/2026"/>
+          <input id="exame" placeholder="000156/2026" />
         </div>
       </div>
     </section>
   </main>
 
   <script>
-    const $ = (id)=>document.getElementById(id);
-
-    // ✅ CONFIG: caminho do laudo
-    const LAUDO_URL = "laudo.html"; // <- TROQUE se o arquivo tiver outro nome
-
-    // Estados
-    let modoProfissional = true;
-    let popupCentral = true;
-
-    // Exame: aceita 000156/2026 ou 000156.2026 ou 000156-2026
-    function detectarExame(texto){
-      const m = texto.match(/(\d{3,6})\s*[\/\.\-]\s*(\d{4})/);
-      if(!m) return "";
-      return `${m[1].padStart(6,"0")}/${m[2]}`;
-    }
-
-    // ✅ abre popup central/compacto e com fallback
-    function abrirLaudoPopout(params){
-      const query = new URLSearchParams(params).toString();
-      const url = `${LAUDO_URL}?${query}`;
-
-      // tamanho compacto
-      const w = 980;
-      const h = 720;
-
-      // posição central
-      const left = Math.max(0, (window.screen.width - w) / 2);
-      const top  = Math.max(0, (window.screen.height - h) / 2);
-
-      let features = `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`;
-
-      const win = window.open(url, "LAUDO_POPUP", features);
-
-      // fallback se bloqueado
-      if (!win || win.closed || typeof win.closed === "undefined") {
-        window.location.href = url;
-        return;
-      }
-
-      win.focus();
-    }
-
-    // Botões do topo
-    $("btnProf").addEventListener("click", () => {
-      modoProfissional = !modoProfissional;
-      $("btnProf").classList.toggle("on", modoProfissional);
-    });
-
-    $("btnPopupCentral").addEventListener("click", () => {
-      popupCentral = !popupCentral;
-      $("btnPopupCentral").classList.toggle("on", popupCentral);
-      $("txtJanela").textContent = popupCentral ? "Central" : "Normal";
-    });
-
-    $("btnExtrair").addEventListener("click", ()=>{
-      const texto = $("textoDigitacao").value.trim();
-      if(!texto){
-        alert("Cole os dados da digitação rápida.");
-        return;
-      }
-
-      const linhas = texto.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
-      const exame = detectarExame(texto);
-      const nome = linhas[0] || "";
-
-      $("nome").value = nome;
-      if(exame) $("exame").value = exame;
-
-      // ✅ envia dados pro laudo
-      const params = {
-        nome: nome,
-        exame: exame || $("exame").value || "",
-        modo: modoProfissional ? "prof" : "simples",
-        origem: "principal"
-      };
-
-      if (popupCentral) abrirLaudoPopout(params);
-      else window.location.href = `${LAUDO_URL}?${new URLSearchParams(params).toString()}`;
-    });
+    // Layout ok. Depois corrigimos o extrair.
   </script>
 </body>
 </html>
