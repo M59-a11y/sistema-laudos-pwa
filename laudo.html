@@ -146,7 +146,7 @@
     font-size:12pt;
     margin-bottom:8px;
   }
-  #obs_texto{
+  #obs_texto_tela{
     width:100%;
     min-height:110px;
     resize:vertical;
@@ -182,13 +182,13 @@
       object-fit:cover;
     }
 
-    /* ✅ Conteúdo por cima do timbre */
+    /* ✅ Conteúdo por cima do timbre (MANTIDO) */
     .print-page{
       position:relative;
       z-index:2;
       margin: 0;
 
-      /* ✅ SUAS ALTERAÇÕES (mantidas) */
+      /* ✅ SUAS ALTERAÇÕES MANTIDAS */
       padding: 50mm 18mm 22mm 18mm;
 
       box-sizing:border-box;
@@ -231,7 +231,7 @@
     display:grid;
     grid-template-columns: 1.2fr 0.8fr;
 
-    /* ✅ SUAS ALTERAÇÕES (mantidas) */
+    /* ✅ SUAS ALTERAÇÕES MANTIDAS */
     gap: 6px 60px;
     font-family:"Arial Narrow";
     font-size:8pt;
@@ -391,11 +391,10 @@
       </div>
     </div>
 
-    <!-- ✅ Observação na TELA: com opções padrão -->
+    <!-- ✅ Observação na TELA -->
     <div class="obs-wrap">
       <div class="obs-title">Observação:</div>
 
-      <!-- ✅ OPÇÕES PADRÃO -->
       <div class="op-col" style="margin-bottom:10px;">
         <label><input type="radio" name="obs_opt" value="Tratar e repetir." onclick="aplicarObs(this.value)"> Tratar e repetir.</label>
         <label><input type="radio" name="obs_opt" value="Alterações celulares importantes. Tratar e repetir." onclick="aplicarObs(this.value)"> Alterações celulares importantes. Tratar e repetir.</label>
@@ -404,7 +403,7 @@
         <label><input type="radio" name="obs_opt" value="Padrão epitelial ainda trófico." onclick="aplicarObs(this.value)"> Padrão epitelial ainda trófico.</label>
       </div>
 
-      <textarea id="obs_texto" placeholder="Caso necessário, digite a observação aqui..." oninput="setObsPrint(this.value)"></textarea>
+      <textarea id="obs_texto_tela" placeholder="Caso necessário, digite a observação aqui..."></textarea>
     </div>
   </div>
 
@@ -475,7 +474,6 @@
         <span id="p_res_concl" class="concl-resposta-bloco"></span>
       </div>
 
-      <!-- ✅ Observação no PRINT: só aparece se tiver -->
       <div class="secao-print" id="obs_print_wrap">
         <strong>Observação:</strong>
         <span id="obs_print"></span>
@@ -509,7 +507,6 @@
     void document.body.offsetHeight;
   }
 
-  // ✅ Observação no PRINT
   function setObsPrint(texto){
     const wrap = document.getElementById("obs_print_wrap");
     const el = document.getElementById("obs_print");
@@ -526,9 +523,8 @@
     }
   }
 
-  // ✅ Aplica opção padrão na Observação
   function aplicarObs(txt){
-    const obs = document.getElementById("obs_texto");
+    const obs = document.getElementById("obs_texto_tela");
     if(!obs) return;
     obs.value = txt;
     setObsPrint(txt);
@@ -564,8 +560,14 @@
     document.getElementById("data_coleta_print").textContent = init.data_coleta;
     document.getElementById("nome_resp_print").textContent = init.responsavel;
 
-    document.getElementById("obs_texto").value = init.observacao;
-    setObsPrint(init.observacao);
+    // ✅ Observação vem do sistema principal (se houver)
+    const obsTela = document.getElementById("obs_texto_tela");
+    if(obsTela){
+      obsTela.value = init.observacao || "";
+      setObsPrint(obsTela.value);
+    }else{
+      setObsPrint(init.observacao || "");
+    }
 
     const now = new Date();
     const dia = now.getDate();
@@ -630,9 +632,13 @@
       elResConcl.textContent = "";
     }
 
+    // ✅ garante observação do textarea da tela
+    setObsPrint(document.getElementById("obs_texto_tela")?.value || "");
+
     preencherCabecalhoPrint();
   }
 
+  /* ===== Exportação no padrão do sistema ===== */
   function mesChaveAtual(){
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -715,8 +721,8 @@
       atualizar();
       forceReflow();
 
-      // ✅ GARANTIA OBSERVAÇÃO antes de imprimir
-      setObsPrint(document.getElementById("obs_texto")?.value || "");
+      // ✅ GARANTE observação antes de imprimir
+      setObsPrint(document.getElementById("obs_texto_tela")?.value || "");
 
       window.print();
       setTimeout(() => { document.title = tituloOriginal; }, 1200);
@@ -727,8 +733,8 @@
   function buildWordHTML(){
     atualizar();
 
-    // ✅ GARANTIA OBSERVAÇÃO antes de montar Word
-    setObsPrint(document.getElementById("obs_texto")?.value || "");
+    // ✅ GARANTE observação antes de Word
+    setObsPrint(document.getElementById("obs_texto_tela")?.value || "");
 
     const bloco = document.querySelector(".print-only .print-page");
     const clone = bloco.cloneNode(true);
@@ -754,8 +760,8 @@
       }
     }catch(e){ console.error(e); }
 
-    // ✅ GARANTIA OBSERVAÇÃO antes de gerar Word
-    setObsPrint(document.getElementById("obs_texto")?.value || "");
+    // ✅ GARANTE observação antes de gerar Word
+    setObsPrint(document.getElementById("obs_texto_tela")?.value || "");
 
     const htmlWord = buildWordHTML();
     const doc =
@@ -775,14 +781,14 @@
     setTimeout(() => voltarSistema(), 700);
   }
 
-  // ✅ Ativação EXTRA: se por algum motivo oninput falhar, ainda funciona
+  // ✅ Ligação garantida do input no textarea
   (function ativarObservacao(){
-    const obs = document.getElementById("obs_texto");
+    const obs = document.getElementById("obs_texto_tela");
     if(!obs) return;
 
     obs.addEventListener("input", () => setObsPrint(obs.value));
 
-    // inicialização
+    // aplica na inicialização
     setObsPrint(obs.value || init.observacao || "");
   })();
 
