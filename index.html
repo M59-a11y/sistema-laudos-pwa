@@ -144,7 +144,7 @@ SNM"></textarea>
   </div>
 
   <div class="muted">
-    ✅ Após extrair, o laudo abre automaticamente em outra aba com todos os dados enviados.
+    ✅ Após extrair, o laudo abre automaticamente com todos os dados enviados.
   </div>
 </div>
 
@@ -245,7 +245,7 @@ function extrairRapidoOrdemCorrigido(){
   if(resp) document.getElementById("responsavel").value = resp;
 }
 
-/* ✅ ABRIR LAUDO */
+/* ✅ ABRIR LAUDO (CORRIGIDO COM RETURN) */
 function abrirLaudo(){
   const paciente = up(document.getElementById('paciente').value);
   const exame = up(document.getElementById('exame').value);
@@ -260,6 +260,9 @@ function abrirLaudo(){
   const responsavel = up(document.getElementById('responsavel').value);
   const observacao = (document.getElementById('observacao').value || "").trim();
 
+  // ✅ URL de retorno para o laudo voltar automaticamente
+  const returnUrl = window.location.href;
+
   const params = new URLSearchParams({
     paciente, exame,
     data_coleta: dataColeta,
@@ -267,11 +270,15 @@ function abrirLaudo(){
     cartao_sus: cartaoSus,
     telefone, rua, bairro, cidade, cep,
     responsavel,
-    observacao
+    observacao,
+    return: returnUrl
   });
 
-  /* ✅ ALTERAÇÃO PRINCIPAL: ABRE O FORMULÁRIO CORRETO */
-  window.open('laudo.html?' + params.toString(), '_blank');
+  // ✅ caminho do arquivo do laudo no GitHub
+  const laudoPath = "laudo.html";
+
+  // ✅ abre na MESMA ABA para o retorno funcionar perfeito
+  window.location.href = laudoPath + "?" + params.toString();
 }
 
 /* ✅ REGISTRO SERVICE WORKER (PWA) */
