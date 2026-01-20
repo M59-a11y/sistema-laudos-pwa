@@ -499,16 +499,17 @@
   }
 
   function setObsPrint(texto){
-    const wrap = document.getElementById("obs_print_wrap");
-    const el = document.getElementById("obs_print");
-    const t = (texto||"").trim();
-    if(t){
-      wrap.style.display = "block";
-      el.textContent = " " + t;
-    }else{
-      wrap.style.display = "none";
-      el.textContent = "";
-    }
+  const wrap = document.getElementById("obs_print_wrap");
+  const el = document.getElementById("obs_print");
+  const t = (texto||"").trim();
+
+  if(t){
+    wrap.style.display = "block";
+    el.textContent = " " + t;
+  }else{
+    wrap.style.display = "none";
+    el.textContent = "";
+  }
   }
 
   const params = new URLSearchParams(window.location.search);
@@ -747,6 +748,7 @@
 
 </body>
 </html>
+
 
 
 
