@@ -41,7 +41,6 @@
     border-radius:6px;
   }
   .btn-print{ background:#28a745;color:#fff; }
-  .btn-pdfreal{ margin-top:10px;background:#0078d7;color:#fff; }
   .btn-clear{ margin-top:10px;background:#eee; }
 
   /* ===== FOLHA ===== */
@@ -229,13 +228,24 @@
     font-size:10pt;
   }
 
-  /* ✅ PRINT PERFEITO */
+  /* ✅ PRINT PERFEITO + sem folha extra */
   @media print{
     body{ background:#fff; padding:0; }
     .controles{ display:none !important; }
-    .folha{ box-shadow:none; width:100%; margin:0; padding:10mm; min-height:auto !important; height:auto !important; }
+
+    /* ✅ remove min-height só no print pra não criar folha em branco */
+    .folha{
+      box-shadow:none;
+      width:100%;
+      margin:0;
+      padding:10mm;
+      min-height:auto !important;
+      height:auto !important;
+    }
+
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
+
     @page{ size:A4; margin:10mm; }
   }
 </style>
@@ -246,13 +256,12 @@
 <div class="folha">
 
   <!-- =========================
-       ✅ TELA: FORM COMPLETO
+       ✅ TELA: SOMENTE PAINEL
        ========================= -->
   <div class="no-print">
     <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
 
     <div class="painel">
-
       <!-- 1 -->
       <div class="sec">
         <div class="sec-title">1. Avaliação Pré Analítica</div>
@@ -330,29 +339,29 @@
           <div class="lbl">CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO:</div>
         </div>
         <div class="grupo">
-          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="— ESCAMOSAS: Possivelmente não neoplásicas (ASC-US)." value="ASC-US" onchange="atualizar()"> ESCAMOSAS (ASC-US)</label>
-          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="— ESCAMOSAS: Não se pode afastar lesão intra-epitelial de alto grau (ASC-H)." value="ASC-H" onchange="atualizar()"> ESCAMOSAS (ASC-H)</label>
-          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="— GLANDULARES: Possivelmente não neoplásicas." value="GLANDULARES: Possivelmente não neoplásicas" onchange="atualizar()"> GLANDULARES: Possivelmente não neoplásicas</label>
-          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="— GLANDULARES: Não se pode afastar alto grau." value="GLANDULARES: Não se pode afastar alto grau" onchange="atualizar()"> GLANDULARES: Não se pode afastar alto grau</label>
+          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Escamosas: possivelmente não neoplásicas (ASC-US)" value="ASC-US" onchange="atualizar()"> ESCAMOSAS (ASC-US)</label>
+          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Escamosas: não se pode afastar lesão intra-epitelial de alto grau (ASC-H)" value="ASC-H" onchange="atualizar()"> ESCAMOSAS (ASC-H)</label>
+          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: possivelmente não neoplásicas" value="GLANDULARES: Possivelmente não neoplásicas" onchange="atualizar()"> GLANDULARES: Possivelmente não neoplásicas</label>
+          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: não se pode afastar lesão de alto grau" value="GLANDULARES: Não se pode afastar alto grau" onchange="atualizar()"> GLANDULARES: Não se pode afastar alto grau</label>
         </div>
 
         <div class="linha" style="margin-top:10px;">
           <div class="lbl">ATIPIAS EM CÉLULAS ESCAMOSAS:</div>
         </div>
         <div class="grupo">
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="— Lesão intra-epitelial de baixo grau (compreendendo efeito citopático pelo vírus HPV e neoplasia intra-epitelial cervical grau I - NIC I)." value="NIC I" onchange="atualizar()"> BAIXO GRAU (HPV / NIC I)</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="— Lesão intra-epitelial de alto grau (NIC II e III)." value="NIC II / III" onchange="atualizar()"> ALTO GRAU (NIC II / III)</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="— Carcinoma epidermóide invasor." value="Carcinoma" onchange="atualizar()"> Carcinoma epidermóide invasor</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Lesão intra-epitelial de baixo grau (compreendendo efeito citopático pelo vírus HPV e neoplasia intra-epitelial cervical grau I - NIC I)" value="NIC I" onchange="atualizar()"> BAIXO GRAU (HPV / NIC I)</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Lesão intra-epitelial de alto grau (NIC II e III)" value="NIC II / III" onchange="atualizar()"> ALTO GRAU (NIC II / III)</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Carcinoma epidermóide invasor" value="Carcinoma" onchange="atualizar()"> Carcinoma epidermóide invasor</label>
         </div>
 
         <div class="linha" style="margin-top:10px;">
           <div class="lbl">ATIPIAS EM CÉLULAS GLANDULARES:</div>
         </div>
         <div class="grupo">
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="— Adenocarcinoma 'in situ'." value="Adenocarcinoma 'in situ'" onchange="atualizar()"> Adenocarcinoma "in situ"</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="— Adenocarcinoma invasor, cervical." value="Adenocarcinoma cervical" onchange="atualizar()"> Adenocarcinoma invasor, cervical</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="— Adenocarcinoma invasor, endometrial." value="Adenocarcinoma endometrial" onchange="atualizar()"> Adenocarcinoma invasor, endometrial</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="— Adenocarcinoma invasor, SOE." value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma 'in situ'" value="Adenocarcinoma 'in situ'" onchange="atualizar()"> Adenocarcinoma "in situ"</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, cervical" value="Adenocarcinoma cervical" onchange="atualizar()"> Adenocarcinoma invasor, cervical</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, endometrial" value="Adenocarcinoma endometrial" onchange="atualizar()"> Adenocarcinoma invasor, endometrial</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, SOE" value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
         </div>
       </div>
 
@@ -375,17 +384,19 @@
 
   </div><!-- /no-print -->
 
-  <!-- ✅ PRINT ONLY (seu laudo completo perfeito - mantido) -->
+  <!-- =========================
+       ✅ IMPRESSÃO: LAUDO COMPLETO
+       ========================= -->
   <div class="print-only">
 
     <div class="cab-paciente">
       <div class="cab-row1">
         <div class="cab-left">
-          <div class="cab-lbl">Paciente</div>
+          <div class="cab-lbl">PACIENTE</div>
           <div class="cab-nome" id="cab_nome"></div>
         </div>
         <div class="cab-right">
-          <div class="cab-lbl">Nº do Exame</div>
+          <div class="cab-lbl">Nº DO EXAME</div>
           <div class="cab-exame" id="cab_exame"></div>
         </div>
       </div>
@@ -457,18 +468,16 @@
     </div>
   </div>
 
-</div>
+</div><!-- /folha -->
 
+<!-- ✅ BOTÕES -->
 <div class="controles no-print">
-  <button class="btn btn-print" onclick="imprimirSalvarPdf()">IMPRIMIR (LAYOUT PERFEITO)</button>
-  <button class="btn btn-pdfreal" onclick="gerarPdfRealEditavel()">GERAR PDF REAL (EDITÁVEL)</button>
+  <button class="btn btn-print" onclick="imprimirLaudo()">IMPRIMIR / SALVAR PDF</button>
   <button class="btn btn-clear" onclick="location.reload()">LIMPAR</button>
 </div>
 
-<!-- ✅ pdf-lib -->
-<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-
 <script>
+  function onlyDigits(s){ return (s||"").replace(/\D/g,''); }
   function up(v){ return (v||"").toUpperCase().trim(); }
   function sanitizeFileName(name){
     return (name||"").replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim();
@@ -493,8 +502,9 @@
     setObsPrint(txt);
   }
 
-  // ===== INIT =====
+  // ===== INIT DADOS DO SISTEMA PRINCIPAL =====
   const params = new URLSearchParams(window.location.search);
+
   const init = {
     paciente: up(params.get("paciente")),
     exame: up(params.get("exame")),
@@ -526,6 +536,7 @@
   document.getElementById("obs_texto").value = init.observacao;
   setObsPrint(init.observacao);
 
+  // Rodapé com data completa
   const hoje = new Date();
   const dia = hoje.getDate();
   const mes = hoje.toLocaleDateString("pt-BR",{month:"long"});
@@ -534,9 +545,11 @@
 
   function atualizar(){
     const checksEpi = document.querySelectorAll('.epi:checked');
+    const zonaSim = document.getElementById('zona_sim');
+    const zonaNao = document.getElementById('zona_nao');
 
-    if (checksEpi.length > 1) document.getElementById('zona_sim').checked = true;
-    else if (checksEpi.length === 1) document.getElementById('zona_nao').checked = true;
+    if (checksEpi.length > 1) zonaSim.checked = true;
+    else if (checksEpi.length === 1) zonaNao.checked = true;
 
     document.getElementById('p_adeq').textContent = document.querySelector('input[name="adeq"]:checked')?.value || '';
     document.getElementById('p_epi').textContent = Array.from(checksEpi).map(c => c.value).join(", ");
@@ -579,7 +592,7 @@
     }
   }
 
-  // ✅ Storage positivos
+  // ===== Exportação no padrão do sistema =====
   function mesChaveAtual(){
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -624,14 +637,14 @@
     return sanitizeFileName(`${exameSeguro} ${nome}`);
   }
 
-  function limparEVoltarSistema(){
+  function voltarSistema(){
     const returnUrl = params.get("return");
     if(returnUrl){ window.location.href = returnUrl; return; }
     if(window.history.length > 1){ window.history.back(); return; }
   }
 
-  // ✅ Imprimir normal (layout perfeito)
-  function imprimirSalvarPdf(){
+  // ✅ IMPRIMIR (sugere nome + exporta + volta)
+  function imprimirLaudo(){
     atualizar();
 
     const sugerido = nomeArquivoSugerido();
@@ -660,133 +673,10 @@
 
     window.print();
 
-    setTimeout(() => { document.title = tituloOriginal; }, 1500);
-    setTimeout(() => limparEVoltarSistema(), 700);
+    setTimeout(() => { document.title = tituloOriginal; }, 1200);
+    setTimeout(() => voltarSistema(), 700);
   }
 
-  // ✅ PDF REAL (1 folha)
-  async function gerarPdfRealEditavel(){
-    atualizar();
-
-    const sugerido = nomeArquivoSugerido();
-    const digitado = prompt("Nome do arquivo (PDF REAL):", sugerido);
-    if(digitado === null) return;
-    const nomeFinal = (digitado || sugerido).trim() || sugerido;
-
-    // exporta positivo se for
-    try{
-      const concl = document.querySelector('input[name="c"]:checked');
-      if(concl && concl.value !== "NEGATIVO"){
-        const payload = {
-          exame: init.exame,
-          nome: init.paciente,
-          telefone: init.telefone,
-          categoria: concl.getAttribute("data-tit") || "",
-          subcategoria: (concl.getAttribute("data-full") || concl.value || "").trim()
-        };
-        salvarCasoPositivoNoStorage(payload);
-        gerarArquivoExportacaoMes();
-      }
-    }catch(e){ console.error(e); }
-
-    const { PDFDocument, StandardFonts } = PDFLib;
-
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([595.28, 841.89]); // A4
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-    let y = 810;
-    const x = 45;
-
-    function line(txt, size=10, gap=14){
-      page.drawText(txt, { x, y, size, font });
-      y -= gap;
-    }
-
-    // Cabeçalho
-    line(`PACIENTE: ${init.paciente}`, 12, 18);
-    line(`Nº DO EXAME: ${init.exame.replaceAll("/", ".")}`, 12, 18);
-    y -= 4;
-
-    line(`DATA DE NASCIMENTO: ${init.data_nascimento}`);
-    line(`CARTÃO SUS: ${init.cartao_sus}`);
-    line(`RUA: ${init.rua}`);
-    line(`TELEFONE: ${init.telefone}`);
-    line(`BAIRRO: ${init.bairro}`);
-    line(`CIDADE: ${init.cidade}`);
-    line(`CEP: ${init.cep}`);
-    y -= 8;
-
-    line("CONVÊNIO: UNIDADE MÓVEL SESC SAÚDE MULHER", 10);
-    line("EXAME REALIZADO: CITOPATOLÓGICO CÉRVICO-VAGINAL/MICROFLORA", 10);
-    line(`DATA DA COLETA: ${init.data_coleta}`, 10);
-    line(`RESPONSÁVEL: ${init.responsavel}`, 10);
-    y -= 12;
-
-    line("LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO", 12, 20);
-    y -= 8;
-
-    // Corpo do laudo (texto real)
-    line("AVALIAÇÃO PRÉ-ANALÍTICA", 11, 18);
-    line(`ADEQUABILIDADE DO MATERIAL: ${document.getElementById('p_adeq')?.textContent || ""}`);
-    line(`EPITÉLIOS REPRESENTADOS NA AMOSTRA: ${document.getElementById('p_epi')?.textContent || ""}`);
-    line(`REPRESENTATIVIDADE DA ZONA DE TRANSFORMAÇÃO: ${document.getElementById('p_zona')?.textContent || ""}`);
-    y -= 8;
-
-    line("DIAGNÓSTICO DESCRITIVO", 11, 18);
-    line(`${document.getElementById('p_res_diag')?.textContent || ""}`);
-    y -= 8;
-
-    line("MICROBIOLOGIA", 11, 18);
-    line(`${document.getElementById('p_res_micro')?.textContent || ""}`);
-    y -= 8;
-
-    line("CONCLUSÃO", 11, 18);
-    const conclTxt = (document.getElementById('p_res_concl')?.textContent || "").split("\n");
-    for(const c of conclTxt){
-      line(c);
-    }
-
-    const obs = (document.getElementById("obs_texto")?.value || "").trim();
-    if(obs){
-      y -= 8;
-      line("OBSERVAÇÃO", 11, 18);
-      // quebra simples
-      const words = obs.split(/\s+/);
-      let cur = "";
-      for(const w of words){
-        const test = (cur ? cur + " " : "") + w;
-        if(test.length > 90){
-          line(cur);
-          cur = w;
-        }else cur = test;
-      }
-      if(cur) line(cur);
-    }
-
-    y = 110;
-    line(`João Pessoa, ${dia} de ${mes} de ${ano}`, 10, 14);
-    y -= 10;
-    line("Dra. Daniele Carvalho Macêdo", 11, 14);
-    line("CRM 12077 PB", 10, 14);
-
-    // salva
-    const bytes = await pdfDoc.save();
-    const blob = new Blob([bytes], { type: "application/pdf" });
-
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${nomeFinal}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(a.href);
-
-    setTimeout(() => limparEVoltarSistema(), 700);
-  }
-
-  window.imprimirSalvarPdf = imprimirSalvarPdf;
-  window.gerarPdfRealEditavel = gerarPdfRealEditavel;
   window.atualizar = atualizar;
 </script>
 
