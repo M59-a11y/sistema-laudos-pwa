@@ -161,16 +161,13 @@
   /* ===== PRINT ===== */
   .print-only{ display:none; }
 
-  /* ✅ AQUI está a mudança MAIS IMPORTANTE:
-     - fundo timbrado FIXO no print (não se move)
-     - conteúdo com margens padrão (não muda) */
   @media print{
     body{ background:#fff; padding:0; margin:0; }
     .controles{ display:none !important; }
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
 
-    /* ✅ fundo timbrado fixo (ultra estável) */
+    /* ✅ Fundo timbrado fixo */
     .print-bg{
       position:fixed;
       inset:0;
@@ -185,17 +182,20 @@
       object-fit:cover;
     }
 
-    /* ✅ conteúdo sempre por cima */
+    /* ✅ Conteúdo por cima do timbre
+       ✅ DESCE mais para ficar abaixo do logo SESC */
     .print-page{
       position:relative;
       z-index:2;
       margin: 0;
-      padding: 28mm 18mm 20mm 18mm; /* ✅ padrão laudo profissional */
+
+      /* ✅ descer conteúdo (antes 28mm/40mm, agora 44mm) */
+      padding: 44mm 18mm 22mm 18mm;
+
       box-sizing:border-box;
       font-family:"Arial Narrow", Arial, sans-serif;
     }
 
-    /* Remove sombras/tamanhos fixos */
     .folha{ box-shadow:none; width:auto; min-height:auto; padding:0; }
 
     @page{ size:A4; margin:0; }
@@ -212,35 +212,39 @@
   .cab-left{ flex:1; }
   .cab-right{ min-width:220px; text-align:right; }
 
+  /* ✅ maior */
   .cab-lbl2{
-    font-size:12pt;
+    font-size:13pt;
     font-weight:700;
     text-transform:uppercase;
     font-family:"Arial Narrow", Arial, sans-serif;
   }
 
+  /* ✅ maior */
   .cab-nome, .cab-exame{
-    font-size:11.8pt;
+    font-size:12.6pt;
     font-weight:700;
     text-transform:uppercase;
     font-family:"Arial Narrow", Arial, sans-serif;
-    line-height:1.15;
+    line-height:1.2;
   }
 
+  /* ✅ maior */
   .cab-row2{
     margin-top:10px;
     display:grid;
     grid-template-columns: 1.2fr 0.8fr;
     gap: 6px 40px;
     font-family:"Arial Narrow", Arial, sans-serif;
-    font-size:10pt;
+    font-size:11pt;
     text-transform:uppercase;
     font-weight:400;
   }
 
+  /* ✅ maior */
   .linha-identificacao{
     font-family:"Arial Narrow", Arial, sans-serif;
-    font-size:10.5pt;
+    font-size:11.5pt;
     text-transform:uppercase;
     margin-bottom:4px;
     display:flex;
@@ -249,23 +253,26 @@
     white-space:nowrap;
   }
 
+  /* ✅ maior */
   .secao-print{
     margin-bottom:12px;
     line-height:1.55;
     font-family:"Arial Narrow", Arial, sans-serif;
-    font-size:10.5pt;
+    font-size:11.5pt;
     text-align:justify;
   }
+
   .tit-negrito{ font-weight:800; text-transform:uppercase; }
   .tit-normal-caps{ font-weight:400; text-transform:uppercase; }
   .concl-resposta-bloco{ white-space:pre-line; font-weight:400; display:block; margin-top:2px; }
+
   #obs_print_wrap{ display:none; }
 
   .rodape-prof{
     margin-top:18px;
     text-align:center;
     font-family:"Arial Narrow", Arial, sans-serif;
-    font-size:10.5pt;
+    font-size:11.5pt;
   }
 </style>
 </head>
@@ -385,7 +392,6 @@
       </div>
     </div>
 
-    <!-- Observação -->
     <div class="obs-wrap">
       <div class="obs-title">Observação:</div>
       <textarea id="obs_texto" placeholder="Caso necessário, digite a observação aqui..." oninput="setObsPrint(this.value)"></textarea>
