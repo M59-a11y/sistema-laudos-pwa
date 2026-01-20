@@ -510,7 +510,7 @@ function abrirLaudo(){
     `width=${w},height=${h},left=${left},top=${top},` +
     `resizable=yes,scrollbars=yes,status=no,toolbar=no,menubar=no,location=no`;
 
-  const popup = window.location.href = url;
+  const popup = LAUDO_POPUP = window.open(url, "LAUDO_POPUP", specs);
   if(!popup){
     window.location.href = url;
     return;
@@ -530,4 +530,5 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
+
 
