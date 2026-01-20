@@ -27,19 +27,17 @@
       height:100%;
       margin:0;
       padding:0;
-      overflow: hidden !important; /* tira qualquer scroll */
+      overflow: hidden !important;
     }
 
     body{
       font-family: Arial, sans-serif;
       color: var(--ink);
-
-      /* ✅ degradê */
       background: linear-gradient(90deg, var(--verde1) 0%, var(--verde2) 22%, var(--azul1) 70%, var(--azul2) 100%);
       position: relative;
     }
 
-    /* watermark do sesctopo */
+    /* watermark */
     body::before{
       content:"";
       position: absolute;
@@ -50,21 +48,18 @@
       z-index:0;
     }
 
-    /* container fixo para 1920x1080 */
+    header, main{ position:relative; z-index:1; }
+
     .screen{
-      position: relative;
-      z-index: 1;
       width: 100%;
       height: 100%;
       padding: 22px 34px;
-      display: flex;
-      flex-direction: column;
+      display:flex;
+      flex-direction:column;
       gap: 12px;
     }
 
-    /* ===========================
-       TOPO
-    =========================== */
+    /* TOPO */
     header{
       flex: 0 0 auto;
       display:flex;
@@ -72,7 +67,6 @@
       gap:16px;
       padding-bottom: 4px;
     }
-
     .topLogo{
       height: 56px;
       width:auto;
@@ -80,7 +74,6 @@
       display:block;
       filter: drop-shadow(0 12px 20px rgba(0,0,0,.10));
     }
-
     .sysOnly{
       margin:0;
       font-size: 34px;
@@ -91,20 +84,18 @@
       text-shadow: 0 16px 32px rgba(0,0,0,.10);
     }
 
-    /* ===========================
-       CENTRO
-    =========================== */
+    /* CENTRO */
     main{
       flex: 1 1 auto;
       display:flex;
       align-items:center;
       justify-content:center;
-      min-height: 0; /* importante p/ não estourar altura */
+      min-height: 0;
     }
 
     .glass{
-      width: 980px;              /* ✅ perfeito para 1920 */
-      height: 760px;             /* ✅ cabe sem scroll */
+      width: 980px;
+      height: 760px;
       border-radius: 32px;
       border: 1px solid var(--stroke);
       background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
@@ -152,7 +143,6 @@
       letter-spacing: .7px;
       flex: 0 0 auto;
     }
-
     .guideLine .tag{
       padding: 7px 12px;
       border-radius: 999px;
@@ -161,18 +151,16 @@
       box-shadow: 0 10px 20px rgba(0,0,0,.08);
       white-space: nowrap;
     }
-
     .guideLine .sep{
       opacity: .55;
       font-weight: 900;
     }
 
-    /* textarea sem scroll na página (apenas ela interna pode ser editada) */
     textarea{
       width:100%;
       flex: 1 1 auto;
-      min-height: 0;                 /* ✅ evita estourar */
-      resize: none;                  /* ✅ sem puxar tamanho */
+      min-height: 0;
+      resize: none;
       border-radius: 22px;
       border: 1px solid rgba(255,255,255,.34);
       background: rgba(255,255,255,.16);
@@ -182,7 +170,7 @@
       font-size: 17px;
       color: var(--ink);
       line-height: 1.35;
-      overflow: auto; /* rola só dentro se texto passar (sem scroll da página) */
+      overflow: auto;
     }
 
     textarea::placeholder{ color: rgba(6,36,63,.55); }
@@ -210,39 +198,8 @@
     .btn:hover{ filter: brightness(1.05); }
     .btn:active{ transform: translateY(1px); }
 
-    .formRow{
-      display:grid;
-      grid-template-columns: 1fr 260px;
-      gap: 16px;
-      flex: 0 0 auto;
-    }
-
-    label{
-      display:block;
-      font-weight: 900;
-      margin-bottom: 7px;
-      color: var(--ink);
-      font-size: 16px;
-    }
-
-    input{
-      width:100%;
-      padding: 13px 14px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.34);
-      background: rgba(255,255,255,.18);
-      box-shadow: var(--shadow2);
-      outline:none;
-      font-size: 16px;
-      color: var(--ink);
-    }
-    input:focus{
-      border-color: rgba(6,36,63,.28);
-      box-shadow: 0 0 0 4px rgba(6,36,63,.10), var(--shadow2);
-    }
-
-    /* mata definitivamente qualquer sobra antiga */
-    .footHint, .checks, .statusHint, .hintFooter{ display:none !important; }
+    /* ✅ ANTI-SOBRA: caso ainda exista no seu HTML antigo */
+    .formRow, .checks, .footHint, .statusHint, .hintFooter{ display:none !important; }
   </style>
 </head>
 
@@ -273,25 +230,72 @@
 
         <textarea id="textoDigitacao" placeholder="Cole aqui os dados do paciente conforme a ordem acima..."></textarea>
 
-        <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR</button>
-
-        <div class="formRow">
-          <div>
-            <label>Paciente</label>
-            <input id="nome" placeholder="NOME COMPLETO" />
-          </div>
-          <div>
-            <label>Nº Exame</label>
-            <input id="exame" placeholder="000156/2026" />
-          </div>
-        </div>
+        <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO</button>
       </section>
     </main>
 
   </div>
 
   <script>
-    // Layout pronto. Depois fazemos a correção do extrair.
+    // ✅ Ajuste se seu laudo tiver outro nome/caminho
+    const LAUDO_URL = "laudo.html";
+
+    const $ = (id)=>document.getElementById(id);
+
+    function detectarExame(texto){
+      // aceita 000156/2026 ou 000156.2026 ou 000156-2026
+      const m = texto.match(/(\d{3,6})\s*[\/\.\-]\s*(\d{4})/);
+      if(!m) return "";
+      return `${m[1].padStart(6,"0")}/${m[2]}`;
+    }
+
+    function extrairNome(texto){
+      // pega a primeira linha não vazia como nome
+      const linhas = texto.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+      return linhas[0] || "";
+    }
+
+    function abrirLaudoSeguro(dados){
+      // ✅ método mais robusto: salva no localStorage
+      // (laudo.html pode ler isso mesmo sem query)
+      localStorage.setItem("SI_DADOS_LAUDO", JSON.stringify({
+        ...dados,
+        ts: Date.now()
+      }));
+
+      // ✅ envia também via query como redundância
+      const params = new URLSearchParams();
+      if(dados.nome) params.set("nome", dados.nome);
+      if(dados.exame) params.set("exame", dados.exame);
+
+      window.location.assign(`${LAUDO_URL}?${params.toString()}`);
+    }
+
+    $("btnExtrair").addEventListener("click", ()=>{
+      const texto = $("textoDigitacao").value.trim();
+      if(!texto){
+        alert("Cole os dados da digitação rápida.");
+        return;
+      }
+
+      const nome = extrairNome(texto);
+      const exame = detectarExame(texto);
+
+      abrirLaudoSeguro({
+        nome,
+        exame,
+        textoBruto: texto,
+        origem: "principal"
+      });
+    });
+
+    // ✅ atalho teclado: CTRL+ENTER para abrir laudo
+    document.addEventListener("keydown", (e)=>{
+      if(e.ctrlKey && e.key === "Enter"){
+        e.preventDefault();
+        $("btnExtrair").click();
+      }
+    });
   </script>
 </body>
 </html>
