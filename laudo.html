@@ -22,7 +22,7 @@
     color:var(--ink);
   }
 
-  /* ✅ Header do laudo (TELA) */
+  /* ✅ Topbar (TELA) */
   .topbar{
     max-width: 980px;
     margin: 0 auto 14px;
@@ -50,6 +50,7 @@
 
   /* ===== CONTROLES ===== */
   .controles{
+    position: static;
     margin-top: 18px;
     background:#fff;
     border:1px solid rgba(0,0,0,.25);
@@ -203,19 +204,6 @@
     box-sizing:border-box;
   }
 
-  /* ✅ Preview na tela (debug visual para confirmar antes de imprimir) */
-  .obs-preview{
-    margin-top:10px;
-    padding:10px 12px;
-    background:#fff;
-    border-radius:12px;
-    border:1px solid rgba(0,0,0,.12);
-    font-family:"Arial Narrow", Arial, sans-serif;
-    display:none;
-  }
-  .obs-preview.show{ display:block; }
-  .obs-preview b{ text-transform:uppercase; }
-
   /* ===== PRINT ===== */
   .print-only{ display:none; }
 
@@ -313,7 +301,7 @@
   .tit-normal-caps{ font-weight:400; text-transform:uppercase; }
   .concl-resposta-bloco{ white-space:pre-line; font-weight:400; display:block; margin-top:2px; }
 
-  /* ✅ Observação no print */
+  /* ✅ OBSERVAÇÃO NO PRINT: só aparece se tiver texto */
   #obs_print{ white-space: pre-line; }
   #obs_print_wrap{ display:block; }
   #obs_print_wrap.vazio{ display:none; }
@@ -332,17 +320,17 @@
 <div class="topbar no-print">
   <div>
     <strong>LAUDO • SESC</strong><br>
-    <span>Interface premium do laudo (não altera impressão)</span>
+    <span>Selecione as opções e imprima em PDF</span>
   </div>
   <div style="opacity:.9;font-size:12px;">
-    Versão: <b>FINAL FIX OBS</b>
+    Versão: <b>COMPLETO - BENIGNAS/ATIPIAS</b>
   </div>
 </div>
 
 <div class="folha">
 
   <!-- =========================
-       ✅ TELA: FORMULÁRIO
+       ✅ TELA: FORMULÁRIO COMPLETO
        ========================= -->
   <div class="no-print">
     <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
@@ -465,12 +453,6 @@
       </div>
 
       <textarea id="obs_texto_tela" placeholder="Caso necessário, digite a observação aqui..."></textarea>
-
-      <!-- ✅ preview para confirmar que está sincronizando -->
-      <div id="obs_preview" class="obs-preview">
-        <b>Observação (preview):</b>
-        <span id="obs_preview_txt"></span>
-      </div>
     </div>
   </div>
 
@@ -574,14 +556,11 @@
     void document.body.offsetHeight;
   }
 
-  /* ✅ SYNC DEFINITIVA DA OBSERVAÇÃO (print + preview) */
+  /* ✅ sincronização definitiva da observação */
   function syncObservacao(){
     const txt = (document.getElementById("obs_texto_tela")?.value || "").trim();
-
     const wrap = document.getElementById("obs_print_wrap");
     const el = document.getElementById("obs_print");
-    const prev = document.getElementById("obs_preview");
-    const prevTxt = document.getElementById("obs_preview_txt");
 
     if(el) el.textContent = txt;
 
@@ -589,23 +568,13 @@
       if(txt) wrap.classList.remove("vazio");
       else wrap.classList.add("vazio");
     }
-
-    if(prev && prevTxt){
-      if(txt){
-        prev.classList.add("show");
-        prevTxt.textContent = " " + txt;
-      }else{
-        prev.classList.remove("show");
-        prevTxt.textContent = "";
-      }
-    }
   }
 
   function aplicarObs(txt){
     const obs = document.getElementById("obs_texto_tela");
     if(!obs) return;
     obs.value = txt;
-    syncObservacao();   // ✅ atualiza na hora
+    syncObservacao();
   }
 
   const params = new URLSearchParams(window.location.search);
@@ -644,7 +613,6 @@
     const ano = now.getFullYear();
     document.getElementById("rodape_data").textContent = `João Pessoa, ${dia} de ${mes} de ${ano}`;
   }
-  preencherCabecalhoPrint();
 
   function atualizar(){
     const checksEpi = document.querySelectorAll('.epi:checked');
@@ -692,7 +660,6 @@
     if(concl){
       const categoria = concl.getAttribute('data-tit') || "CONCLUSÃO";
       const respostaTecnica = concl.getAttribute('data-full') || concl.value || "";
-
       elTitConcl.textContent = (concl.value === "NEGATIVO") ? "CONCLUSÃO:" : (categoria + ":");
       elResConcl.textContent = respostaTecnica;
     }else{
@@ -701,10 +668,10 @@
     }
 
     preencherCabecalhoPrint();
-    syncObservacao(); // ✅ SEMPRE sincroniza
+    syncObservacao();
   }
 
-  /* ✅ Exportação no padrão do sistema */
+  /* ===== Exportação no padrão do sistema ===== */
   function mesChaveAtual(){
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -753,24 +720,18 @@
     const returnUrl = params.get("return");
     if(returnUrl){ window.location.href = returnUrl; return; }
     if(window.history.length > 1){ window.history.back(); return; }
-    window.close?.();
   }
 
   function imprimirLaudo(){
-    // ✅ FORÇA TUDO ficar pronto
     atualizar();
-    syncObservacao();
-
-    // ✅ dupla garantia
-    forceReflow();
-    syncObservacao();
-    forceReflow();
+    syncObservacao(); // ✅ garante observação no PDF
 
     const sugerido = nomeArquivoSugerido();
     const digitado = prompt("Nome do arquivo (PDF):", sugerido);
     if(digitado === null) return;
 
     const nomeFinal = (digitado || sugerido).trim() || sugerido;
+
     const tituloOriginal = document.title;
     document.title = nomeFinal;
 
@@ -789,13 +750,16 @@
       }
     }catch(e){ console.error(e); }
 
-    // ✅ imprime após sincronizar
+    forceReflow();
     setTimeout(() => {
+      atualizar();
       syncObservacao();
+      forceReflow();
+
       window.print();
       setTimeout(() => { document.title = tituloOriginal; }, 1200);
       setTimeout(() => voltarSistema(), 700);
-    }, 120);
+    }, 160);
   }
 
   function buildWordHTML(){
@@ -845,25 +809,21 @@
     setTimeout(() => voltarSistema(), 700);
   }
 
-  // ✅ ligações e init
+  // ✅ inicialização
+  preencherCabecalhoPrint();
+
   (function initObs(){
     const obs = document.getElementById("obs_texto_tela");
     if(!obs) return;
 
-    // preenche do sistema principal
+    // recebe observação do sistema principal
     if(init.observacao && !obs.value) obs.value = init.observacao;
 
-    obs.addEventListener("input", () => {
-      syncObservacao();
-    });
-
-    // primeiro sync
+    obs.addEventListener("input", () => syncObservacao());
     syncObservacao();
   })();
 
-  // inicializa
-  atualizar();
-
+  // deixa função disponível
   window.atualizar = atualizar;
 </script>
 
