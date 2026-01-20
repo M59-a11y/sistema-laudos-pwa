@@ -30,7 +30,6 @@
 
     --accent:#00d36d;
     --accent2:#00a651;
-    --danger:#ff4d4d;
   }
 
   *{box-sizing:border-box}
@@ -41,7 +40,10 @@
     font-family:"Segoe UI", Roboto, Arial, sans-serif;
     background: linear-gradient(90deg, var(--bgA) 0%, var(--bgB) 60%, var(--bgC) 100%);
     color:var(--txt);
-    overflow:hidden; /* ✅ zero scroll */
+
+    /* ✅ ZERO SCROLL */
+    height:100vh;
+    overflow:hidden;
   }
 
   /* ✅ Marca d’água */
@@ -69,6 +71,9 @@
     padding:18px;
     position:relative;
     z-index:1;
+
+    /* ✅ não deixa crescer */
+    min-height:0;
   }
 
   /* ✅ Header */
@@ -123,7 +128,7 @@
   }
   .dev-card .role{
     margin-top:4px;
-    font-size:11px;              /* ✅ menor */
+    font-size:11px;
     letter-spacing:.22em;
     text-transform:uppercase;
     color:rgba(255,255,255,.72);
@@ -135,11 +140,13 @@
     margin-top:14px;
     border-radius: var(--r22);
     border:1px solid var(--line);
-    background: linear-gradient(180deg, var(--glass), var(--glass2));
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
     box-shadow: var(--shadow);
     overflow:hidden;
+
     flex:1 1 auto;
     min-height:0;
+
     display:flex;
     flex-direction:column;
   }
@@ -176,8 +183,12 @@
     display:grid;
     grid-template-columns: 1fr 380px;
     gap:16px;
-    min-height:0;
+
     flex:1 1 auto;
+    min-height:0;
+
+    /* ✅ impede overflow do grid */
+    overflow:hidden;
   }
 
   /* ✅ painel de digitação */
@@ -198,6 +209,7 @@
     display:flex;
     justify-content:space-between;
     align-items:center;
+    flex:0 0 auto;
   }
 
   .panel-h strong{
@@ -221,14 +233,22 @@
     display:flex;
     flex-direction:column;
     gap:10px;
+
+    flex:1 1 auto;
     min-height:0;
+
+    /* ✅ nada de scroll no card */
+    overflow:hidden;
   }
 
   textarea{
     width:100%;
-    min-height:0;
-    height:100%;
     flex:1 1 auto;
+    min-height:0;
+
+    /* ✅ se precisar rola DENTRO do campo, não na página */
+    overflow:auto;
+
     resize:none;
     padding:12px 12px;
     font-size:14px;
@@ -253,6 +273,7 @@
     letter-spacing:.06em;
     text-transform:uppercase;
     cursor:pointer;
+    flex:0 0 auto;
   }
   .btn-green{ background: linear-gradient(180deg, #19e27b, #00a651); color:#062014; }
   .btn-green:hover{ filter:brightness(1.04); }
@@ -262,17 +283,17 @@
     color:rgba(255,255,255,.74);
     line-height:1.4;
     margin-top:2px;
+    flex:0 0 auto;
   }
 
-  /* ✅ campos técnicos (não precisa exibir) */
+  /* ✅ campos técnicos invisíveis */
   .hidden-tech{ display:none !important; }
 
-  /* ✅ responsivo */
+  /* ✅ Mobile: mantém ZERO scroll do body e ajusta grid */
   @media (max-width: 1060px){
-    body{overflow:auto;}
-    .shell{height:auto; min-height:100vh;}
-    .card{min-height:720px;}
-    .card-b{grid-template-columns:1fr;}
+    .card-b{ grid-template-columns: 1fr; }
+    .dev-card{ min-width: 220px; }
+    .guide{ display:none; } /* para caber sem quebrar */
   }
 </style>
 </head>
@@ -337,7 +358,7 @@ SNM"></textarea>
         </div>
       </div>
 
-      <!-- ✅ Campos de destino (invisíveis - permanecem no código) -->
+      <!-- ✅ Campos técnicos invisíveis (mantidos para o laudo funcionar) -->
       <div class="hidden-tech">
         <input id="paciente" type="text" />
         <input id="exame" type="text" />
@@ -479,8 +500,6 @@ function abrirLaudo(){
   });
 
   const laudoPath = "laudo.html";
-
-  // ✅ MESMA ABA - evita popout
   window.location.href = laudoPath + "?" + params.toString();
 }
 
