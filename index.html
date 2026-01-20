@@ -12,16 +12,24 @@
 
 <style>
   :root{
-    --bg1:#baf2c7;               /* verde claro */
-    --bg2:#0a2a47;               /* azul escuro */
-    --panel:rgba(255,255,255,.10);
-    --panel2:rgba(255,255,255,.06);
-    --border:rgba(255,255,255,.22);
-    --text:#f5fbff;
+    --bgA:#baf2c7;
+    --bgB:#0a2a47;
+    --bgC:#061a2e;
+
+    --glass:rgba(255,255,255,.10);
+    --glass2:rgba(255,255,255,.06);
+    --line:rgba(255,255,255,.18);
+
+    --txt:#f5fbff;
     --muted:rgba(255,255,255,.78);
+
     --accent:#17e3a6;
-    --shadow: 0 18px 40px rgba(0,0,0,.30);
-    --radius:16px;
+    --accent2:#2196f3;
+
+    --shadow:0 18px 40px rgba(0,0,0,.32);
+    --shadow2:0 6px 24px rgba(0,0,0,.24);
+
+    --r22:22px;
   }
 
   *{box-sizing:border-box}
@@ -30,26 +38,26 @@
   body{
     margin:0;
     font-family:"Segoe UI", Roboto, Arial, sans-serif;
-    color:var(--text);
-    overflow:hidden;       /* ✅ ZERO SCROLL */
+    color:var(--txt);
     height:100vh;
-    background: linear-gradient(90deg, var(--bg1) 0%, var(--bg2) 55%, #061a2e 100%);
+    overflow:hidden; /* ✅ ZERO SCROLL */
+    background: linear-gradient(90deg, var(--bgA) 0%, var(--bgB) 60%, var(--bgC) 100%);
     position:relative;
   }
 
-  /* ✅ marca d’água */
-  body::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background-image:url("logo/logotipo.png");
-    background-repeat:no-repeat;
-    background-position:right center;
-    background-size:clamp(360px, 50vw, 900px);
-    opacity:.12;
+  /* ✅ Watermark discreta e no lugar certo */
+  .watermark{
+    position:fixed;
+    top:88px;
+    right:24px;
+    width:min(46vw, 720px);
+    height:calc(100vh - 110px);
+    background:url("logo/logotipo.png") no-repeat right center;
+    background-size:contain;
+    opacity:.08;
     pointer-events:none;
-    filter:saturate(.95) contrast(1.05);
-    transform:translateX(4%);
+    z-index:0;
+    filter: saturate(.9) contrast(1.05);
   }
 
   .app{
@@ -60,15 +68,14 @@
     z-index:1;
   }
 
-  /* ✅ Header */
   header{
-    height:78px;
+    height:84px;
+    padding:14px 22px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:14px 22px;
-    border-bottom: 1px solid rgba(255,255,255,.12);
-    background: linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.00));
+    border-bottom:1px solid rgba(255,255,255,.12);
+    background: linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.00));
     backdrop-filter: blur(10px);
   }
 
@@ -76,93 +83,97 @@
     display:flex;
     align-items:center;
     gap:14px;
-    min-width:340px;
+    min-width: 320px;
   }
 
   .brand img{
-    width:165px;
+    width:170px;
+    max-height:52px;
     height:auto;
     object-fit:contain;
-    filter: drop-shadow(0 8px 14px rgba(0,0,0,.35));
+    display:block;
+    filter: drop-shadow(0 10px 16px rgba(0,0,0,.35));
   }
 
-  .brand-title{
+  .brand-info{
     display:flex;
     flex-direction:column;
-    line-height:1.1;
+    line-height:1.05;
   }
 
-  .brand-title strong{
+  .brand-info strong{
     font-size:14px;
-    letter-spacing:.18em;
+    letter-spacing:.20em;
     text-transform:uppercase;
-    color: rgba(255,255,255,.90);
+    font-weight:900;
+    color: rgba(255,255,255,.92);
   }
 
-  .brand-title span{
+  .brand-info span{
+    margin-top:6px;
     font-size:12px;
-    color: rgba(255,255,255,.68);
-    margin-top:3px;
+    color:rgba(255,255,255,.68);
   }
 
-  .header-right{
+  .hdr-right{
     display:flex;
     align-items:center;
     gap:10px;
   }
 
-  .badge{
-    padding:8px 10px;
-    border:1px solid rgba(255,255,255,.18);
+  .pill{
+    padding:9px 12px;
     border-radius:999px;
+    border:1px solid rgba(255,255,255,.18);
     background: rgba(0,0,0,.18);
-    color:rgba(255,255,255,.86);
     font-size:12px;
+    color:rgba(255,255,255,.86);
     letter-spacing:.04em;
-    backdrop-filter: blur(8px);
     user-select:none;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow2);
   }
 
   main{
     flex:1;
+    min-height:0;
     display:grid;
-    grid-template-columns: 1.25fr .75fr;
+    grid-template-columns: 1.22fr .78fr;
     gap:18px;
     padding:18px 22px 22px;
-    height:calc(100vh - 78px);
-    min-height:0;
+    height:calc(100vh - 84px);
+    position:relative;
+    z-index:1;
   }
 
-  /* Painéis */
   .panel{
-    background: linear-gradient(180deg, var(--panel), var(--panel2));
-    border:1px solid var(--border);
-    border-radius: var(--radius);
+    min-height:0;
+    border-radius: var(--r22);
+    border:1px solid var(--line);
+    background: linear-gradient(180deg, var(--glass), var(--glass2));
     box-shadow: var(--shadow);
     overflow:hidden;
     display:flex;
     flex-direction:column;
-    min-height:0;
   }
 
-  .panel-head{
+  .panel-h{
     padding:14px 16px;
-    border-bottom:1px solid rgba(255,255,255,.12);
     display:flex;
     align-items:center;
     justify-content:space-between;
+    border-bottom:1px solid rgba(255,255,255,.10);
   }
 
-  .panel-head h1{
+  .panel-h h1{
     margin:0;
     font-size:15px;
-    letter-spacing:.14em;
     text-transform:uppercase;
-    font-weight:800;
-    color:rgba(255,255,255,.92);
+    letter-spacing:.16em;
+    font-weight:900;
   }
 
-  .panel-body{
+  .panel-b{
     padding:16px;
     display:flex;
     flex-direction:column;
@@ -170,128 +181,103 @@
     min-height:0;
   }
 
-  /* ✅ Digitação rápida (label fixo + guia sempre visível) */
-  .fast-input{
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,.22);
+  .quick{
+    border-radius: var(--r22);
+    border:1px solid rgba(255,255,255,.20);
     background: rgba(0,0,0,.20);
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.18);
-    padding: 14px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.22);
+    padding:16px;
   }
 
-  .fast-input .label{
+  .q-label{
     display:flex;
     align-items:center;
     gap:10px;
     font-size:12px;
-    letter-spacing:.09em;
     text-transform:uppercase;
-    color: rgba(255,255,255,.82);
-    margin-bottom:10px;
+    letter-spacing:.10em;
+    color:rgba(255,255,255,.88);
     user-select:none;
+    margin-bottom:10px;
   }
 
-  .label .dot{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background: var(--accent);
+  .dot{
+    width:11px;height:11px;border-radius:50%;
+    background:linear-gradient(135deg, var(--accent), var(--accent2));
     box-shadow: 0 0 0 4px rgba(23,227,166,.14);
   }
 
   .guide{
-    font-size:12px;
-    color: rgba(255,255,255,.80);
-    margin: 0 0 10px 0;
-    padding: 10px 12px;
-    border-radius: 12px;
+    padding:10px 12px;
+    border-radius:14px;
     border:1px dashed rgba(255,255,255,.20);
     background: rgba(255,255,255,.05);
+    font-size:12px;
+    color:rgba(255,255,255,.82);
     display:flex;
     flex-wrap:wrap;
-    align-items:center;
-    gap:8px;
+    gap:6px;
     user-select:none;
+    margin-bottom:10px;
   }
-
   .guide code{
-    font-family: "Consolas", "Courier New", monospace;
+    font-family:Consolas, "Courier New", monospace;
     font-size:12px;
     padding:2px 8px;
-    border-radius:8px;
-    background: rgba(0,0,0,.22);
+    border-radius:10px;
+    background: rgba(0,0,0,.26);
     border:1px solid rgba(255,255,255,.12);
   }
 
   textarea{
     width:100%;
-    height:210px;
+    height:220px;
     resize:none;
+    border-radius: var(--r22);
     border:1px solid rgba(255,255,255,.18);
-    border-radius: 14px;
-    padding: 14px;
+    padding:16px;
     outline:none;
-    background: rgba(10, 18, 26, .60);
-    color: rgba(255,255,255,.95);
+    background: rgba(10,18,26,.65);
+    color: rgba(255,255,255,.96);
     font-size: 15px;
-    line-height: 1.5;
-    white-space: pre-wrap;
+    line-height:1.55;
+    white-space:pre-wrap;
     box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
   }
 
   textarea:focus{
-    border-color: rgba(23,227,166,.70);
-    box-shadow: 0 0 0 3px rgba(23,227,166,.16), inset 0 0 0 1px rgba(0,0,0,.25);
-  }
-
-  .hint{
-    font-size:12px;
-    color: rgba(255,255,255,.78);
-    line-height:1.5;
-    margin-top:10px;
-    user-select:none;
-  }
-
-  /* Botões */
-  .actions{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
+    border-color: rgba(23,227,166,.72);
+    box-shadow: 0 0 0 3px rgba(23,227,166,.18), inset 0 0 0 1px rgba(0,0,0,.25);
   }
 
   .btn{
     border:none;
     cursor:pointer;
-    padding: 12px 14px;
-    border-radius: 14px;
+    padding:14px 16px;
+    border-radius: 18px;
     font-weight:900;
     letter-spacing:.04em;
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    gap:8px;
-    transition: transform .06s ease, opacity .2s ease, filter .2s ease;
-    user-select:none;
+    gap:10px;
     width:100%;
-  }
-
-  .btn:active{ transform: scale(.99) }
-
-  .btn-green{
-    background: linear-gradient(135deg, rgba(23,227,166,.95), rgba(33,150,243,.82));
+    background: linear-gradient(135deg, rgba(23,227,166,.96), rgba(33,150,243,.80));
     color:#06242a;
-    box-shadow: 0 18px 34px rgba(0,0,0,.26);
+    box-shadow: 0 18px 34px rgba(0,0,0,.24);
+    transition: transform .06s ease, filter .2s ease;
   }
 
-  /* ✅ área técnica oculta (campos destino invisíveis) */
-  .tech-hidden{
-    display:none !important;
-    visibility:hidden !important;
-    height:0 !important;
-    overflow:hidden !important;
+  .btn:active{ transform:scale(.99) }
+
+  .hint{
+    margin-top:10px;
+    font-size:12px;
+    color: rgba(255,255,255,.78);
+    line-height:1.5;
+    user-select:none;
   }
 
-  /* Painel lateral */
   .side{
     display:flex;
     flex-direction:column;
@@ -300,15 +286,14 @@
   }
 
   .card{
-    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+    border-radius: var(--r22);
     border:1px solid rgba(255,255,255,.18);
-    border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
     box-shadow: var(--shadow);
     overflow:hidden;
-    min-height:0;
   }
 
-  .card-head{
+  .card-h{
     padding:12px 14px;
     border-bottom:1px solid rgba(255,255,255,.12);
     display:flex;
@@ -316,24 +301,23 @@
     justify-content:space-between;
   }
 
-  .card-head h2{
+  .card-h h2{
     margin:0;
     font-size:13px;
-    letter-spacing:.10em;
     text-transform:uppercase;
-    color:rgba(255,255,255,.88);
+    letter-spacing:.10em;
   }
 
-  .card-body{
+  .card-b{
     padding:14px;
-    color: rgba(255,255,255,.82);
     font-size:13px;
+    color:rgba(255,255,255,.82);
     line-height:1.6;
   }
 
   .kpi{
     display:grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:1fr 1fr;
     gap:12px;
     margin-top:12px;
   }
@@ -350,191 +334,129 @@
     font-size:11px;
     letter-spacing:.14em;
     text-transform:uppercase;
-    color: rgba(255,255,255,.72);
+    color:rgba(255,255,255,.72);
     margin-bottom:6px;
   }
 
   .kpi-box span{
     font-size:18px;
     font-weight:900;
-    color: rgba(255,255,255,.92);
+    color:rgba(255,255,255,.92);
   }
+
+  .tech-hidden{ display:none !important; }
 
   @media (max-width: 980px){
     main{ grid-template-columns: 1fr; }
     textarea{ height:190px; }
-    .brand{min-width:auto}
+    .brand img{ width:160px; max-height:46px; }
   }
 </style>
 </head>
 
 <body>
-<div class="app">
+  <div class="watermark" aria-hidden="true"></div>
 
-  <!-- ✅ Título + Logo topo esquerdo -->
-  <header>
-    <div class="brand">
-      <img src="logo/sesctopo.png" alt="SESC" />
-      <div class="brand-title">
-        <strong>SI - SISTEMA DE INFORMAÇÃO</strong>
-        <span>Sistema Laboratorial • Laudos</span>
-      </div>
-    </div>
-
-    <div class="header-right">
-      <div class="badge">Modo Profissional</div>
-      <div class="badge">100vh • Zero Scroll</div>
-    </div>
-  </header>
-
-  <main>
-
-    <!-- Painel principal -->
-    <section class="panel">
-      <div class="panel-head">
-        <h1>Digitação rápida</h1>
-        <div class="badge">Extração automática</div>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <img src="logo/sesctopo.png" alt="SESC" />
+        <div class="brand-info">
+          <strong>SI - SISTEMA DE INFORMAÇÃO</strong>
+          <span>Sistema Laboratorial • Laudos</span>
+        </div>
       </div>
 
-      <div class="panel-body">
+      <div class="hdr-right">
+        <div class="pill">Modo Profissional</div>
+        <div class="pill">Popup Central</div>
+      </div>
+    </header>
 
-        <div class="fast-input">
-          <!-- ✅ Label fixo (substitui placeholder de instrução) -->
-          <div class="label">
-            <span class="dot"></span>
-            Cole ou digite os dados no campo abaixo
-          </div>
+    <main>
+      <section class="panel">
+        <div class="panel-h">
+          <h1>Digitação rápida</h1>
+          <div class="pill">Extração automática</div>
+        </div>
 
-          <!-- ✅ Guia fixo permanente (sempre visível) -->
-          <div class="guide">
-            Ordem:
-            <code>Data da Coleta</code> |
-            <code>Data de Nascimento</code> |
-            <code>Cartão SUS</code> |
-            <code>Telefone</code> |
-            <code>Rua</code>
-          </div>
+        <div class="panel-b">
+          <div class="quick">
+            <div class="q-label"><span class="dot"></span> Cole ou digite os dados no campo abaixo</div>
 
-          <textarea id="entrada_rapida" rows="11"></textarea>
+            <div class="guide">
+              Ordem:
+              <code>Data da Coleta</code> |
+              <code>Data de Nascimento</code> |
+              <code>Cartão SUS</code> |
+              <code>Telefone</code> |
+              <code>Rua</code>
+            </div>
 
-          <div class="actions" style="margin-top:10px;">
-            <button class="btn btn-green" onclick="extrairEAbrir()">
+            <textarea id="entrada_rapida" rows="11"></textarea>
+
+            <button class="btn" style="margin-top:10px;" onclick="extrairEAbrir()">
               EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO
             </button>
-          </div>
 
-          <div class="hint">
-            ✅ Última linha pode ser: <b>SNM</b> ou <b>EAM</b> (Responsável).<br>
-            ✅ O nome não quebra: o exame é detectado por padrão <b>000156/2026</b>.
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Lateral (informações úteis) -->
-    <aside class="side">
-
-      <section class="card">
-        <div class="card-head">
-          <h2>Status do sistema</h2>
-          <div class="badge">Online</div>
-        </div>
-        <div class="card-body">
-          Interface otimizada para digitação rápida e precisão técnica.
-
-          <div class="kpi">
-            <div class="kpi-box">
-              <b>Extração</b>
-              <span>Automática</span>
-            </div>
-            <div class="kpi-box">
-              <b>Fluxo</b>
-              <span>Direto</span>
+            <div class="hint">
+              ✅ Última linha pode ser: <b>SNM</b> ou <b>EAM</b> (Responsável).<br>
+              ✅ O nome não quebra: o exame é detectado por padrão <b>000156/2026</b>.
             </div>
           </div>
         </div>
       </section>
 
-      <section class="card">
-        <div class="card-head">
-          <h2>Campos técnicos</h2>
-          <div class="badge">Ocultos</div>
-        </div>
-        <div class="card-body">
-          Os campos de destino continuam no código para envio ao laudo,
-          mas ficam invisíveis para manter a interface limpa.
-        </div>
-      </section>
+      <aside class="side">
+        <section class="card">
+          <div class="card-h">
+            <h2>Status do sistema</h2>
+            <div class="pill">Online</div>
+          </div>
+          <div class="card-b">
+            Laudo abre em janela central (compacta).  
+            Se popup for bloqueado, abre na mesma aba.
+            <div class="kpi">
+              <div class="kpi-box"><b>Janela</b><span>Central</span></div>
+              <div class="kpi-box"><b>Tamanho</b><span>Compacto</span></div>
+            </div>
+          </div>
+        </section>
 
-    </aside>
+        <section class="card">
+          <div class="card-h">
+            <h2>Campos técnicos</h2>
+            <div class="pill">Ocultos</div>
+          </div>
+          <div class="card-b">
+            Os campos de destino continuam no código para envio ao laudo, porém ficam invisíveis ao usuário.
+          </div>
+        </section>
+      </aside>
 
-    <!-- ✅ Campos de destino (ocultos) -->
-    <div class="tech-hidden">
-      <div class="grid">
-        <div>
-          <label>Paciente</label>
-          <input id="paciente" type="text"/>
-        </div>
-        <div>
-          <label>Nº Exame</label>
-          <input id="exame" type="text"/>
-        </div>
+      <!-- ✅ Campos técnicos invisíveis -->
+      <div class="tech-hidden">
+        <input id="paciente" type="text"/>
+        <input id="exame" type="text"/>
+        <input id="data_coleta" type="text" maxlength="10"/>
+        <input id="data_nascimento" type="text" maxlength="10"/>
+        <input id="cartao_sus" type="text"/>
+        <input id="telefone" type="text"/>
+        <input id="rua" type="text"/>
+        <input id="bairro" type="text"/>
+        <input id="cidade" type="text"/>
+        <input id="cep" type="text"/>
 
-        <div>
-          <label>Data da Coleta</label>
-          <input id="data_coleta" type="text" maxlength="10"/>
-        </div>
-        <div>
-          <label>Data de Nascimento</label>
-          <input id="data_nascimento" type="text" maxlength="10"/>
-        </div>
+        <select id="responsavel">
+          <option value="">Selecione...</option>
+          <option value="SHEINA N. MORAIS RAMALHO">SHEINA N. MORAIS RAMALHO</option>
+          <option value="EDVÂNIA APARECIDA MENDES DE AZEVÊDO">EDVÂNIA APARECIDA MENDES DE AZEVÊDO</option>
+        </select>
 
-        <div>
-          <label>Cartão SUS</label>
-          <input id="cartao_sus" type="text"/>
-        </div>
-        <div>
-          <label>Telefone</label>
-          <input id="telefone" type="text"/>
-        </div>
-
-        <div>
-          <label>Rua</label>
-          <input id="rua" type="text"/>
-        </div>
-        <div>
-          <label>Bairro</label>
-          <input id="bairro" type="text"/>
-        </div>
-
-        <div>
-          <label>Cidade</label>
-          <input id="cidade" type="text"/>
-        </div>
-        <div>
-          <label>CEP</label>
-          <input id="cep" type="text"/>
-        </div>
-
-        <div style="grid-column: span 2;">
-          <label>Responsável</label>
-          <select id="responsavel">
-            <option value="">Selecione...</option>
-            <option value="SHEINA N. MORAIS RAMALHO">SHEINA N. MORAIS RAMALHO</option>
-            <option value="EDVÂNIA APARECIDA MENDES DE AZEVÊDO">EDVÂNIA APARECIDA MENDES DE AZEVÊDO</option>
-          </select>
-        </div>
-
-        <div style="grid-column: span 2;">
-          <label>Observação (opcional)</label>
-          <input id="observacao" type="text"/>
-        </div>
+        <input id="observacao" type="text"/>
       </div>
-    </div>
-
-  </main>
-</div>
+    </main>
+  </div>
 
 <script>
 function onlyDigits(s){ return (s||"").replace(/\D/g,''); }
@@ -546,13 +468,11 @@ function maskDate(v){
   if(d.length >= 3) return d.replace(/(\d{2})(\d+)/,'$1/$2');
   return d;
 }
-
 function maskCep(v){
   let c = onlyDigits(v).slice(0,8);
   if(c.length > 5) return c.replace(/(\d{5})(\d+)/,'$1-$2');
   return c;
 }
-
 function maskPhone(v){
   let t = onlyDigits(v).slice(0,11);
   if(t.length === 11){
@@ -563,7 +483,6 @@ function maskPhone(v){
   }
   return v;
 }
-
 function setVal(id,val){
   const el = document.getElementById(id);
   if(el) el.value = val;
@@ -575,17 +494,14 @@ function extrairEAbrir(){
   abrirLaudo();
 }
 
-/* ✅ EXTRAÇÃO ROBUSTA (não quebra nome) */
+/* ✅ EXTRAÇÃO ROBUSTA */
 function extrairRapidoOrdemCorrigido(){
   const raw = document.getElementById("entrada_rapida").value || "";
   const linhas = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
 
-  // Linha 1: "NOME COMPLETO 000156/2026"
   const l1 = linhas[0] || "";
-  let nome = "";
-  let exame = "";
+  let nome = "", exame = "";
 
-  // Detecta exame por REGEX: 1-6 dígitos / 4 dígitos
   const match = l1.match(/(\d{1,6}\/\d{4})\s*$/);
   if(match){
     exame = match[1];
@@ -601,8 +517,7 @@ function extrairRapidoOrdemCorrigido(){
   const sus = onlyDigits(linhas[3] || "");
   const tel = maskPhone(linhas[4] || "");
 
-  let rua="", bairro="", cidade="", cep="";
-  let resp="";
+  let rua="", bairro="", cidade="", cep="", resp="";
 
   for(let i=5;i<linhas.length;i++){
     const line = linhas[i];
@@ -612,7 +527,6 @@ function extrairRapidoOrdemCorrigido(){
     else if(/^cidade\s*:/i.test(line)) cidade = line.replace(/^cidade\s*:\s*/i,"");
     else if(/^cep\s*:/i.test(line)) cep = line.replace(/^cep\s*:\s*/i,"");
     else {
-      // responsável: SNM / EAM
       const t = up(line);
       if(t === "SNM") resp = "SHEINA N. MORAIS RAMALHO";
       if(t === "EAM") resp = "EDVÂNIA APARECIDA MENDES DE AZEVÊDO";
@@ -629,11 +543,10 @@ function extrairRapidoOrdemCorrigido(){
   setVal("bairro", up(bairro));
   setVal("cidade", up(cidade));
   setVal("cep", maskCep(cep));
-
   if(resp) document.getElementById("responsavel").value = resp;
 }
 
-/* ✅ ABRIR LAUDO (CORRIGIDO COM RETURN) */
+/* ✅ ABRIR LAUDO EM POPUP CENTRAL */
 function abrirLaudo(){
   const paciente = up(document.getElementById('paciente').value);
   const exame = up(document.getElementById('exame').value);
@@ -648,7 +561,6 @@ function abrirLaudo(){
   const responsavel = up(document.getElementById('responsavel').value);
   const observacao = (document.getElementById('observacao').value || "").trim();
 
-  // ✅ URL de retorno para o laudo voltar automaticamente
   const returnUrl = window.location.href;
 
   const params = new URLSearchParams({
@@ -663,10 +575,32 @@ function abrirLaudo(){
   });
 
   const laudoPath = "laudo.html";
-  window.location.href = laudoPath + "?" + params.toString();
+  const url = laudoPath + "?" + params.toString();
+
+  // ✅ tamanho compacto
+  const w = 920;
+  const h = 720;
+
+  // ✅ centralização perfeita
+  const left = Math.max(0, (window.screen.width - w) / 2);
+  const top = Math.max(0, (window.screen.height - h) / 2);
+
+  const specs =
+    `width=${w},height=${h},left=${left},top=${top},` +
+    `resizable=yes,scrollbars=yes,status=no,toolbar=no,menubar=no,location=no`;
+
+  const popup = window.open(url, "LAUDO_POPUP", specs);
+
+  // ✅ fallback: se popup bloqueado, abre normal
+  if(!popup){
+    window.location.href = url;
+    return;
+  }
+
+  popup.focus();
 }
 
-/* ✅ REGISTRO SERVICE WORKER (PWA) */
+/* ✅ PWA */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js")
