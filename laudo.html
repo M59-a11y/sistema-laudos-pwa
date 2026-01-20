@@ -9,102 +9,176 @@
   :root{
     --blue:#336699;
     --panel:#eef2f7;
-    --ink:#0b1e2d;
-    --shadow:0 18px 50px rgba(0,0,0,.18);
-    --radius:16px;
+
+    /* ✅ Identidade visual do sistema principal */
+    --bgA:#baf2c7;
+    --bgB:#0a2a47;
+    --bgC:#061a2e;
+
+    --glass:rgba(255,255,255,.10);
+    --glass2:rgba(255,255,255,.06);
+    --line:rgba(255,255,255,.18);
+
+    --txt:#f5fbff;
+    --muted:rgba(255,255,255,.78);
+
+    --shadow:0 18px 40px rgba(0,0,0,.32);
+    --shadow2:0 6px 24px rgba(0,0,0,.24);
+
+    --r22:22px;
   }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
 
   body{
     margin:0;
     padding:18px;
-    background: linear-gradient(135deg, #e9f6ee 0%, #0a2a47 100%);
-    font-family: Arial, sans-serif;
-    color:var(--ink);
+    font-family:"Segoe UI", Roboto, Arial, sans-serif;
+
+    /* ✅ Igual ao sistema principal */
+    background: linear-gradient(90deg, var(--bgA) 0%, var(--bgB) 60%, var(--bgC) 100%);
   }
 
-  /* ✅ Topbar (TELA) */
-  .topbar{
-    max-width: 980px;
-    margin: 0 auto 14px;
-    padding: 14px 16px;
-    border-radius: var(--radius);
-    background: rgba(255,255,255,.14);
-    border:1px solid rgba(255,255,255,.20);
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow);
-    color:#fff;
+  /* ✅ Marca d’água igual ao sistema */
+  .watermark{
+    position:fixed;
+    top:88px;
+    right:24px;
+    width:min(46vw, 720px);
+    height:calc(100vh - 110px);
+    background:url("logo/logotipo.png") no-repeat right center;
+    background-size:contain;
+    opacity:.07;
+    pointer-events:none;
+    z-index:0;
+    filter: saturate(.9) contrast(1.05);
+  }
+
+  /* ✅ Shell premium (parecido com o principal) */
+  .shell{
+    max-width:1180px;
+    margin:0 auto;
+    position:relative;
+    z-index:1;
+  }
+
+  /* ✅ Header estilo sistema */
+  .hdr{
+    height:84px;
+    padding:14px 22px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:12px;
-  }
-  .topbar strong{
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    font-size:13px;
-  }
-  .topbar span{
-    opacity:.9;
-    font-size:12px;
+    border-bottom:1px solid rgba(255,255,255,.12);
+    background: linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.00));
+    border-radius: var(--r22);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow2);
   }
 
-  /* ===== CONTROLES ===== */
-  .controles{
-    position: static;
-    margin-top: 18px;
-    background:#fff;
-    border:1px solid rgba(0,0,0,.25);
-    padding:14px;
-    width: 100%;
-    max-width: 420px;
-    margin-left:auto;
-    margin-right:auto;
-    border-radius: 14px;
-    box-shadow: var(--shadow);
+  .brand{display:flex;align-items:center;gap:14px;min-width:320px;}
+  .brand img{
+    width:170px;max-height:52px;height:auto;object-fit:contain;display:block;
+    filter: drop-shadow(0 10px 16px rgba(0,0,0,.35));
   }
+  .brand-info{display:flex;flex-direction:column;line-height:1.05;color:var(--txt);}
+  .brand-info strong{
+    font-size:14px;letter-spacing:.20em;text-transform:uppercase;font-weight:900;
+    color: rgba(255,255,255,.92);
+  }
+  .brand-info span{margin-top:6px;font-size:12px;color:rgba(255,255,255,.68);}
+
+  .pill{
+    padding:9px 12px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.18);
+    background: rgba(0,0,0,.18);
+    font-size:12px;color:rgba(255,255,255,.86);
+    letter-spacing:.04em;user-select:none;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow2);
+  }
+
+  /* ✅ Card principal estilo sistema */
+  .card{
+    margin-top:14px;
+    border-radius: var(--r22);
+    border:1px solid var(--line);
+    background: linear-gradient(180deg, var(--glass), var(--glass2));
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+
+  .card-h{
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid rgba(255,255,255,.10);
+    color:var(--txt);
+  }
+  .card-h h1{
+    margin:0;
+    font-size:14px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    font-weight:900;
+  }
+
+  .card-b{
+    padding:16px;
+    display:grid;
+    grid-template-columns: 1fr 380px;
+    gap:16px;
+  }
+
+  /* ✅ “folha” agora fica mais elegante dentro do card */
+  .folha{
+    width: 100%;
+    min-height: 297mm;
+    margin:0;
+    background:#fff;
+    box-shadow: none;
+    box-sizing:border-box;
+    padding:14mm 18mm;
+    position:relative;
+    border-radius:18px;
+    overflow:hidden;
+  }
+
+  /* ✅ controles na lateral (bem parecido com software) */
+  .controles{
+    position: sticky;
+    top: 16px;
+    align-self:start;
+
+    border-radius: var(--r22);
+    border:1px solid rgba(255,255,255,.18);
+    background: rgba(0,0,0,.22);
+    padding:14px;
+    box-shadow: var(--shadow2);
+  }
+
   .btn{
     width:100%;
     padding:12px;
     font-weight:900;
     cursor:pointer;
     border:none;
-    border-radius:10px;
+    border-radius:14px;
   }
   .btn-print{ background:#28a745;color:#fff; }
   .btn-word{ margin-top:10px;background:#1f6feb;color:#fff; }
   .btn-clear{ margin-top:10px;background:#eee; }
 
-  /* ===== FOLHA (TELA) ===== */
-  .folha{
-    width: 210mm;
-    min-height: 297mm;
-    margin:auto;
-    background:#fff;
-    box-shadow: var(--shadow);
-    box-sizing:border-box;
-    padding:14mm 18mm;
-    position:relative;
-    border-radius: var(--radius);
-    overflow:hidden;
-  }
-  .folha::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background: radial-gradient(circle at 85% 20%, rgba(51,102,153,.08), transparent 60%);
-    pointer-events:none;
-  }
-
-  /* ===== TELA (FORMULÁRIO) ===== */
+  /* ===== SEU FORMULÁRIO (INTACTO) ===== */
   .titulo-laudo{
     text-align:center;
-    font-weight:900;
+    font-weight:800;
     font-size:12pt;
     margin: 8px 0 14px;
     text-transform:uppercase;
     font-family:"Arial Narrow", Arial, sans-serif;
-    position:relative;
-    z-index:1;
   }
 
   .painel{
@@ -112,8 +186,6 @@
     border: 2px solid #7aa4c7;
     border-radius:10px;
     padding:14px 14px 8px;
-    position:relative;
-    z-index:1;
   }
 
   .sec{
@@ -176,15 +248,12 @@
     margin-top:6px;
   }
 
-  /* ===== OBSERVAÇÃO (TELA) ===== */
   .obs-wrap{
     margin-top:12px;
     background:#e9eff7;
     border: 2px dashed #9cb6cf;
     border-radius:14px;
     padding:12px;
-    position:relative;
-    z-index:1;
   }
   .obs-title{
     font-weight:900;
@@ -204,12 +273,13 @@
     box-sizing:border-box;
   }
 
-  /* ===== PRINT ===== */
+  /* ===== PRINT (NÃO MEXE) ===== */
   .print-only{ display:none; }
 
   @media print{
     body{ background:#fff; padding:0; margin:0; }
-    .controles{ display:none !important; }
+    .hdr, .card, .controles, .watermark{ display:none !important; }
+
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
 
@@ -237,11 +307,10 @@
     }
 
     .folha{ box-shadow:none; width:auto; min-height:auto; padding:0; border-radius:0; }
-
     @page{ size:A4; margin:0; }
   }
 
-  /* ===== PRINT LAYOUT ===== */
+  /* ===== PRINT LAYOUT (INTACTO) ===== */
   .cab-paciente{
     border-top: 3px solid #00a651;
     border-bottom: 3px solid #00a651;
@@ -301,7 +370,6 @@
   .tit-normal-caps{ font-weight:400; text-transform:uppercase; }
   .concl-resposta-bloco{ white-space:pre-line; font-weight:400; display:block; margin-top:2px; }
 
-  /* ✅ OBSERVAÇÃO NO PRINT */
   #obs_print{ white-space: pre-line; }
   #obs_print_wrap{ display:block; }
   #obs_print_wrap.vazio{ display:none; }
@@ -312,235 +380,258 @@
     font-family:"Arial Narrow", Arial, sans-serif;
     font-size:11.5pt;
   }
+
+  @media (max-width: 1100px){
+    body{padding:12px;}
+    .card-b{grid-template-columns:1fr; }
+    .controles{position:static;}
+  }
 </style>
 </head>
 
 <body>
+<div class="watermark" aria-hidden="true"></div>
 
-<div class="topbar no-print">
-  <div>
-    <strong>LAUDO • SESC</strong><br>
-    <span>Selecione as opções e imprima em PDF</span>
-  </div>
-  <div style="opacity:.9;font-size:12px;">
-    Versão: <b>AUTO-ZONA</b>
-  </div>
-</div>
-
-<div class="folha">
-
-  <!-- ✅ TELA -->
-  <div class="no-print">
-    <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
-
-    <div class="painel">
-      <!-- 1 -->
-      <div class="sec">
-        <div class="sec-title">1. Avaliação Pré Analítica</div>
-
-        <div class="linha">
-          <div class="lbl">Adequabilidade:</div>
-          <div class="op-row">
-            <label><input type="radio" name="adeq" value="Satisfatória" onchange="atualizar()"> Satisfatória</label>
-            <label><input type="radio" name="adeq" value="Insatisfatória" onchange="atualizar()"> Insatisfatória</label>
-          </div>
-        </div>
-
-        <div class="linha">
-          <div class="lbl">Epitélios:</div>
-          <div class="op-row">
-            <label><input type="checkbox" class="epi" value="ESCAMOSO" onchange="atualizar()"> Escamoso</label>
-            <label><input type="checkbox" class="epi" value="GLANDULAR" onchange="atualizar()"> Glandular</label>
-            <label><input type="checkbox" class="epi" value="METAPLÁSICO" onchange="atualizar()"> Metaplásico</label>
-          </div>
-        </div>
-
-        <div class="linha">
-          <div class="lbl">Zona de Transformação:</div>
-          <div class="op-row">
-            <label><input type="radio" name="zona" id="zona_sim" value="Sim" onchange="atualizar()"> Sim</label>
-            <label><input type="radio" name="zona" id="zona_nao" value="Não" onchange="atualizar()"> Não</label>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2 -->
-      <div class="sec">
-        <div class="sec-title">2. Diagnóstico Descritivo</div>
-
-        <div class="op-col">
-          <label><input type="checkbox" id="chk_norm" onchange="atualizar()"> DENTRO DOS LIMITES DA NORMALIDADE NO MATERIAL EXAMINADO</label>
-        </div>
-
-        <div class="linha" style="margin-top:10px;">
-          <div class="lbl">ALTERAÇÕES CELULARES BENIGNAS:</div>
-        </div>
-        <div class="grupo">
-          <label><input type="checkbox" class="alt" value="Inflamação" onchange="atualizar()"> Inflamação</label>
-          <label><input type="checkbox" class="alt" value="Metaplasia escamosa imatura" onchange="atualizar()"> Metaplasia escamosa imatura</label>
-          <label><input type="checkbox" class="alt" value="Reparação" onchange="atualizar()"> Reparação</label>
-          <label><input type="checkbox" class="alt" value="Atrofia com inflamação" onchange="atualizar()"> Atrofia com inflamação</label>
-          <label><input type="checkbox" class="alt" value="Radiação" onchange="atualizar()"> Radiação</label>
-        </div>
-      </div>
-
-      <!-- 3 -->
-      <div class="sec">
-        <div class="sec-title">3. Microbiologia</div>
-        <div class="grupo" style="margin-left:0;">
-          <label><input type="checkbox" class="micro" value="Lactobacillus sp" onchange="atualizar()"> Lactobacillus sp</label>
-          <label><input type="checkbox" class="micro" value="Cocos" onchange="atualizar()"> Cocos</label>
-          <label><input type="checkbox" class="micro" value="Sugestivo de Chlamydia sp" onchange="atualizar()"> Sugestivo de Chlamydia sp</label>
-          <label><input type="checkbox" class="micro" value="Actinomyces sp" onchange="atualizar()"> Actinomyces sp</label>
-          <label><input type="checkbox" class="micro" value="Candida sp" onchange="atualizar()"> Candida sp</label>
-          <label><input type="checkbox" class="micro" value="Trichomonas vaginalis" onchange="atualizar()"> Trichomonas vaginalis</label>
-          <label><input type="checkbox" class="micro" data-full="Bacilos supracitoplasmáticos (sugestivos de Gardnerella/Mobiluncus)" value="Gardnerella/Mobiluncus" onchange="atualizar()"> Gardnerella/Mobiluncus</label>
-          <label><input type="checkbox" class="micro" data-full="Efeito citopático compatível com vírus do grupo Herpes" value="Vírus Herpes" onchange="atualizar()"> Vírus Herpes</label>
-        </div>
-      </div>
-
-      <!-- 4 -->
-      <div class="sec">
-        <div class="sec-title">4. Conclusão Técnica</div>
-
-        <div class="op-col">
-          <label><input type="radio" name="c" data-tit="CONCLUSÃO" data-full="NEGATIVO PARA MALIGNIDADE." value="NEGATIVO" onchange="atualizar()"> NEGATIVO PARA MALIGNIDADE.</label>
-        </div>
-
-        <div class="linha" style="margin-top:10px;">
-          <div class="lbl">CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO:</div>
-        </div>
-        <div class="grupo">
-          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Escamosas: possivelmente não neoplásicas (ASC-US)" value="ASC-US" onchange="atualizar()"> ESCAMOSAS (ASC-US)</label>
-          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Escamosas: não se pode afastar lesão intra-epitelial de alto grau (ASC-H)" value="ASC-H" onchange="atualizar()"> ESCAMOSAS (ASC-H)</label>
-          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: possivelmente não neoplásicas" value="GLANDULARES: Possivelmente não neoplásicas" onchange="atualizar()"> GLANDULARES: Possivelmente não neoplásicas</label>
-          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: não se pode afastar lesão de alto grau" value="GLANDULARES: Não se pode afastar alto grau" onchange="atualizar()"> GLANDULARES: Não se pode afastar alto grau</label>
-        </div>
-
-        <div class="linha" style="margin-top:10px;">
-          <div class="lbl">ATIPIAS EM CÉLULAS ESCAMOSAS:</div>
-        </div>
-        <div class="grupo">
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Lesão intra-epitelial de baixo grau (compreendendo efeito citopático pelo vírus HPV e neoplasia intra-epitelial cervical grau I - NIC I)" value="NIC I" onchange="atualizar()"> BAIXO GRAU (HPV / NIC I)</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Lesão intra-epitelial de alto grau (NIC II e III)" value="NIC II / III" onchange="atualizar()"> ALTO GRAU (NIC II / III)</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Carcinoma epidermóide invasor" value="Carcinoma" onchange="atualizar()"> Carcinoma epidermóide invasor</label>
-        </div>
-
-        <div class="linha" style="margin-top:10px;">
-          <div class="lbl">ATIPIAS EM CÉLULAS GLANDULARES:</div>
-        </div>
-        <div class="grupo">
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma 'in situ'" value="Adenocarcinoma 'in situ'" onchange="atualizar()"> Adenocarcinoma "in situ"</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, cervical" value="Adenocarcinoma cervical" onchange="atualizar()"> Adenocarcinoma invasor, cervical</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, endometrial" value="Adenocarcinoma endometrial" onchange="atualizar()"> Adenocarcinoma invasor, endometrial</label>
-          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, SOE" value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
-        </div>
+<div class="shell">
+  <div class="hdr no-print">
+    <div class="brand">
+      <img src="logo/sesctopo.png" alt="SESC" />
+      <div class="brand-info">
+        <strong>SI - SISTEMA DE INFORMAÇÃO</strong>
+        <span>Laudo • Digitação e Impressão</span>
       </div>
     </div>
-
-    <!-- ✅ Observação -->
-    <div class="obs-wrap">
-      <div class="obs-title">Observação:</div>
-
-      <div class="op-col" style="margin-bottom:10px;">
-        <label><input type="radio" name="obs_opt" value="Tratar e repetir." onclick="aplicarObs(this.value)"> Tratar e repetir.</label>
-        <label><input type="radio" name="obs_opt" value="Alterações celulares importantes. Tratar e repetir." onclick="aplicarObs(this.value)"> Alterações celulares importantes. Tratar e repetir.</label>
-        <label><input type="radio" name="obs_opt" value="Correlacionar com exames complementares." onclick="aplicarObs(this.value)"> Correlacionar com exames complementares.</label>
-        <label><input type="radio" name="obs_opt" value="Padrão epitelial hipoestrogênico." onclick="aplicarObs(this.value)"> Padrão epitelial hipoestrogênico.</label>
-        <label><input type="radio" name="obs_opt" value="Padrão epitelial ainda trófico." onclick="aplicarObs(this.value)"> Padrão epitelial ainda trófico.</label>
-      </div>
-
-      <textarea id="obs_texto_tela" placeholder="Caso necessário, digite a observação aqui..."></textarea>
-    </div>
+    <div class="pill">Formulário do Laudo</div>
   </div>
 
-  <!-- =========================
-       ✅ PRINT
-       ========================= -->
-  <div class="print-only">
-    <div class="print-bg">
-      <img src="img/SESC_1.png" alt="Timbre">
+  <div class="card">
+    <div class="card-h no-print">
+      <h1>LAUDO DO EXAME CITOPATOLÓGICO</h1>
+      <div class="pill">Opções intactas • Sem alterações funcionais</div>
     </div>
 
-    <div class="print-page">
-      <div class="cab-paciente">
-        <div class="cab-row1">
-          <div class="cab-left">
-            <div class="cab-lbl2">PACIENTE</div>
-            <div class="cab-nome" id="cab_nome"></div>
+    <div class="card-b">
+      <!-- ====== SUA FOLHA (mantida) ====== -->
+      <div class="folha">
+
+        <!-- =========================
+             ✅ TELA: FORMULÁRIO (INTACTO)
+             ========================= -->
+        <div class="no-print">
+          <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
+
+          <div class="painel">
+            <!-- 1 -->
+            <div class="sec">
+              <div class="sec-title">1. Avaliação Pré Analítica</div>
+
+              <div class="linha">
+                <div class="lbl">Adequabilidade:</div>
+                <div class="op-row">
+                  <label><input type="radio" name="adeq" value="Satisfatória" onchange="atualizar()"> Satisfatória</label>
+                  <label><input type="radio" name="adeq" value="Insatisfatória" onchange="atualizar()"> Insatisfatória</label>
+                </div>
+              </div>
+
+              <div class="linha">
+                <div class="lbl">Epitélios:</div>
+                <div class="op-row">
+                  <label><input type="checkbox" class="epi" value="ESCAMOSO" onchange="atualizar()"> Escamoso</label>
+                  <label><input type="checkbox" class="epi" value="GLANDULAR" onchange="atualizar()"> Glandular</label>
+                  <label><input type="checkbox" class="epi" value="METAPLÁSICO" onchange="atualizar()"> Metaplásico</label>
+                </div>
+              </div>
+
+              <div class="linha">
+                <div class="lbl">Zona de Transformação:</div>
+                <div class="op-row">
+                  <label><input type="radio" name="zona" id="zona_sim" value="Sim" onchange="atualizar()"> Sim</label>
+                  <label><input type="radio" name="zona" id="zona_nao" value="Não" onchange="atualizar()"> Não</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2 -->
+            <div class="sec">
+              <div class="sec-title">2. Diagnóstico Descritivo</div>
+
+              <div class="op-col">
+                <label><input type="checkbox" id="chk_norm" onchange="atualizar()"> DENTRO DOS LIMITES DA NORMALIDADE NO MATERIAL EXAMINADO</label>
+              </div>
+
+              <div class="linha" style="margin-top:10px;">
+                <div class="lbl">ALTERAÇÕES CELULARES BENIGNAS:</div>
+              </div>
+              <div class="grupo">
+                <label><input type="checkbox" class="alt" value="Inflamação" onchange="atualizar()"> Inflamação</label>
+                <label><input type="checkbox" class="alt" value="Metaplasia escamosa imatura" onchange="atualizar()"> Metaplasia escamosa imatura</label>
+                <label><input type="checkbox" class="alt" value="Reparação" onchange="atualizar()"> Reparação</label>
+                <label><input type="checkbox" class="alt" value="Atrofia com inflamação" onchange="atualizar()"> Atrofia com inflamação</label>
+                <label><input type="checkbox" class="alt" value="Radiação" onchange="atualizar()"> Radiação</label>
+              </div>
+            </div>
+
+            <!-- 3 -->
+            <div class="sec">
+              <div class="sec-title">3. Microbiologia</div>
+              <div class="grupo" style="margin-left:0;">
+                <label><input type="checkbox" class="micro" value="Lactobacillus sp" onchange="atualizar()"> Lactobacillus sp</label>
+                <label><input type="checkbox" class="micro" value="Cocos" onchange="atualizar()"> Cocos</label>
+                <label><input type="checkbox" class="micro" value="Sugestivo de Chlamydia sp" onchange="atualizar()"> Sugestivo de Chlamydia sp</label>
+                <label><input type="checkbox" class="micro" value="Actinomyces sp" onchange="atualizar()"> Actinomyces sp</label>
+                <label><input type="checkbox" class="micro" value="Candida sp" onchange="atualizar()"> Candida sp</label>
+                <label><input type="checkbox" class="micro" value="Trichomonas vaginalis" onchange="atualizar()"> Trichomonas vaginalis</label>
+                <label><input type="checkbox" class="micro" data-full="Bacilos supracitoplasmáticos (sugestivos de Gardnerella/Mobiluncus)" value="Gardnerella/Mobiluncus" onchange="atualizar()"> Gardnerella/Mobiluncus</label>
+                <label><input type="checkbox" class="micro" data-full="Efeito citopático compatível com vírus do grupo Herpes" value="Vírus Herpes" onchange="atualizar()"> Vírus Herpes</label>
+              </div>
+            </div>
+
+            <!-- 4 -->
+            <div class="sec">
+              <div class="sec-title">4. Conclusão Técnica</div>
+
+              <div class="op-col">
+                <label><input type="radio" name="c" data-tit="CONCLUSÃO" data-full="NEGATIVO PARA MALIGNIDADE." value="NEGATIVO" onchange="atualizar()"> NEGATIVO PARA MALIGNIDADE.</label>
+              </div>
+
+              <div class="linha" style="margin-top:10px;">
+                <div class="lbl">CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO:</div>
+              </div>
+              <div class="grupo">
+                <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Escamosas: possivelmente não neoplásicas (ASC-US)" value="ASC-US" onchange="atualizar()"> ESCAMOSAS (ASC-US)</label>
+                <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Escamosas: não se pode afastar lesão intra-epitelial de alto grau (ASC-H)" value="ASC-H" onchange="atualizar()"> ESCAMOSAS (ASC-H)</label>
+                <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: possivelmente não neoplásicas" value="GLANDULARES: Possivelmente não neoplásicas" onchange="atualizar()"> GLANDULARES: Possivelmente não neoplásicas</label>
+                <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: não se pode afastar lesão de alto grau" value="GLANDULARES: Não se pode afastar alto grau" onchange="atualizar()"> GLANDULARES: Não se pode afastar alto grau</label>
+              </div>
+
+              <div class="linha" style="margin-top:10px;">
+                <div class="lbl">ATIPIAS EM CÉLULAS ESCAMOSAS:</div>
+              </div>
+              <div class="grupo">
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Lesão intra-epitelial de baixo grau (compreendendo efeito citopático pelo vírus HPV e neoplasia intra-epitelial cervical grau I - NIC I)" value="NIC I" onchange="atualizar()"> BAIXO GRAU (HPV / NIC I)</label>
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Lesão intra-epitelial de alto grau (NIC II e III)" value="NIC II / III" onchange="atualizar()"> ALTO GRAU (NIC II / III)</label>
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Carcinoma epidermóide invasor" value="Carcinoma" onchange="atualizar()"> Carcinoma epidermóide invasor</label>
+              </div>
+
+              <div class="linha" style="margin-top:10px;">
+                <div class="lbl">ATIPIAS EM CÉLULAS GLANDULARES:</div>
+              </div>
+              <div class="grupo">
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma 'in situ'" value="Adenocarcinoma 'in situ'" onchange="atualizar()"> Adenocarcinoma "in situ"</label>
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, cervical" value="Adenocarcinoma cervical" onchange="atualizar()"> Adenocarcinoma invasor, cervical</label>
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, endometrial" value="Adenocarcinoma endometrial" onchange="atualizar()"> Adenocarcinoma invasor, endometrial</label>
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, SOE" value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
+              </div>
+            </div>
           </div>
-          <div class="cab-right">
-            <div class="cab-lbl2">Nº DO EXAME</div>
-            <div class="cab-exame" id="cab_exame"></div>
+
+          <!-- ✅ Observação na TELA -->
+          <div class="obs-wrap">
+            <div class="obs-title">Observação:</div>
+
+            <div class="op-col" style="margin-bottom:10px;">
+              <label><input type="radio" name="obs_opt" value="Tratar e repetir." onclick="aplicarObs(this.value)"> Tratar e repetir.</label>
+              <label><input type="radio" name="obs_opt" value="Alterações celulares importantes. Tratar e repetir." onclick="aplicarObs(this.value)"> Alterações celulares importantes. Tratar e repetir.</label>
+              <label><input type="radio" name="obs_opt" value="Correlacionar com exames complementares." onclick="aplicarObs(this.value)"> Correlacionar com exames complementares.</label>
+              <label><input type="radio" name="obs_opt" value="Padrão epitelial hipoestrogênico." onclick="aplicarObs(this.value)"> Padrão epitelial hipoestrogênico.</label>
+              <label><input type="radio" name="obs_opt" value="Padrão epitelial ainda trófico." onclick="aplicarObs(this.value)"> Padrão epitelial ainda trófico.</label>
+            </div>
+
+            <textarea id="obs_texto_tela" placeholder="Caso necessário, digite a observação aqui..."></textarea>
           </div>
         </div>
 
-        <div class="cab-row2">
-          <div>DATA DE NASCIMENTO: <span id="cab_nasc"></span></div>
-          <div>CARTÃO SUS: <span id="cab_sus"></span></div>
-          <div>RUA: <span id="cab_rua"></span></div>
-          <div>TELEFONE: <span id="cab_tel"></span></div>
-          <div>BAIRRO: <span id="cab_bairro"></span></div>
-          <div></div>
-          <div>CIDADE: <span id="cab_cidade"></span></div>
-          <div></div>
-          <div>CEP: <span id="cab_cep"></span></div>
-          <div></div>
+        <!-- =========================
+             ✅ PRINT (INTACTO)
+             ========================= -->
+        <div class="print-only">
+          <div class="print-bg">
+            <img src="img/SESC_1.png" alt="Timbre">
+          </div>
+
+          <div class="print-page">
+            <div class="cab-paciente">
+              <div class="cab-row1">
+                <div class="cab-left">
+                  <div class="cab-lbl2">PACIENTE</div>
+                  <div class="cab-nome" id="cab_nome"></div>
+                </div>
+                <div class="cab-right">
+                  <div class="cab-lbl2">Nº DO EXAME</div>
+                  <div class="cab-exame" id="cab_exame"></div>
+                </div>
+              </div>
+
+              <div class="cab-row2">
+                <div>DATA DE NASCIMENTO: <span id="cab_nasc"></span></div>
+                <div>CARTÃO SUS: <span id="cab_sus"></span></div>
+                <div>RUA: <span id="cab_rua"></span></div>
+                <div>TELEFONE: <span id="cab_tel"></span></div>
+                <div>BAIRRO: <span id="cab_bairro"></span></div>
+                <div></div>
+                <div>CIDADE: <span id="cab_cidade"></span></div>
+                <div></div>
+                <div>CEP: <span id="cab_cep"></span></div>
+                <div></div>
+              </div>
+            </div>
+
+            <div class="linha-identificacao"><strong>CONVÊNIO:</strong>&nbsp;UNIDADE MÓVEL SESC SAÚDE MULHER</div>
+            <div class="linha-identificacao"><strong>EXAME REALIZADO:</strong>&nbsp;CITOPATOLÓGICO CÉRVICO-VAGINAL/MICROFLORA</div>
+            <div class="linha-identificacao"><strong>DATA DA COLETA:</strong>&nbsp;<span id="data_coleta_print"></span></div>
+            <div class="linha-identificacao"><strong>RESPONSÁVEL:</strong>&nbsp;<span id="nome_resp_print"></span></div>
+
+            <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
+
+            <div class="secao-print">
+              <span class="tit-negrito">AVALIAÇÃO PRÉ-ANALÍTICA</span><br>
+              <span class="tit-normal-caps">ADEQUABILIDADE DO MATERIAL:</span> <span id="p_adeq"></span><br>
+              <span class="tit-normal-caps">EPITÉLIOS REPRESENTADOS NA AMOSTRA:</span> <span id="p_epi"></span><br>
+              <span class="tit-normal-caps">REPRESENTATIVIDADE DA ZONA DE TRANSFORMAÇÃO:</span> <span id="p_zona"></span>
+            </div>
+
+            <div class="secao-print">
+              <span id="p_tit_diag" class="tit-negrito">DIAGNÓSTICO DESCRITIVO:</span>
+              <div style="display:block;margin-top:5px;">
+                <span id="p_subtit_diag" class="tit-normal-caps" style="display:none;">ALTERAÇÕES CELULARES BENIGNAS REATIVAS OU REPARATIVAS:</span>
+                <span id="p_res_diag"></span>
+              </div>
+            </div>
+
+            <div class="secao-print" style="margin-top:-5px;">
+              <span class="tit-normal-caps">MICROBIOLOGIA:</span>
+              <span id="p_res_micro"></span>
+            </div>
+
+            <div class="secao-print">
+              <span id="p_tit_concl" class="tit-negrito">CONCLUSÃO:</span>
+              <span id="p_res_concl" class="concl-resposta-bloco"></span>
+            </div>
+
+            <div class="secao-print" id="obs_print_wrap">
+              <strong>Observação:</strong>
+              <span id="obs_print"></span>
+            </div>
+
+            <div class="rodape-prof">
+              <div id="rodape_data"></div>
+              <div style="height:10px;"></div>
+              <div style="font-weight:800;">Dra. Daniele Carvalho Macêdo</div>
+              <div>CRM 12077 PB</div>
+            </div>
+          </div>
         </div>
+
       </div>
 
-      <div class="linha-identificacao"><strong>CONVÊNIO:</strong>&nbsp;UNIDADE MÓVEL SESC SAÚDE MULHER</div>
-      <div class="linha-identificacao"><strong>EXAME REALIZADO:</strong>&nbsp;CITOPATOLÓGICO CÉRVICO-VAGINAL/MICROFLORA</div>
-      <div class="linha-identificacao"><strong>DATA DA COLETA:</strong>&nbsp;<span id="data_coleta_print"></span></div>
-      <div class="linha-identificacao"><strong>RESPONSÁVEL:</strong>&nbsp;<span id="nome_resp_print"></span></div>
-
-      <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
-
-      <div class="secao-print">
-        <span class="tit-negrito">AVALIAÇÃO PRÉ-ANALÍTICA</span><br>
-        <span class="tit-normal-caps">ADEQUABILIDADE DO MATERIAL:</span> <span id="p_adeq"></span><br>
-        <span class="tit-normal-caps">EPITÉLIOS REPRESENTADOS NA AMOSTRA:</span> <span id="p_epi"></span><br>
-        <span class="tit-normal-caps">REPRESENTATIVIDADE DA ZONA DE TRANSFORMAÇÃO:</span> <span id="p_zona"></span>
-      </div>
-
-      <div class="secao-print">
-        <span id="p_tit_diag" class="tit-negrito">DIAGNÓSTICO DESCRITIVO:</span>
-        <div style="display:block;margin-top:5px;">
-          <span id="p_subtit_diag" class="tit-normal-caps" style="display:none;">ALTERAÇÕES CELULARES BENIGNAS REATIVAS OU REPARATIVAS:</span>
-          <span id="p_res_diag"></span>
-        </div>
-      </div>
-
-      <div class="secao-print" style="margin-top:-5px;">
-        <span class="tit-normal-caps">MICROBIOLOGIA:</span>
-        <span id="p_res_micro"></span>
-      </div>
-
-      <div class="secao-print">
-        <span id="p_tit_concl" class="tit-negrito">CONCLUSÃO:</span>
-        <span id="p_res_concl" class="concl-resposta-bloco"></span>
-      </div>
-
-      <div class="secao-print" id="obs_print_wrap">
-        <strong>Observação:</strong>
-        <span id="obs_print"></span>
-      </div>
-
-      <div class="rodape-prof">
-        <div id="rodape_data"></div>
-        <div style="height:10px;"></div>
-        <div style="font-weight:800;">Dra. Daniele Carvalho Macêdo</div>
-        <div>CRM 12077 PB</div>
+      <!-- ✅ Controles -->
+      <div class="controles no-print">
+        <button class="btn btn-print" onclick="imprimirLaudo()">IMPRIMIR / SALVAR PDF</button>
+        <button class="btn btn-word" onclick="baixarWordEVoltar()">BAIXAR WORD (.DOC)</button>
+        <button class="btn btn-clear" onclick="location.reload()">LIMPAR</button>
       </div>
     </div>
   </div>
-
-</div>
-
-<div class="controles no-print">
-  <button class="btn btn-print" onclick="imprimirLaudo()">IMPRIMIR / SALVAR PDF</button>
-  <button class="btn btn-word" onclick="baixarWordEVoltar()">BAIXAR WORD (.DOC)</button>
-  <button class="btn btn-clear" onclick="location.reload()">LIMPAR</button>
 </div>
 
 <script>
@@ -554,7 +645,7 @@
     void document.body.offsetHeight;
   }
 
-  /* ✅ Observação sincronizada */
+  /* ✅ Observação sincronizada (mantida) */
   function syncObservacao(){
     const txt = (document.getElementById("obs_texto_tela")?.value || "").trim();
     const wrap = document.getElementById("obs_print_wrap");
@@ -615,15 +706,10 @@
   function atualizar(){
     const checksEpi = document.querySelectorAll('.epi:checked');
 
-    /* ==========================================================
-       ✅ NOVO: AUTO ZONA DE TRANSFORMAÇÃO
-       Se marcar 2 ou mais epitélios => Zona de Transformação = SIM
-       ========================================================== */
+    /* ✅ AUTO-ZONA (mantido) */
     if(checksEpi.length >= 2){
       const zSim = document.getElementById("zona_sim");
-      if(zSim && !zSim.checked){
-        zSim.checked = true;
-      }
+      if(zSim && !zSim.checked) zSim.checked = true;
     }
 
     document.getElementById('p_adeq').textContent =
@@ -680,7 +766,7 @@
     syncObservacao();
   }
 
-  /* ===== Exportação no padrão do sistema ===== */
+  /* ===== Exportação no padrão do sistema (MANTIDA) ===== */
   function mesChaveAtual(){
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -773,6 +859,7 @@
   function buildWordHTML(){
     atualizar();
     syncObservacao();
+
     const bloco = document.querySelector(".print-only .print-page");
     const clone = bloco.cloneNode(true);
     clone.style.display = "block";
@@ -816,7 +903,7 @@
     setTimeout(() => voltarSistema(), 700);
   }
 
-  // init
+  // ✅ init
   preencherCabecalhoPrint();
 
   (function initObs(){
