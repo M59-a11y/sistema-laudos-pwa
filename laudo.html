@@ -301,7 +301,7 @@
   .tit-normal-caps{ font-weight:400; text-transform:uppercase; }
   .concl-resposta-bloco{ white-space:pre-line; font-weight:400; display:block; margin-top:2px; }
 
-  /* ✅ OBSERVAÇÃO NO PRINT: só aparece se tiver texto */
+  /* ✅ OBSERVAÇÃO NO PRINT */
   #obs_print{ white-space: pre-line; }
   #obs_print_wrap{ display:block; }
   #obs_print_wrap.vazio{ display:none; }
@@ -323,15 +323,13 @@
     <span>Selecione as opções e imprima em PDF</span>
   </div>
   <div style="opacity:.9;font-size:12px;">
-    Versão: <b>COMPLETO - BENIGNAS/ATIPIAS</b>
+    Versão: <b>AUTO-ZONA</b>
   </div>
 </div>
 
 <div class="folha">
 
-  <!-- =========================
-       ✅ TELA: FORMULÁRIO COMPLETO
-       ========================= -->
+  <!-- ✅ TELA -->
   <div class="no-print">
     <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
 
@@ -440,7 +438,7 @@
       </div>
     </div>
 
-    <!-- ✅ Observação na TELA -->
+    <!-- ✅ Observação -->
     <div class="obs-wrap">
       <div class="obs-title">Observação:</div>
 
@@ -556,7 +554,7 @@
     void document.body.offsetHeight;
   }
 
-  /* ✅ sincronização definitiva da observação */
+  /* ✅ Observação sincronizada */
   function syncObservacao(){
     const txt = (document.getElementById("obs_texto_tela")?.value || "").trim();
     const wrap = document.getElementById("obs_print_wrap");
@@ -616,6 +614,17 @@
 
   function atualizar(){
     const checksEpi = document.querySelectorAll('.epi:checked');
+
+    /* ==========================================================
+       ✅ NOVO: AUTO ZONA DE TRANSFORMAÇÃO
+       Se marcar 2 ou mais epitélios => Zona de Transformação = SIM
+       ========================================================== */
+    if(checksEpi.length >= 2){
+      const zSim = document.getElementById("zona_sim");
+      if(zSim && !zSim.checked){
+        zSim.checked = true;
+      }
+    }
 
     document.getElementById('p_adeq').textContent =
       document.querySelector('input[name="adeq"]:checked')?.value || '';
@@ -724,14 +733,13 @@
 
   function imprimirLaudo(){
     atualizar();
-    syncObservacao(); // ✅ garante observação no PDF
+    syncObservacao();
 
     const sugerido = nomeArquivoSugerido();
     const digitado = prompt("Nome do arquivo (PDF):", sugerido);
     if(digitado === null) return;
 
     const nomeFinal = (digitado || sugerido).trim() || sugerido;
-
     const tituloOriginal = document.title;
     document.title = nomeFinal;
 
@@ -765,7 +773,6 @@
   function buildWordHTML(){
     atualizar();
     syncObservacao();
-
     const bloco = document.querySelector(".print-only .print-page");
     const clone = bloco.cloneNode(true);
     clone.style.display = "block";
@@ -809,21 +816,19 @@
     setTimeout(() => voltarSistema(), 700);
   }
 
-  // ✅ inicialização
+  // init
   preencherCabecalhoPrint();
 
   (function initObs(){
     const obs = document.getElementById("obs_texto_tela");
     if(!obs) return;
 
-    // recebe observação do sistema principal
     if(init.observacao && !obs.value) obs.value = init.observacao;
 
     obs.addEventListener("input", () => syncObservacao());
     syncObservacao();
   })();
 
-  // deixa função disponível
   window.atualizar = atualizar;
 </script>
 
