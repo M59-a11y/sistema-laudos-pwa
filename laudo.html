@@ -57,10 +57,8 @@
     overflow:hidden;
   }
 
-  /* ✅ Timbre SOMENTE no print */
-  .timbre-print{
-    display:none;
-  }
+  /* ✅ Timbre: NÃO aparece na tela, só no print */
+  .timbre-print{ display:none; }
 
   /* ===== TELA (FORMULÁRIO) ===== */
   .titulo-laudo{
@@ -165,10 +163,16 @@
     box-sizing:border-box;
   }
 
-  /* ===== PRINT ===== */
+  /* ===== PRINT (LAUDO COMPLETO) ===== */
   .print-only{ display:none; }
 
-  /* ✅ Cabeçalho com dados (igual seu modelo) */
+  /* ✅ Conteúdo impresso acima do timbre */
+  .print-only{
+    position:relative;
+    z-index:2;
+  }
+
+  /* ✅ Cabeçalho do timbre */
   .cab-dados{
     position:absolute;
     top:16mm;
@@ -194,7 +198,7 @@
     white-space:nowrap;
   }
 
-  /* ✅ Conteúdo impresso desce para não invadir o timbre/cabeçalho */
+  /* ✅ Desce conteúdo para não bater no cabeçalho */
   .print-body{
     margin-top:42mm;
   }
@@ -305,11 +309,11 @@
 
 <div class="folha">
 
-  <!-- ✅ Timbre SOMENTE na impressão -->
+  <!-- ✅ Timbre SOMENTE no print -->
   <img class="timbre-print" src="img/SESC_1.png" alt="Timbre">
 
   <!-- =========================
-       ✅ TELA (DIGITAÇÃO)
+       ✅ TELA: FORMULÁRIO
        ========================= -->
   <div class="no-print">
     <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
@@ -417,6 +421,7 @@
           <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, SOE" value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
         </div>
       </div>
+
     </div><!-- painel -->
 
     <!-- Observação -->
@@ -433,13 +438,15 @@
 
       <textarea id="obs_texto" placeholder="Caso necessário, digite a observação aqui..." oninput="setObsPrint(this.value)"></textarea>
     </div>
+
   </div><!-- /no-print -->
 
   <!-- =========================
        ✅ IMPRESSÃO
        ========================= -->
-  <div class="print-only">
+  <div class="print-only" id="printRoot">
 
+    <!-- Cabeçalho timbrado -->
     <table class="cab-dados">
       <tr>
         <td class="cab-lbl">Emissão:</td>
@@ -539,7 +546,7 @@
         <div>CRM 12077 PB</div>
       </div>
 
-    </div>
+    </div><!-- /print-body -->
   </div><!-- /print-only -->
 
 </div><!-- /folha -->
@@ -555,6 +562,12 @@
   function up(v){ return (v||"").toUpperCase().trim(); }
   function sanitizeFileName(name){
     return (name||"").replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim();
+  }
+
+  /* ✅ força o navegador recalcular o layout antes do print (evita folha em branco) */
+  function forceReflow(){
+    void document.documentElement.offsetHeight;
+    void document.body.offsetHeight;
   }
 
   function setObsPrint(texto){
@@ -594,42 +607,35 @@
     observacao: (params.get("observacao") || "").trim()
   };
 
-  // Cabeçalho do paciente (print)
-  document.getElementById("cab_nome").textContent = init.paciente;
-  document.getElementById("cab_exame").textContent = init.exame;
-  document.getElementById("cab_nasc").textContent = init.data_nascimento;
-  document.getElementById("cab_sus").textContent = init.cartao_sus;
-  document.getElementById("cab_tel").textContent = init.telefone;
-  document.getElementById("cab_rua").textContent = init.rua;
-  document.getElementById("cab_bairro").textContent = init.bairro;
-  document.getElementById("cab_cidade").textContent = init.cidade;
-  document.getElementById("cab_cep").textContent = init.cep;
+  // Preenche cabeçalho do print
+  function preencherCabecalhoPrint(){
+    document.getElementById("cab_nome").textContent = init.paciente;
+    document.getElementById("cab_exame").textContent = init.exame;
+    document.getElementById("cab_nasc").textContent = init.data_nascimento;
+    document.getElementById("cab_sus").textContent = init.cartao_sus;
+    document.getElementById("cab_tel").textContent = init.telefone;
+    document.getElementById("cab_rua").textContent = init.rua;
+    document.getElementById("cab_bairro").textContent = init.bairro;
+    document.getElementById("cab_cidade").textContent = init.cidade;
+    document.getElementById("cab_cep").textContent = init.cep;
 
-  document.getElementById("data_coleta_print").textContent = init.data_coleta;
-  document.getElementById("nome_resp_print").textContent = init.responsavel;
+    document.getElementById("data_coleta_print").textContent = init.data_coleta;
+    document.getElementById("nome_resp_print").textContent = init.responsavel;
 
-  document.getElementById("obs_texto").value = init.observacao;
-  setObsPrint(init.observacao);
+    document.getElementById("obs_texto").value = init.observacao;
+    setObsPrint(init.observacao);
 
-  // Rodapé com data completa
-  (function setRodape(){
-    const hoje = new Date();
-    const dia = hoje.getDate();
-    const mes = hoje.toLocaleDateString("pt-BR",{month:"long"});
-    const ano = hoje.getFullYear();
-    document.getElementById("rodape_data").textContent = `João Pessoa, ${dia} de ${mes} de ${ano}`;
-  })();
-
-  // ✅ Cabeçalho timbre: Emissão/Hora
-  (function setCabDados(){
     const now = new Date();
-    const data = now.toLocaleDateString("pt-BR");
-    const hora = now.toLocaleTimeString("pt-BR", { hour12:false });
-    const elData = document.getElementById("cab_emissao");
-    const elHora = document.getElementById("cab_hora");
-    if(elData) elData.textContent = data;
-    if(elHora) elHora.textContent = hora;
-  })();
+    document.getElementById("cab_emissao").textContent = now.toLocaleDateString("pt-BR");
+    document.getElementById("cab_hora").textContent = now.toLocaleTimeString("pt-BR",{hour12:false});
+
+    const dia = now.getDate();
+    const mes = now.toLocaleDateString("pt-BR",{month:"long"});
+    const ano = now.getFullYear();
+    document.getElementById("rodape_data").textContent = `João Pessoa, ${dia} de ${mes} de ${ano}`;
+  }
+
+  preencherCabecalhoPrint();
 
   function atualizar(){
     const checksEpi = document.querySelectorAll('.epi:checked');
@@ -639,12 +645,18 @@
     if (checksEpi.length > 1) zonaSim.checked = true;
     else if (checksEpi.length === 1) zonaNao.checked = true;
 
-    document.getElementById('p_adeq').textContent = document.querySelector('input[name="adeq"]:checked')?.value || '';
-    document.getElementById('p_epi').textContent = Array.from(checksEpi).map(c => c.value).join(", ");
-    document.getElementById('p_zona').textContent = document.querySelector('input[name="zona"]:checked')?.value || '';
+    document.getElementById('p_adeq').textContent =
+      document.querySelector('input[name="adeq"]:checked')?.value || '';
+
+    document.getElementById('p_epi').textContent =
+      Array.from(checksEpi).map(c => c.value).join(", ");
+
+    document.getElementById('p_zona').textContent =
+      document.querySelector('input[name="zona"]:checked')?.value || '';
 
     const norm = document.getElementById('chk_norm').checked;
     const alts = Array.from(document.querySelectorAll('.alt:checked')).map(c => c.value);
+
     const pTitDiag = document.getElementById('p_tit_diag');
     const pSubtitDiag = document.getElementById('p_subtit_diag');
     const pResDiag = document.getElementById('p_res_diag');
@@ -663,21 +675,29 @@
       pResDiag.textContent = "";
     }
 
-    const micros = Array.from(document.querySelectorAll('.micro:checked')).map(c => c.getAttribute('data-full') || c.value);
-    document.getElementById('p_res_micro').textContent = micros.join(", ") + (micros.length ? "." : "");
+    const micros = Array.from(document.querySelectorAll('.micro:checked'))
+      .map(c => c.getAttribute('data-full') || c.value);
+
+    document.getElementById('p_res_micro').textContent =
+      micros.join(", ") + (micros.length ? "." : "");
 
     const concl = document.querySelector('input[name="c"]:checked');
     if(concl){
       const categoria = concl.getAttribute('data-tit');
       const respostaTecnica = concl.getAttribute('data-full') || concl.value;
+
       if(concl.value === "NEGATIVO"){
         document.getElementById('p_res_concl').textContent = respostaTecnica;
       }else{
-        document.getElementById('p_res_concl').textContent = categoria + ":\n" + respostaTecnica;
+        document.getElementById('p_res_concl').textContent =
+          categoria + ":\n" + respostaTecnica;
       }
     }else{
       document.getElementById('p_res_concl').textContent = "";
     }
+
+    // sempre manter cabeçalho/hora atualizada
+    preencherCabecalhoPrint();
   }
 
   // ===== Exportação no padrão do sistema =====
@@ -731,7 +751,46 @@
     if(window.history.length > 1){ window.history.back(); return; }
   }
 
-  // ✅ Word
+  // ✅ PRINT (corrigido para NÃO ficar em branco)
+  function imprimirLaudo(){
+    atualizar();
+
+    const sugerido = nomeArquivoSugerido();
+    const digitado = prompt("Nome do arquivo (PDF):", sugerido);
+    if(digitado === null) return;
+
+    const nomeFinal = (digitado || sugerido).trim() || sugerido;
+
+    const tituloOriginal = document.title;
+    document.title = nomeFinal;
+
+    try{
+      const concl = document.querySelector('input[name="c"]:checked');
+      if(concl && concl.value !== "NEGATIVO"){
+        const payload = {
+          exame: init.exame,
+          nome: init.paciente,
+          telefone: init.telefone,
+          categoria: concl.getAttribute("data-tit") || "",
+          subcategoria: (concl.getAttribute("data-full") || concl.value || "").trim()
+        };
+        salvarCasoPositivoNoStorage(payload);
+        gerarArquivoExportacaoMes();
+      }
+    }catch(e){ console.error(e); }
+
+    // ✅ força layout antes do print
+    forceReflow();
+
+    // ✅ pequena espera para o navegador montar o DOM do print
+    setTimeout(() => {
+      window.print();
+      setTimeout(() => { document.title = tituloOriginal; }, 1200);
+      setTimeout(() => voltarSistema(), 700);
+    }, 120);
+  }
+
+  // ✅ Word (.doc)
   function buildWordHTML(){
     atualizar();
     const bloco = document.querySelector(".print-only");
@@ -743,7 +802,6 @@
   function baixarWordEVoltar(){
     atualizar();
 
-    // ✅ backup/exportação para alterados
     try{
       const concl = document.querySelector('input[name="c"]:checked');
       if(concl && concl.value !== "NEGATIVO"){
@@ -779,39 +837,6 @@
     a.remove();
     URL.revokeObjectURL(a.href);
 
-    setTimeout(() => voltarSistema(), 700);
-  }
-
-  function imprimirLaudo(){
-    atualizar();
-
-    const sugerido = nomeArquivoSugerido();
-    const digitado = prompt("Nome do arquivo (PDF):", sugerido);
-    if(digitado === null) return;
-
-    const nomeFinal = (digitado || sugerido).trim() || sugerido;
-
-    const tituloOriginal = document.title;
-    document.title = nomeFinal;
-
-    try{
-      const concl = document.querySelector('input[name="c"]:checked');
-      if(concl && concl.value !== "NEGATIVO"){
-        const payload = {
-          exame: init.exame,
-          nome: init.paciente,
-          telefone: init.telefone,
-          categoria: concl.getAttribute("data-tit") || "",
-          subcategoria: (concl.getAttribute("data-full") || concl.value || "").trim()
-        };
-        salvarCasoPositivoNoStorage(payload);
-        gerarArquivoExportacaoMes();
-      }
-    }catch(e){ console.error(e); }
-
-    window.print();
-
-    setTimeout(() => { document.title = tituloOriginal; }, 1200);
     setTimeout(() => voltarSistema(), 700);
   }
 
