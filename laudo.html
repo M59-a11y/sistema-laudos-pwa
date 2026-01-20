@@ -234,7 +234,6 @@
     body{ background:#fff; padding:0; }
     .controles{ display:none !important; }
 
-    /* ✅ remove min-height só no print pra não criar folha em branco */
     .folha{
       box-shadow:none;
       width:100%;
@@ -365,6 +364,7 @@
           <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, SOE" value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
         </div>
       </div>
+
     </div><!-- painel -->
 
     <!-- Observação -->
@@ -478,7 +478,6 @@
 </div>
 
 <script>
-  function onlyDigits(s){ return (s||"").replace(/\D/g,''); }
   function up(v){ return (v||"").toUpperCase().trim(); }
   function sanitizeFileName(name){
     return (name||"").replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim();
@@ -594,11 +593,131 @@
   }
 
   /* ==========================================================
-     ✅ POPUP WORD COM CÓPIA AUTOMÁTICA + FORMATAÇÃO (HTML clipboard)
+     ✅ GERAR HTML ESPECÍFICO PARA WORD
+     - Sem flex/grid
+     - Cabeçalho e dados em tabelas (Word-friendly)
+     - Conclusão com quebra de linha preservada
   ========================================================== */
-  function abrirLaudoEmJanelaWord(laudoHTML, titulo = "Laudo - Copiar para Word") {
+  function buildWordHTML(){
+    // garante dados atualizados
+    atualizar();
+
+    const get = (id) => (document.getElementById(id)?.textContent || "").trim();
+
+    const obsWrap = document.getElementById("obs_print_wrap");
+    const obsVisible = obsWrap && (obsWrap.style.display !== "none");
+    const obsText = (document.getElementById("obs_print")?.textContent || "").trim();
+
+    const pResConcl = document.getElementById("p_res_concl");
+    let conclTexto = (pResConcl?.textContent || "").trim();
+    // preserva quebras para Word
+    conclTexto = conclTexto.replace(/\n/g, "<br>");
+
+    // HTML tabelado para Word
+    return `
+      <div style="font-family:'Arial Narrow', Arial, sans-serif; font-size:10pt;">
+
+        <!-- CABEÇALHO -->
+        <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-top:3px solid #00a651;border-bottom:3px solid #00a651;margin-bottom:10px;">
+          <tr>
+            <td style="padding:10px 0;">
+              <div style="text-transform:uppercase;font-size:12pt;">PACIENTE</div>
+              <div style="text-transform:uppercase;font-weight:bold;font-size:11.5pt;">${get("cab_nome")}</div>
+            </td>
+            <td style="padding:10px 0; text-align:right;">
+              <div style="text-transform:uppercase;font-size:12pt;">Nº DO EXAME</div>
+              <div style="text-transform:uppercase;font-weight:bold;font-size:11.5pt;">${get("cab_exame")}</div>
+            </td>
+          </tr>
+        </table>
+
+        <!-- DADOS EM TABELA (Word-friendly) -->
+        <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin-bottom:10px;text-transform:uppercase;font-size:9.5pt;">
+          <tr>
+            <td style="padding:2px 0;">DATA DE NASCIMENTO: <strong>${get("cab_nasc")}</strong></td>
+            <td style="padding:2px 0;">CARTÃO SUS: <strong>${get("cab_sus")}</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:2px 0;">RUA: <strong>${get("cab_rua")}</strong></td>
+            <td style="padding:2px 0;">TELEFONE: <strong>${get("cab_tel")}</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:2px 0;">BAIRRO: <strong>${get("cab_bairro")}</strong></td>
+            <td style="padding:2px 0;"></td>
+          </tr>
+          <tr>
+            <td style="padding:2px 0;">CIDADE: <strong>${get("cab_cidade")}</strong></td>
+            <td style="padding:2px 0;"></td>
+          </tr>
+          <tr>
+            <td style="padding:2px 0;">CEP: <strong>${get("cab_cep")}</strong></td>
+            <td style="padding:2px 0;"></td>
+          </tr>
+        </table>
+
+        <!-- IDENTIFICAÇÃO -->
+        <div style="text-transform:uppercase;margin-bottom:4px;"><strong>CONVÊNIO:</strong> UNIDADE MÓVEL SESC SAÚDE MULHER</div>
+        <div style="text-transform:uppercase;margin-bottom:4px;"><strong>EXAME REALIZADO:</strong> CITOPATOLÓGICO CÉRVICO-VAGINAL/MICROFLORA</div>
+        <div style="text-transform:uppercase;margin-bottom:4px;"><strong>DATA DA COLETA:</strong> ${get("data_coleta_print")}</div>
+        <div style="text-transform:uppercase;margin-bottom:10px;"><strong>RESPONSÁVEL:</strong> ${get("nome_resp_print")}</div>
+
+        <!-- TÍTULO -->
+        <div style="text-align:center;font-weight:800;font-size:12pt;text-transform:uppercase;margin:8px 0 14px;">
+          LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO
+        </div>
+
+        <!-- SEÇÕES -->
+        <div style="margin-bottom:12px; text-align:justify; line-height:1.5;">
+          <span style="font-weight:700;text-transform:uppercase;">AVALIAÇÃO PRÉ-ANALÍTICA</span><br>
+          <span style="text-transform:uppercase;">ADEQUABILIDADE DO MATERIAL:</span> ${get("p_adeq")}<br>
+          <span style="text-transform:uppercase;">EPITÉLIOS REPRESENTADOS NA AMOSTRA:</span> ${get("p_epi")}<br>
+          <span style="text-transform:uppercase;">REPRESENTATIVIDADE DA ZONA DE TRANSFORMAÇÃO:</span> ${get("p_zona")}
+        </div>
+
+        <div style="margin-bottom:12px; text-align:justify; line-height:1.5;">
+          <span style="font-weight:700;text-transform:uppercase;">DIAGNÓSTICO DESCRITIVO:</span>
+          <div style="margin-top:5px;">
+            ${ (document.getElementById("p_subtit_diag")?.style.display !== "none")
+                ? `<span style="text-transform:uppercase;">ALTERAÇÕES CELULARES BENIGNAS REATIVAS OU REPARATIVAS:</span>`
+                : "" }
+            <span>${get("p_res_diag")}</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px; text-align:justify; line-height:1.5;">
+          <span style="text-transform:uppercase;">MICROBIOLOGIA:</span>
+          <span>${get("p_res_micro")}</span>
+        </div>
+
+        <div style="margin-bottom:12px; text-align:justify; line-height:1.5;">
+          <span style="font-weight:700;text-transform:uppercase;">CONCLUSÃO:</span><br>
+          <span>${conclTexto}</span>
+        </div>
+
+        ${ (obsVisible && obsText)
+            ? `<div style="margin-bottom:12px; line-height:1.5;"><strong>Observação:</strong> ${obsText}</div>`
+            : "" }
+
+        <!-- RODAPÉ -->
+        <div style="margin-top:20px; text-align:center; font-size:10pt;">
+          <div>${get("rodape_data")}</div>
+          <div style="height:12px;"></div>
+          <div style="font-weight:800;">Dra. Daniele Carvalho Macêdo</div>
+          <div>CRM 12077 PB</div>
+        </div>
+
+      </div>
+    `;
+  }
+
+  /* ==========================================================
+     ✅ POPUP WORD COM CÓPIA AUTOMÁTICA (HTML + tabelas)
+  ========================================================== */
+  function abrirLaudoWord(){
+    const laudoWordHTML = buildWordHTML();
+
     const w = window.open("", "_blank", "width=950,height=750,scrollbars=yes,resizable=yes");
-    if (!w) {
+    if(!w){
       alert("Pop-up bloqueado! Permita pop-ups para este site.");
       return;
     }
@@ -609,62 +728,28 @@
       <html lang="pt-BR">
       <head>
         <meta charset="UTF-8" />
-        <title>${titulo}</title>
+        <title>Laudo ${init.exame} - ${init.paciente}</title>
         <style>
           body{ font-family: Arial, sans-serif; padding:20px; background:#f6f6f6; }
           .topo{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:14px; }
           button{ padding:10px 14px; border:0; border-radius:10px; font-weight:800; cursor:pointer; }
           .btnCopiar{ background:#2e7d32; color:#fff; }
           .btnFechar{ background:#b71c1c; color:#fff; }
-          .btnSelecionar{ background:#1f6feb; color:#fff; }
-          .card{
-            background:#fff;
-            border:1px solid #ddd;
-            border-radius:14px;
-            padding:18px;
-            line-height:1.5;
-            font-size:14px;
-          }
+          .card{ background:#fff; border:1px solid #ddd; border-radius:14px; padding:18px; }
           .aviso{ margin-left:auto; font-size:12px; opacity:0.85; }
-
-          /* ✅ CSS do laudo dentro do popup */
-          .cab-paciente{ border-top:3px solid #00a651; border-bottom:3px solid #00a651; padding:10px 0; margin:0 0 14px; }
-          .cab-row1{ display:flex; justify-content:space-between; gap:20px; }
-          .cab-left{ flex:1; }
-          .cab-right{ min-width:220px; text-align:right; }
-          .cab-lbl{ font-size:12pt; font-weight:400; text-transform:uppercase; font-family:"Arial Narrow", Arial, sans-serif; }
-          .cab-nome,.cab-exame{ font-size:11.5pt; font-weight:700; text-transform:uppercase; font-family:"Arial Narrow"; line-height:1.1; }
-          .cab-row2{ margin-top:10px; display:grid; grid-template-columns:1.2fr 0.8fr; gap:6px 40px; font-family:"Arial Narrow", Arial, sans-serif; font-size:9.5pt; text-transform:uppercase; font-weight:400; }
-          .linha-identificacao{ font-family:"Arial Narrow", Arial, sans-serif; font-size:10pt; text-transform:uppercase; margin-bottom:4px; display:flex; gap:6px; align-items:baseline; white-space:nowrap; }
-          .titulo-laudo{ text-align:center; font-weight:800; font-size:12pt; margin:8px 0 14px; text-transform:uppercase; font-family:"Arial Narrow", Arial, sans-serif; }
-          .secao-print{ margin-bottom:12px; line-height:1.5; font-family:"Arial Narrow", Arial, sans-serif; font-size:10pt; text-align:justify; }
-          .tit-negrito{ font-weight:700; text-transform:uppercase; }
-          .tit-normal-caps{ font-weight:400; text-transform:uppercase; }
-          .concl-resposta-bloco{ white-space:pre-line; font-weight:400; display:block; }
-          .rodape-prof{ margin-top:20px; text-align:center; font-family:"Arial Narrow", Arial, sans-serif; font-size:10pt; }
         </style>
       </head>
       <body>
         <div class="topo">
-          <button class="btnCopiar" onclick="copiarHTML()">📋 Copiar laudo formatado</button>
-          <button class="btnSelecionar" onclick="selecionar()">🖱️ Selecionar tudo</button>
+          <button class="btnCopiar" onclick="copiar()">📋 Copiar laudo (Word)</button>
           <button class="btnFechar" onclick="window.close()">✖ Fechar</button>
           <span class="aviso" id="msg"></span>
         </div>
 
-        <div id="laudo" class="card">${laudoHTML}</div>
+        <div id="laudo" class="card">${laudoWordHTML}</div>
 
         <script>
-          function selecionar(){
-            const el = document.getElementById('laudo');
-            const range = document.createRange();
-            range.selectNodeContents(el);
-            const sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-          }
-
-          async function copiarHTML(){
+          async function copiar(){
             const el = document.getElementById('laudo');
             const html = el.innerHTML;
             const texto = el.innerText;
@@ -681,40 +766,32 @@
                   })
                 ]);
 
-                document.getElementById('msg').textContent = "✅ Copiado com formatação! Cole no Word (Ctrl+V).";
+                document.getElementById('msg').textContent = "✅ Copiado PERFEITO! Cole no Word (Ctrl+V).";
               }else{
-                selecionar();
+                // fallback
+                const range = document.createRange();
+                range.selectNodeContents(el);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
                 document.execCommand('copy');
-                window.getSelection().removeAllRanges();
-                document.getElementById('msg').textContent = "✅ Copiado! (fallback)";
+                sel.removeAllRanges();
+                document.getElementById('msg').textContent = "✅ Copiado (fallback).";
               }
             }catch(e){
               console.error(e);
-              document.getElementById('msg').textContent = "⚠️ Não consegui copiar automaticamente. Selecione e use Ctrl+C.";
+              document.getElementById('msg').textContent = "⚠️ Não consegui copiar automaticamente. Selecione e Ctrl+C.";
             }
           }
 
           window.onload = function(){
-            setTimeout(copiarHTML, 250);
+            setTimeout(copiar, 250);
           }
         <\/script>
       </body>
       </html>
     `);
     w.document.close();
-  }
-
-  function montarLaudoHTMLWord(){
-    atualizar();
-    const bloco = document.querySelector(".print-only");
-    const clone = bloco.cloneNode(true);
-    clone.style.display = "block";
-    return clone.innerHTML;
-  }
-
-  function abrirLaudoWord(){
-    const html = montarLaudoHTMLWord();
-    abrirLaudoEmJanelaWord(html, `Laudo ${init.exame} - ${init.paciente}`);
   }
 
   // ===== Exportação no padrão do sistema (MANTIDO) =====
@@ -768,7 +845,6 @@
     if(window.history.length > 1){ window.history.back(); return; }
   }
 
-  // ✅ IMPRIMIR (sugere nome + exporta + volta)
   function imprimirLaudo(){
     atualizar();
 
@@ -803,12 +879,7 @@
   }
 
   window.atualizar = atualizar;
-  window.abrirLaudoWord = abrirLaudoWord;
 </script>
 
 </body>
 </html>
-
-
-
-
