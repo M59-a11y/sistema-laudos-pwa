@@ -9,7 +9,6 @@
   :root{
     --blue:#336699;
     --panel:#eef2f7;
-    --border:#c7d7e6;
   }
 
   body{
@@ -57,10 +56,10 @@
     overflow:hidden;
   }
 
-  /* ✅ Timbre: NÃO aparece na tela, só no print */
+  /* Timbre só no print */
   .timbre-print{ display:none; }
 
-  /* ===== TELA (FORMULÁRIO) ===== */
+  /* ===== TELA ===== */
   .titulo-laudo{
     text-align:center;
     font-weight:800;
@@ -137,7 +136,7 @@
     margin-top:6px;
   }
 
-  /* ===== OBSERVAÇÃO (TELA) ===== */
+  /* ===== OBS ===== */
   .obs-wrap{
     margin-top:12px;
     background:#e9eff7;
@@ -163,19 +162,13 @@
     box-sizing:border-box;
   }
 
-  /* ===== PRINT (LAUDO COMPLETO) ===== */
-  .print-only{ display:none; }
+  /* ===== PRINT ===== */
+  .print-only{ display:none; position:relative; z-index:2; }
 
-  /* ✅ Conteúdo impresso acima do timbre */
-  .print-only{
-    position:relative;
-    z-index:2;
-  }
-
-  /* ✅ Cabeçalho do timbre */
+  /* ✅ Cabeçalho Emissão/Hora - SUBIU (pra não invadir SUS/telefone) */
   .cab-dados{
     position:absolute;
-    top:16mm;
+    top:11mm;         /* ✅ antes 16mm (isso estava invadindo no seu PDF) */
     right:18mm;
     border-collapse:collapse;
     font-family:"Arial Narrow", Arial, sans-serif;
@@ -183,24 +176,13 @@
     line-height:1.15;
     z-index:3;
   }
-  .cab-dados td{
-    padding:0;
-    vertical-align:top;
-  }
-  .cab-lbl{
-    text-align:left;
-    padding-right:10px;
-    white-space:nowrap;
-  }
-  .cab-val{
-    text-align:right;
-    min-width:70px;
-    white-space:nowrap;
-  }
+  .cab-dados td{ padding:0; vertical-align:top; }
+  .cab-lbl{ text-align:left; padding-right:10px; white-space:nowrap; }
+  .cab-val{ text-align:right; min-width:70px; white-space:nowrap; }
 
-  /* ✅ Desce conteúdo para não bater no cabeçalho */
+  /* ✅ corpo do laudo também sobe um pouco pra casar com o timbre */
   .print-body{
-    margin-top:42mm;
+    margin-top:40mm; /* antes 42mm */
   }
 
   .cab-paciente{
@@ -271,7 +253,6 @@
     font-size:10pt;
   }
 
-  /* ✅ PRINT PERFEITO */
   @media print{
     body{ background:#fff; padding:0; }
     .controles{ display:none !important; }
@@ -288,7 +269,6 @@
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
 
-    /* ✅ Timbre aparece só no laudo */
     .timbre-print{
       display:block !important;
       position:absolute;
@@ -308,13 +288,9 @@
 <body>
 
 <div class="folha">
-
-  <!-- ✅ Timbre SOMENTE no print -->
   <img class="timbre-print" src="img/SESC_1.png" alt="Timbre">
 
-  <!-- =========================
-       ✅ TELA: FORMULÁRIO
-       ========================= -->
+  <!-- ===== TELA ===== -->
   <div class="no-print">
     <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
 
@@ -438,36 +414,18 @@
 
       <textarea id="obs_texto" placeholder="Caso necessário, digite a observação aqui..." oninput="setObsPrint(this.value)"></textarea>
     </div>
-
   </div><!-- /no-print -->
 
-  <!-- =========================
-       ✅ IMPRESSÃO
-       ========================= -->
-  <div class="print-only" id="printRoot">
-
-    <!-- Cabeçalho timbrado -->
+  <!-- ===== PRINT ===== -->
+  <div class="print-only">
     <table class="cab-dados">
-      <tr>
-        <td class="cab-lbl">Emissão:</td>
-        <td class="cab-val" id="cab_emissao"></td>
-      </tr>
-      <tr>
-        <td class="cab-lbl">Hora:</td>
-        <td class="cab-val" id="cab_hora"></td>
-      </tr>
-      <tr>
-        <td class="cab-lbl">Página:</td>
-        <td class="cab-val">1</td>
-      </tr>
-      <tr>
-        <td class="cab-lbl">UF.:</td>
-        <td class="cab-val">PB</td>
-      </tr>
+      <tr><td class="cab-lbl">Emissão:</td><td class="cab-val" id="cab_emissao"></td></tr>
+      <tr><td class="cab-lbl">Hora:</td><td class="cab-val" id="cab_hora"></td></tr>
+      <tr><td class="cab-lbl">Página:</td><td class="cab-val">1</td></tr>
+      <tr><td class="cab-lbl">UF.:</td><td class="cab-val">PB</td></tr>
     </table>
 
     <div class="print-body">
-
       <div class="cab-paciente">
         <div class="cab-row1">
           <div class="cab-left">
@@ -545,13 +503,10 @@
         <div style="font-weight:800;">Dra. Daniele Carvalho Macêdo</div>
         <div>CRM 12077 PB</div>
       </div>
+    </div>
+  </div>
+</div>
 
-    </div><!-- /print-body -->
-  </div><!-- /print-only -->
-
-</div><!-- /folha -->
-
-<!-- ✅ BOTÕES -->
 <div class="controles no-print">
   <button class="btn btn-print" onclick="imprimirLaudo()">IMPRIMIR / SALVAR PDF</button>
   <button class="btn btn-word" onclick="baixarWordEVoltar()">BAIXAR WORD (.DOC)</button>
@@ -564,7 +519,6 @@
     return (name||"").replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim();
   }
 
-  /* ✅ força o navegador recalcular o layout antes do print (evita folha em branco) */
   function forceReflow(){
     void document.documentElement.offsetHeight;
     void document.body.offsetHeight;
@@ -589,9 +543,7 @@
     setObsPrint(txt);
   }
 
-  // ===== INIT DADOS DO SISTEMA PRINCIPAL =====
   const params = new URLSearchParams(window.location.search);
-
   const init = {
     paciente: up(params.get("paciente")),
     exame: up(params.get("exame")),
@@ -607,7 +559,6 @@
     observacao: (params.get("observacao") || "").trim()
   };
 
-  // Preenche cabeçalho do print
   function preencherCabecalhoPrint(){
     document.getElementById("cab_nome").textContent = init.paciente;
     document.getElementById("cab_exame").textContent = init.exame;
@@ -645,14 +596,9 @@
     if (checksEpi.length > 1) zonaSim.checked = true;
     else if (checksEpi.length === 1) zonaNao.checked = true;
 
-    document.getElementById('p_adeq').textContent =
-      document.querySelector('input[name="adeq"]:checked')?.value || '';
-
-    document.getElementById('p_epi').textContent =
-      Array.from(checksEpi).map(c => c.value).join(", ");
-
-    document.getElementById('p_zona').textContent =
-      document.querySelector('input[name="zona"]:checked')?.value || '';
+    document.getElementById('p_adeq').textContent = document.querySelector('input[name="adeq"]:checked')?.value || '';
+    document.getElementById('p_epi').textContent = Array.from(checksEpi).map(c => c.value).join(", ");
+    document.getElementById('p_zona').textContent = document.querySelector('input[name="zona"]:checked')?.value || '';
 
     const norm = document.getElementById('chk_norm').checked;
     const alts = Array.from(document.querySelectorAll('.alt:checked')).map(c => c.value);
@@ -675,32 +621,35 @@
       pResDiag.textContent = "";
     }
 
-    const micros = Array.from(document.querySelectorAll('.micro:checked'))
-      .map(c => c.getAttribute('data-full') || c.value);
-
-    document.getElementById('p_res_micro').textContent =
-      micros.join(", ") + (micros.length ? "." : "");
+    const micros = Array.from(document.querySelectorAll('.micro:checked')).map(c => c.getAttribute('data-full') || c.value);
+    document.getElementById('p_res_micro').textContent = micros.join(", ") + (micros.length ? "." : "");
 
     const concl = document.querySelector('input[name="c"]:checked');
+    const elTitConcl = document.getElementById('p_tit_concl');
+    const elResConcl = document.getElementById('p_res_concl');
+
     if(concl){
-      const categoria = concl.getAttribute('data-tit');
-      const respostaTecnica = concl.getAttribute('data-full') || concl.value;
+      const categoria = concl.getAttribute('data-tit') || "CONCLUSÃO";
+      const respostaTecnica = concl.getAttribute('data-full') || concl.value || "";
+
+      /* ✅ FIX: NEGATIVO também gera título+texto sempre */
+      elTitConcl.textContent = (concl.value === "NEGATIVO") ? "CONCLUSÃO:" : (categoria + ":");
 
       if(concl.value === "NEGATIVO"){
-        document.getElementById('p_res_concl').textContent = respostaTecnica;
+        elResConcl.textContent = respostaTecnica;
       }else{
-        document.getElementById('p_res_concl').textContent =
-          categoria + ":\n" + respostaTecnica;
+        elResConcl.textContent = respostaTecnica;
       }
     }else{
-      document.getElementById('p_res_concl').textContent = "";
+      elTitConcl.textContent = "CONCLUSÃO:";
+      elResConcl.textContent = "";
     }
 
-    // sempre manter cabeçalho/hora atualizada
+    // mantém cabeçalho atualizado
     preencherCabecalhoPrint();
   }
 
-  // ===== Exportação no padrão do sistema =====
+  // ===== Exportação =====
   function mesChaveAtual(){
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -751,7 +700,6 @@
     if(window.history.length > 1){ window.history.back(); return; }
   }
 
-  // ✅ PRINT (corrigido para NÃO ficar em branco)
   function imprimirLaudo(){
     atualizar();
 
@@ -779,18 +727,18 @@
       }
     }catch(e){ console.error(e); }
 
-    // ✅ força layout antes do print
     forceReflow();
 
-    // ✅ pequena espera para o navegador montar o DOM do print
     setTimeout(() => {
+      atualizar();      /* ✅ chama 2x (garante NEGATIVO não sair vazio) */
+      forceReflow();
       window.print();
+
       setTimeout(() => { document.title = tituloOriginal; }, 1200);
       setTimeout(() => voltarSistema(), 700);
-    }, 120);
+    }, 180);
   }
 
-  // ✅ Word (.doc)
   function buildWordHTML(){
     atualizar();
     const bloco = document.querySelector(".print-only");
@@ -820,13 +768,8 @@
     const htmlWord = buildWordHTML();
     const doc =
 `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Laudo</title>
-</head>
-<body>${htmlWord}</body>
-</html>`;
+<html><head><meta charset="utf-8"><title>Laudo</title></head>
+<body>${htmlWord}</body></html>`;
 
     const blob = new Blob(['\ufeff', doc], { type: "application/msword" });
     const a = document.createElement("a");
