@@ -184,7 +184,7 @@ function setVal(id,val){
 /* ✅ EXTRAI + ABRE LAUDO AUTOMATICAMENTE */
 function extrairEAbrir(){
   extrairRapidoOrdemCorrigido();
-  abrirLaudo(); // ✅ abre automaticamente
+  abrirLaudo();
 }
 
 /* ✅ EXTRAÇÃO ROBUSTA (não quebra nome) */
@@ -203,7 +203,6 @@ function extrairRapidoOrdemCorrigido(){
     exame = match[1];
     nome = l1.replace(match[1],"").trim();
   }else{
-    // fallback caso não tenha /2026
     const parts = l1.split(/\s+/);
     exame = parts.pop() || "";
     nome = parts.join(" ");
@@ -243,7 +242,6 @@ function extrairRapidoOrdemCorrigido(){
   setVal("cidade", up(cidade));
   setVal("cep", maskCep(cep));
 
-  // responsável automático
   if(resp) document.getElementById("responsavel").value = resp;
 }
 
@@ -272,18 +270,19 @@ function abrirLaudo(){
     observacao
   });
 
-  /* ✅ AGORA ABRE A PWA DO LAUDO (index.html) */
-  window.open('index.html?' + params.toString(), '_blank');
+  /* ✅ ALTERAÇÃO PRINCIPAL: ABRE O FORMULÁRIO CORRETO */
+  window.open('laudo.html?' + params.toString(), '_blank');
 }
 
 /* ✅ REGISTRO SERVICE WORKER (PWA) */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js")
-      .then(() => console.log("✅ PWA: Service Worker registrado no Sistema-Laudo!"))
-      .catch((err) => console.log("❌ PWA erro:", err));
+      .then(() => console.log("✅ PWA: Service Worker registrado (SISTEMA)!"))
+      .catch((err) => console.log("❌ PWA erro (SISTEMA):", err));
   });
 }
 </script>
+
 </body>
 </html>
