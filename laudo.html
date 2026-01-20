@@ -812,10 +812,23 @@
   }
 
   function voltarSistema(){
-    const returnUrl = params.get("return");
-    if(returnUrl){ window.location.href = returnUrl; return; }
-    if(window.history.length > 1){ window.history.back(); return; }
+  const returnUrl = params.get("return");
+
+  // ✅ se foi aberto como popup, fecha ao voltar (não duplica)
+  if(window.opener && !window.opener.closed){
+    try{
+      if(returnUrl) window.opener.location.href = returnUrl;
+      window.close();
+      return;
+    }catch(e){
+      // fallback: se não conseguir acessar opener
+    }
   }
+
+  // fallback normal
+  if(returnUrl){ window.location.href = returnUrl; return; }
+  if(window.history.length > 1){ window.history.back(); return; }
+}
 
   function imprimirLaudo(){
     atualizar();
@@ -921,3 +934,4 @@
 
 </body>
 </html>
+
