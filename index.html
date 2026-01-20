@@ -11,373 +11,170 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 
 <style>
-  :root{
-    --bgA:#baf2c7;
-    --bgB:#0a2a47;
-    --bgC:#061a2e;
+  body{font-family:Arial,sans-serif;margin:0;padding:24px;background:#f4f4f4;}
+  .card{max-width:980px;margin:auto;background:#fff;padding:22px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.12);}
+  h1{margin:0 0 14px;text-align:center;color:#003366;}
 
-    --glass:rgba(255,255,255,.10);
-    --glass2:rgba(255,255,255,.06);
-    --line:rgba(255,255,255,.18);
-
-    --txt:#f5fbff;
-    --muted:rgba(255,255,255,.78);
-
-    --shadow:0 18px 40px rgba(0,0,0,.32);
-    --shadow2:0 6px 24px rgba(0,0,0,.24);
-
-    --r22:22px;
-
-    --accent:#00d36d;
-    --accent2:#00a651;
+  label{font-weight:900;display:block;margin-top:14px;}
+  input, textarea, select{
+    width:100%; box-sizing:border-box;
+    padding:10px; font-size:14px;
+    border:1px solid #cfd6dd; border-radius:8px;
   }
 
-  *{box-sizing:border-box}
-  html,body{height:100%}
-
-  body{
-    margin:0;
-    font-family:"Segoe UI", Roboto, Arial, sans-serif;
-    background: linear-gradient(90deg, var(--bgA) 0%, var(--bgB) 60%, var(--bgC) 100%);
-    color:var(--txt);
-
-    /* ✅ ZERO SCROLL */
-    height:100vh;
-    overflow:hidden;
+  textarea{resize:vertical;white-space:pre-wrap;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .btn{
+    margin-top:16px; width:100%;
+    padding:14px; border:none; border-radius:10px;
+    background:#0078d7; color:#fff; font-weight:900; font-size:16px;
+    cursor:pointer;
   }
+  .btn:hover{background:#005fa3;}
+  .btn-green{background:#00a651;}
+  .btn-green:hover{background:#008f45;}
 
-  /* ✅ Marca d’água */
-  .watermark{
-    position:fixed;
-    top:88px;
-    right:24px;
-    width:min(46vw, 720px);
-    height:calc(100vh - 110px);
-    background:url("logo/logotipo.png") no-repeat right center;
-    background-size:contain;
-    opacity:.07;
-    pointer-events:none;
-    z-index:0;
-    filter: saturate(.9) contrast(1.05);
+  .muted{color:#444;font-size:13px;margin-top:8px;line-height:1.4;}
+  .box{
+    margin-top:14px;
+    background:#f7fbff;
+    border:1px dashed #8bb3db;
+    padding:12px;
+    border-radius:10px;
   }
-
-  /* ✅ Shell */
-  .shell{
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    max-width:1180px;
-    margin:0 auto;
-    padding:18px;
-    position:relative;
-    z-index:1;
-
-    /* ✅ não deixa crescer */
-    min-height:0;
-  }
-
-  /* ✅ Header */
-  .hdr{
-    height:84px;
-    padding:14px 22px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border-bottom:1px solid rgba(255,255,255,.12);
-    background: linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.00));
-    border-radius: var(--r22);
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow2);
-    flex:0 0 auto;
-  }
-
-  .brand{display:flex;align-items:center;gap:14px;min-width:320px;}
-  .brand img{
-    width:170px;max-height:52px;height:auto;object-fit:contain;display:block;
-    filter: drop-shadow(0 10px 16px rgba(0,0,0,.35));
-  }
-  .brand-info{display:flex;flex-direction:column;line-height:1.05;color:var(--txt);}
-  .brand-info strong{
-    font-size:14px;letter-spacing:.20em;text-transform:uppercase;font-weight:900;
-    color: rgba(255,255,255,.92);
-  }
-  .brand-info span{margin-top:6px;font-size:12px;color:rgba(255,255,255,.68);}
-
-  /* ✅ Card Desenvolvedor */
-  .dev-card{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:10px 16px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.18);
-    background: rgba(0,0,0,.18);
-    box-shadow: var(--shadow2);
-    backdrop-filter: blur(10px);
-    min-width:260px;
-  }
-  .dev-card .name{
-    font-weight:1000;
-    letter-spacing:.20em;
+  .subttl{
+    font-weight:900;
+    color:#003366;
+    margin-bottom:8px;
     text-transform:uppercase;
     font-size:13px;
-    color:rgba(255,255,255,.96);
-    line-height:1.1;
   }
-  .dev-card .role{
-    margin-top:4px;
-    font-size:11px;
-    letter-spacing:.22em;
-    text-transform:uppercase;
-    color:rgba(255,255,255,.72);
-    line-height:1.1;
-  }
+  .hint{font-size:12px;color:#444;margin-top:6px;line-height:1.4;}
 
-  /* ✅ Main card */
-  .card{
-    margin-top:14px;
-    border-radius: var(--r22);
-    border:1px solid var(--line);
-    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-    box-shadow: var(--shadow);
-    overflow:hidden;
-
-    flex:1 1 auto;
-    min-height:0;
-
-    display:flex;
-    flex-direction:column;
-  }
-
-  .card-h{
-    padding:14px 16px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border-bottom:1px solid rgba(255,255,255,.10);
-    flex:0 0 auto;
-  }
-
-  .card-h h1{
-    margin:0;
-    font-size:14px;
-    letter-spacing:.16em;
-    text-transform:uppercase;
+  /* ✅ GUIA FIXO (nunca some) */
+  .guia-ordem{
+    margin:10px 0 12px;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid #c7d7e6;
+    background:#eef6ff;
+    color:#003366;
     font-weight:900;
-  }
-
-  .pill{
-    padding:9px 12px;border-radius:999px;
-    border:1px solid rgba(255,255,255,.18);
-    background: rgba(0,0,0,.18);
-    font-size:12px;color:rgba(255,255,255,.86);
-    letter-spacing:.04em;user-select:none;
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow2);
-  }
-
-  .card-b{
-    padding:16px;
-    display:grid;
-    grid-template-columns: 1fr 380px;
-    gap:16px;
-
-    flex:1 1 auto;
-    min-height:0;
-
-    /* ✅ impede overflow do grid */
-    overflow:hidden;
-  }
-
-  /* ✅ painel de digitação */
-  .panel{
-    border-radius: var(--r22);
-    border:1px solid rgba(255,255,255,.18);
-    background: rgba(0,0,0,.22);
-    box-shadow: var(--shadow2);
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    min-height:0;
-  }
-
-  .panel-h{
-    padding:12px 14px;
-    border-bottom:1px solid rgba(255,255,255,.12);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex:0 0 auto;
-  }
-
-  .panel-h strong{
-    font-size:12px;
-    letter-spacing:.22em;
-    text-transform:uppercase;
-    font-weight:900;
-    color:rgba(255,255,255,.92);
-  }
-
-  .guide{
-    font-size:11px;
-    letter-spacing:.12em;
-    color:rgba(255,255,255,.70);
-    text-transform:uppercase;
-    white-space:nowrap;
-  }
-
-  .panel-b{
-    padding:14px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-
-    flex:1 1 auto;
-    min-height:0;
-
-    /* ✅ nada de scroll no card */
-    overflow:hidden;
-  }
-
-  textarea{
-    width:100%;
-    flex:1 1 auto;
-    min-height:0;
-
-    /* ✅ se precisar rola DENTRO do campo, não na página */
-    overflow:auto;
-
-    resize:none;
-    padding:12px 12px;
-    font-size:14px;
-    line-height:1.35;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.18);
-    background: rgba(255,255,255,.08);
-    color: rgba(255,255,255,.92);
-    outline:none;
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
-    white-space:pre-wrap;
-  }
-  textarea::placeholder{ color:rgba(255,255,255,.40); }
-
-  /* ✅ botões */
-  .btn{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:16px;
-    font-weight:1000;
-    letter-spacing:.06em;
-    text-transform:uppercase;
-    cursor:pointer;
-    flex:0 0 auto;
-  }
-  .btn-green{ background: linear-gradient(180deg, #19e27b, #00a651); color:#062014; }
-  .btn-green:hover{ filter:brightness(1.04); }
-
-  .hint{
-    font-size:12px;
-    color:rgba(255,255,255,.74);
+    font-size:13px;
     line-height:1.4;
-    margin-top:2px;
-    flex:0 0 auto;
   }
-
-  /* ✅ campos técnicos invisíveis */
-  .hidden-tech{ display:none !important; }
-
-  /* ✅ Mobile: mantém ZERO scroll do body e ajusta grid */
-  @media (max-width: 1060px){
-    .card-b{ grid-template-columns: 1fr; }
-    .dev-card{ min-width: 220px; }
-    .guide{ display:none; } /* para caber sem quebrar */
+  .guia-ordem span{
+    display:inline-block;
+    margin:2px 4px 0 0;
+    padding:2px 8px;
+    border-radius:999px;
+    background:#003366;
+    color:#fff;
+    font-weight:900;
+    font-size:12px;
   }
 </style>
 </head>
 
 <body>
-<div class="watermark" aria-hidden="true"></div>
+<div class="card">
+  <h1>Sistema de Laudos</h1>
 
-<div class="shell">
-  <!-- ✅ Header -->
-  <div class="hdr">
-    <div class="brand">
-      <img src="logo/sesctopo.png" alt="SESC" />
-      <div class="brand-info">
-        <strong>SI - SISTEMA DE INFORMAÇÃO</strong>
-        <span>Sistema de Laudos • Extração e abertura do Laudo</span>
+  <div class="box">
+    <div class="subttl">DIGITAÇÃO RÁPIDA</div>
+
+    <!-- ✅ ORDEM FIXA (não desaparece ao digitar) -->
+    <div class="guia-ordem">
+      <div style="margin-bottom:6px;">
+        ORDEM (GUia Permanente):
       </div>
+      <span>Data da Coleta</span>
+      <span>Data de Nascimento</span>
+      <span>Cartão SUS</span>
+      <span>Telefone</span>
+      <span>Rua</span>
+      <span>Bairro</span>
+      <span>Cidade</span>
+      <span>CEP</span>
+      <span>Responsável (SNM/EAM)</span>
     </div>
 
-    <!-- ✅ Card elegante do desenvolvedor -->
-    <div class="dev-card" aria-label="Desenvolvedor">
-      <div class="name">MARCOS PONTES</div>
-      <div class="role">DESENVOLVEDOR</div>
+    <!-- ✅ placeholder removido (não some mais) -->
+    <textarea id="entrada_rapida" rows="11"></textarea>
+
+    <button class="btn btn-green" style="margin-top:10px;" onclick="extrairEAbrir()">
+      EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO
+    </button>
+
+    <div class="hint">
+      ✅ Última linha pode ser: <b>SNM</b> ou <b>EAM</b> (Responsável).<br>
+      ✅ O nome não quebra: o exame é detectado por padrão <b>000156/2026</b>.
     </div>
   </div>
 
-  <!-- ✅ Card principal -->
-  <div class="card">
-    <div class="card-h">
-      <h1>Sistema de Laudos</h1>
-      <div class="pill">Zero Scroll • Interface Premium</div>
+  <div class="grid">
+    <div>
+      <label>Paciente</label>
+      <input id="paciente" type="text" placeholder="NOME COMPLETO"/>
+    </div>
+    <div>
+      <label>Nº Exame</label>
+      <input id="exame" type="text" placeholder="000156/2026"/>
     </div>
 
-    <div class="card-b">
-      <!-- ✅ Digitação rápida -->
-      <div class="panel">
-        <div class="panel-h">
-          <strong>Digitação Rápida</strong>
-          <div class="guide">Data da Coleta | Data de Nascimento | Cartão SUS | Telefone | Rua</div>
-        </div>
-
-        <div class="panel-b">
-          <textarea id="entrada_rapida" rows="12" placeholder="MODELO:
-MARIA APARECIDA DA SILVA 000156/2026
-01/12/2025
-18/01/1976
-50037048449
-83985567895
-RUA: LINDOLFO GONÇALVES CHAVES, 900
-BAIRRO: JARDIM SÃO PAULO
-CIDADE: JOÃO PESSOA/PB
-CEP: 58051-200
-SNM"></textarea>
-
-          <button class="btn btn-green" onclick="extrairEAbrir()">
-            Extrair automaticamente e abrir laudo
-          </button>
-
-          <div class="hint">
-            ✅ Última linha pode ser: <b>SNM</b> ou <b>EAM</b> (Responsável).<br>
-            ✅ O nome não quebra: exame detectado por padrão <b>000156/2026</b>.
-          </div>
-        </div>
-      </div>
-
-      <!-- ✅ Campos técnicos invisíveis (mantidos para o laudo funcionar) -->
-      <div class="hidden-tech">
-        <input id="paciente" type="text" />
-        <input id="exame" type="text" />
-        <input id="data_coleta" type="text" />
-        <input id="data_nascimento" type="text" />
-        <input id="cartao_sus" type="text" />
-        <input id="telefone" type="text" />
-        <input id="rua" type="text" />
-        <input id="bairro" type="text" />
-        <input id="cidade" type="text" />
-        <input id="cep" type="text" />
-        <select id="responsavel">
-          <option value="">Selecione...</option>
-          <option value="SHEINA N. MORAIS RAMALHO">SHEINA N. MORAIS RAMALHO</option>
-          <option value="EDVÂNIA APARECIDA MENDES DE AZEVÊDO">EDVÂNIA APARECIDA MENDES DE AZEVÊDO</option>
-        </select>
-        <input id="observacao" type="text" />
-      </div>
+    <div>
+      <label>Data da Coleta</label>
+      <input id="data_coleta" type="text" placeholder="DD/MM/AAAA" maxlength="10"/>
     </div>
+    <div>
+      <label>Data de Nascimento</label>
+      <input id="data_nascimento" type="text" placeholder="DD/MM/AAAA" maxlength="10"/>
+    </div>
+
+    <div>
+      <label>Cartão SUS</label>
+      <input id="cartao_sus" type="text" placeholder="Somente números"/>
+    </div>
+    <div>
+      <label>Telefone</label>
+      <input id="telefone" type="text" placeholder="(83) 9 9999-9999"/>
+    </div>
+
+    <div>
+      <label>Rua</label>
+      <input id="rua" type="text" placeholder="RUA / AV"/>
+    </div>
+    <div>
+      <label>Bairro</label>
+      <input id="bairro" type="text" placeholder="BAIRRO"/>
+    </div>
+
+    <div>
+      <label>Cidade</label>
+      <input id="cidade" type="text" placeholder="CIDADE/UF"/>
+    </div>
+    <div>
+      <label>CEP</label>
+      <input id="cep" type="text" placeholder="00000-000"/>
+    </div>
+
+    <div style="grid-column: span 2;">
+      <label>Responsável</label>
+      <select id="responsavel">
+        <option value="">Selecione...</option>
+        <option value="SHEINA N. MORAIS RAMALHO">SHEINA N. MORAIS RAMALHO</option>
+        <option value="EDVÂNIA APARECIDA MENDES DE AZEVÊDO">EDVÂNIA APARECIDA MENDES DE AZEVÊDO</option>
+      </select>
+    </div>
+
+    <div style="grid-column: span 2;">
+      <label>Observação (opcional)</label>
+      <input id="observacao" type="text" placeholder="Se desejar, digite aqui..."/>
+    </div>
+  </div>
+
+  <div class="muted">
+    ✅ Após extrair, o laudo abre automaticamente com todos os dados enviados.
   </div>
 </div>
 
@@ -391,11 +188,13 @@ function maskDate(v){
   if(d.length >= 3) return d.replace(/(\d{2})(\d+)/,'$1/$2');
   return d;
 }
+
 function maskCep(v){
   let c = onlyDigits(v).slice(0,8);
   if(c.length > 5) return c.replace(/(\d{5})(\d+)/,'$1-$2');
   return c;
 }
+
 function maskPhone(v){
   let t = onlyDigits(v).slice(0,11);
   if(t.length === 11){
@@ -406,6 +205,7 @@ function maskPhone(v){
   }
   return v;
 }
+
 function setVal(id,val){
   const el = document.getElementById(id);
   if(el) el.value = val;
@@ -422,10 +222,12 @@ function extrairRapidoOrdemCorrigido(){
   const raw = document.getElementById("entrada_rapida").value || "";
   const linhas = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
 
+  // Linha 1: "NOME COMPLETO 000156/2026"
   const l1 = linhas[0] || "";
   let nome = "";
   let exame = "";
 
+  // Detecta exame por REGEX: 1-6 dígitos / 4 dígitos
   const match = l1.match(/(\d{1,6}\/\d{4})\s*$/);
   if(match){
     exame = match[1];
@@ -452,6 +254,7 @@ function extrairRapidoOrdemCorrigido(){
     else if(/^cidade\s*:/i.test(line)) cidade = line.replace(/^cidade\s*:\s*/i,"");
     else if(/^cep\s*:/i.test(line)) cep = line.replace(/^cep\s*:\s*/i,"");
     else {
+      // responsável: SNM / EAM
       const t = up(line);
       if(t === "SNM") resp = "SHEINA N. MORAIS RAMALHO";
       if(t === "EAM") resp = "EDVÂNIA APARECIDA MENDES DE AZEVÊDO";
@@ -468,10 +271,11 @@ function extrairRapidoOrdemCorrigido(){
   setVal("bairro", up(bairro));
   setVal("cidade", up(cidade));
   setVal("cep", maskCep(cep));
+
   if(resp) document.getElementById("responsavel").value = resp;
 }
 
-/* ✅ ABRIR LAUDO NA MESMA ABA (SEM POPOUT) */
+/* ✅ ABRIR LAUDO (mantido) */
 function abrirLaudo(){
   const paciente = up(document.getElementById('paciente').value);
   const exame = up(document.getElementById('exame').value);
