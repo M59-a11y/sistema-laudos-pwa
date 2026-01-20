@@ -25,7 +25,9 @@
         radial-gradient(900px 500px at 90% 30%, rgba(255,255,255,.18), transparent 55%),
         linear-gradient(135deg, var(--blue1), var(--blue2));
       min-height:100vh;
-      padding-top: 52px; /* espaço para roteiro fixo */
+
+      /* espaço para roteiro fixo */
+      padding-top: 54px;
     }
 
     /* ===========================
@@ -93,36 +95,6 @@
       font-size: 20px;
       margin: 2px 0 14px;
       text-transform: uppercase;
-    }
-
-    .hintBox{
-      background:#f0f7ff;
-      border:1px solid #cfe6ff;
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 14px;
-    }
-
-    .hintBox h3{
-      margin:0 0 10px;
-      color:#0d3a66;
-      font-size: 18px;
-    }
-
-    .badges{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top: 8px;
-    }
-    .badge{
-      background:#0d3a66;
-      color:#fff;
-      padding: 6px 12px;
-      border-radius:999px;
-      font-weight: 700;
-      font-size: 14px;
-      box-shadow: 0 8px 18px rgba(13,58,102,.20);
     }
 
     textarea{
@@ -195,7 +167,7 @@
     }
 
     /* ===========================
-       ROTEIRO FIXO (igual imagem)
+       ROTEIRO FIXO (igual sua imagem)
     =========================== */
     #roteiroTopo{
       position: fixed;
@@ -241,7 +213,7 @@
 
 <body>
 
-  <!-- ROTEIRO FIXO -->
+  <!-- ✅ ROTEIRO FIXO BONITO NO TOPO -->
   <div id="roteiroTopo">
     <div class="linha">
       <span class="rotulo">Ordem:</span>
@@ -266,24 +238,10 @@
   </header>
 
   <main class="wrap">
-
     <section class="card">
       <div class="titleSec">Digitação rápida</div>
 
-      <div class="hintBox">
-        <h3>ORDEM (Guia Permanente):</h3>
-        <div class="badges">
-          <span class="badge">Data da Coleta</span>
-          <span class="badge">Data de Nascimento</span>
-          <span class="badge">Cartão SUS</span>
-          <span class="badge">Telefone</span>
-          <span class="badge">Rua</span>
-          <span class="badge">Bairro</span>
-          <span class="badge">Cidade</span>
-          <span class="badge">CEP</span>
-          <span class="badge">Responsável (SNM/EAM)</span>
-        </div>
-      </div>
+      <!-- ❌ REMOVIDO: Card “Guia Permanente” que repetia o roteiro -->
 
       <textarea id="textoDigitacao" placeholder="Cole aqui os dados do paciente conforme a ordem acima..."></textarea>
 
@@ -306,15 +264,9 @@
         </div>
       </div>
     </section>
-
   </main>
 
   <script>
-    /* ==========================================================
-       EXTRAÇÃO BÁSICA (DEMO)
-       -> Se você colar seu código real completo eu encaixo
-       exatamente com suas regras atuais.
-    ========================================================== */
     const $ = (id)=>document.getElementById(id);
 
     function detectarExame(texto){
@@ -331,7 +283,6 @@
         return;
       }
 
-      // exemplo simples: detecta exame e pega primeira linha como nome
       const linhas = texto.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
       const exame = detectarExame(texto);
       const nome = linhas[0] || "";
@@ -339,10 +290,7 @@
       $("nome").value = nome;
       if(exame) $("exame").value = exame;
 
-      // Aqui entraria o seu código real:
-      // - salvar backup / localStorage
-      // - abrir laudo para impressão
-      alert("Extraído! (Modelo) \n\nAgora cole seu HTML real para eu integrar sem perder funções.");
+      alert("Extraído! (Modelo)\n\nAgora você já tem o roteiro FIXO bonito no topo.");
     });
   </script>
 </body>
