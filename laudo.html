@@ -502,16 +502,18 @@
   function setObsPrint(texto){
   const wrap = document.getElementById("obs_print_wrap");
   const el = document.getElementById("obs_print");
+  if(!wrap || !el) return;
+
   const t = (texto||"").trim();
 
   if(t){
-    wrap.style.display = "block";
+    wrap.classList.remove("vazio");
     el.textContent = " " + t;
   }else{
-    wrap.style.display = "none";
+    wrap.classList.add("vazio");
     el.textContent = "";
   }
-  }
+}
 
   const params = new URLSearchParams(window.location.search);
   const init = {
@@ -749,6 +751,7 @@
 
 </body>
 </html>
+
 
 
 
