@@ -182,14 +182,13 @@
       object-fit:cover;
     }
 
-    /* ✅ Conteúdo por cima do timbre
-       ✅ DESCE mais para ficar abaixo do logo SESC */
+    /* ✅ Conteúdo por cima do timbre */
     .print-page{
       position:relative;
       z-index:2;
       margin: 0;
 
-      /* ✅ descer conteúdo (antes 28mm/40mm, agora 44mm) */
+      /* ✅ SUAS ALTERAÇÕES (mantidas) */
       padding: 50mm 18mm 22mm 18mm;
 
       box-sizing:border-box;
@@ -201,7 +200,7 @@
     @page{ size:A4; margin:0; }
   }
 
-  /* ===== PRINT LAYOUT (PROFISSIONAL) ===== */
+  /* ===== PRINT LAYOUT ===== */
   .cab-paciente{
     border-top: 3px solid #00a651;
     border-bottom: 3px solid #00a651;
@@ -212,7 +211,6 @@
   .cab-left{ flex:1; }
   .cab-right{ min-width:220px; text-align:right; }
 
-  /* ✅ maior */
   .cab-lbl2{
     font-size:13pt;
     font-weight:700;
@@ -220,7 +218,6 @@
     font-family:"Arial Narrow", Arial, sans-serif;
   }
 
-  /* ✅ maior */
   .cab-nome, .cab-exame{
     font-size:12.6pt;
     font-weight:700;
@@ -229,19 +226,20 @@
     line-height:1.2;
   }
 
-  /* ✅ maior */
   .cab-row2{
     margin-top:10px;
     display:grid;
     grid-template-columns: 1.2fr 0.8fr;
+
+    /* ✅ SUAS ALTERAÇÕES (mantidas) */
     gap: 6px 60px;
     font-family:"Arial Narrow";
     font-size:8pt;
+
     text-transform:uppercase;
     font-weight:400;
   }
 
-  /* ✅ maior */
   .linha-identificacao{
     font-family:"Arial Narrow", Arial, sans-serif;
     font-size:11.5pt;
@@ -253,7 +251,6 @@
     white-space:nowrap;
   }
 
-  /* ✅ maior */
   .secao-print{
     margin-bottom:12px;
     line-height:1.55;
@@ -266,6 +263,7 @@
   .tit-normal-caps{ font-weight:400; text-transform:uppercase; }
   .concl-resposta-bloco{ white-space:pre-line; font-weight:400; display:block; margin-top:2px; }
 
+  /* ✅ OBSERVAÇÃO NO PRINT: SÓ APARECE SE TIVER TEXTO */
   #obs_print_wrap{ display:block; }
   #obs_print_wrap.vazio{ display:none; }
 
@@ -393,8 +391,19 @@
       </div>
     </div>
 
+    <!-- ✅ Observação na TELA: com opções padrão -->
     <div class="obs-wrap">
       <div class="obs-title">Observação:</div>
+
+      <!-- ✅ OPÇÕES PADRÃO -->
+      <div class="op-col" style="margin-bottom:10px;">
+        <label><input type="radio" name="obs_opt" value="Tratar e repetir." onclick="aplicarObs(this.value)"> Tratar e repetir.</label>
+        <label><input type="radio" name="obs_opt" value="Alterações celulares importantes. Tratar e repetir." onclick="aplicarObs(this.value)"> Alterações celulares importantes. Tratar e repetir.</label>
+        <label><input type="radio" name="obs_opt" value="Correlacionar com exames complementares." onclick="aplicarObs(this.value)"> Correlacionar com exames complementares.</label>
+        <label><input type="radio" name="obs_opt" value="Padrão epitelial hipoestrogênico." onclick="aplicarObs(this.value)"> Padrão epitelial hipoestrogênico.</label>
+        <label><input type="radio" name="obs_opt" value="Padrão epitelial ainda trófico." onclick="aplicarObs(this.value)"> Padrão epitelial ainda trófico.</label>
+      </div>
+
       <textarea id="obs_texto" placeholder="Caso necessário, digite a observação aqui..." oninput="setObsPrint(this.value)"></textarea>
     </div>
   </div>
@@ -466,6 +475,7 @@
         <span id="p_res_concl" class="concl-resposta-bloco"></span>
       </div>
 
+      <!-- ✅ Observação no PRINT: só aparece se tiver -->
       <div class="secao-print" id="obs_print_wrap">
         <strong>Observação:</strong>
         <span id="obs_print"></span>
@@ -499,21 +509,30 @@
     void document.body.offsetHeight;
   }
 
+  // ✅ Observação no PRINT
   function setObsPrint(texto){
-  const wrap = document.getElementById("obs_print_wrap");
-  const el = document.getElementById("obs_print");
-  if(!wrap || !el) return;
+    const wrap = document.getElementById("obs_print_wrap");
+    const el = document.getElementById("obs_print");
+    if(!wrap || !el) return;
 
-  const t = (texto||"").trim();
+    const t = (texto||"").trim();
 
-  if(t){
-    wrap.classList.remove("vazio");
-    el.textContent = " " + t;
-  }else{
-    wrap.classList.add("vazio");
-    el.textContent = "";
+    if(t){
+      wrap.classList.remove("vazio");
+      el.textContent = " " + t;
+    }else{
+      wrap.classList.add("vazio");
+      el.textContent = "";
+    }
   }
-}
+
+  // ✅ Aplica opção padrão na Observação
+  function aplicarObs(txt){
+    const obs = document.getElementById("obs_texto");
+    if(!obs) return;
+    obs.value = txt;
+    setObsPrint(txt);
+  }
 
   const params = new URLSearchParams(window.location.search);
   const init = {
@@ -614,7 +633,6 @@
     preencherCabecalhoPrint();
   }
 
-  /* ===== Exportação no padrão do sistema ===== */
   function mesChaveAtual(){
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -696,6 +714,10 @@
     setTimeout(() => {
       atualizar();
       forceReflow();
+
+      // ✅ GARANTIA OBSERVAÇÃO antes de imprimir
+      setObsPrint(document.getElementById("obs_texto")?.value || "");
+
       window.print();
       setTimeout(() => { document.title = tituloOriginal; }, 1200);
       setTimeout(() => voltarSistema(), 700);
@@ -704,6 +726,10 @@
 
   function buildWordHTML(){
     atualizar();
+
+    // ✅ GARANTIA OBSERVAÇÃO antes de montar Word
+    setObsPrint(document.getElementById("obs_texto")?.value || "");
+
     const bloco = document.querySelector(".print-only .print-page");
     const clone = bloco.cloneNode(true);
     clone.style.display = "block";
@@ -728,6 +754,9 @@
       }
     }catch(e){ console.error(e); }
 
+    // ✅ GARANTIA OBSERVAÇÃO antes de gerar Word
+    setObsPrint(document.getElementById("obs_texto")?.value || "");
+
     const htmlWord = buildWordHTML();
     const doc =
 `<!DOCTYPE html>
@@ -746,20 +775,19 @@
     setTimeout(() => voltarSistema(), 700);
   }
 
+  // ✅ Ativação EXTRA: se por algum motivo oninput falhar, ainda funciona
+  (function ativarObservacao(){
+    const obs = document.getElementById("obs_texto");
+    if(!obs) return;
+
+    obs.addEventListener("input", () => setObsPrint(obs.value));
+
+    // inicialização
+    setObsPrint(obs.value || init.observacao || "");
+  })();
+
   window.atualizar = atualizar;
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
