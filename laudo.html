@@ -116,6 +116,14 @@
     margin-top:20px; text-align:center;
     font-family:"Arial Narrow", Arial, sans-serif; font-size:10pt;
   }
+
+  @media print{
+    body{ background:#fff; padding:0; }
+    .controles{ display:none !important; }
+    .folha{ box-shadow:none; width:100%; margin:0; padding:10mm; }
+    .no-print{ display:none !important; }
+    .print-only{ display:block !important; }
+  }
 </style>
 </head>
 
@@ -128,8 +136,10 @@
     <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
 
     <div class="painel">
+
       <div class="sec">
         <div class="sec-title">1. Avaliação Pré Analítica</div>
+
         <div class="linha">
           <div class="lbl">Adequabilidade:</div>
           <div class="op-row">
@@ -158,6 +168,7 @@
 
       <div class="sec">
         <div class="sec-title">2. Diagnóstico Descritivo</div>
+
         <div class="op-col">
           <label><input type="checkbox" id="chk_norm" onchange="atualizar()"> DENTRO DOS LIMITES DA NORMALIDADE NO MATERIAL EXAMINADO</label>
         </div>
@@ -224,8 +235,7 @@
           <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, SOE" value="ADENO_SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
         </div>
       </div>
-
-    </div><!-- painel -->
+    </div>
 
     <div class="obs-wrap">
       <div class="obs-title">Observação:</div>
@@ -240,7 +250,7 @@
     </div>
   </div>
 
-  <!-- ===== LAUDO (para PDF) ===== -->
+  <!-- ===== LAUDO PARA PDF ===== -->
   <div class="print-only">
     <div class="cab-paciente">
       <div class="cab-row1">
@@ -342,7 +352,6 @@
     observacao: (params.get("observacao") || "").trim()
   };
 
-  // preencher cabeçalho
   document.getElementById("cab_nome").textContent = init.paciente;
   document.getElementById("cab_exame").textContent = init.exame;
   document.getElementById("cab_nasc").textContent = init.data_nascimento;
@@ -352,17 +361,16 @@
   document.getElementById("cab_bairro").textContent = init.bairro;
   document.getElementById("cab_cidade").textContent = init.cidade;
   document.getElementById("cab_cep").textContent = init.cep;
+
   document.getElementById("data_coleta_print").textContent = init.data_coleta;
   document.getElementById("nome_resp_print").textContent = init.responsavel;
 
-  // rodapé data
   const hoje = new Date();
   const dia = hoje.getDate();
   const mes = hoje.toLocaleDateString("pt-BR",{month:"long"});
   const ano = hoje.getFullYear();
   document.getElementById("rodape_data").textContent = `João Pessoa, ${dia} de ${mes} de ${ano}`;
 
-  // observação inicial
   document.getElementById("obs_texto").value = init.observacao;
   setObsPrint(init.observacao);
 
@@ -424,34 +432,51 @@
     }
   }
 
-  // ===== positivo =====
-  const STORAGE_KEY_ATIPIAS = "casos_positivos_atipias";
+  /* ==========================================================
+     ✅ ACUMULA POSITIVOS NO MÊS E EXPORTA SEM SUBSTITUIR
+     ========================================================== */
+  const STORAGE_KEY_GERAL = "casos_positivos_atipias";
 
-  function salvarCasoPositivoNoStorage(payload){
-    const atual = JSON.parse(localStorage.getItem(STORAGE_KEY_ATIPIAS) || "[]");
-    atual.push({ ...payload, data: new Date().toISOString() });
-    localStorage.setItem(STORAGE_KEY_ATIPIAS, JSON.stringify(atual));
-  }
-
-  function gerarArquivoExportacao(payload){
+  function mesChaveAtual(){
     const now = new Date();
     const yyyy = now.getFullYear();
     const mm = String(now.getMonth() + 1).padStart(2, "0");
-    const mesChave = `${yyyy}-${mm}`;
-    const key = `pacientes_${mesChave}`;
+    return `${yyyy}-${mm}`;
+  }
 
-    const registro = {
-      nome: `${payload.exame} ${payload.nome}`.trim(),
-      telefone: payload.telefone || "",
-      categoria: payload.categoria || "",
-      subcategoria: payload.subcategoria || ""
-    };
+  function keyPositivosMes(){
+    return `positivos_${mesChaveAtual()}`;
+  }
 
-    const exportJSON = { [key]: JSON.stringify([registro]) };
+  function salvarCasoPositivoNoStorage(payload){
+    const keyMes = keyPositivosMes();
 
-    const exameSeguro = (payload.exame || "").replaceAll("/", ".");
-    const nomeSafe = sanitizeFileName((payload.nome || "").toUpperCase());
-    const fileName = `${sanitizeFileName(exameSeguro)} ${nomeSafe} - EXPORT_${mesChave}.json`;
+    const listaMes = JSON.parse(localStorage.getItem(keyMes) || "[]");
+    listaMes.push({ ...payload, data: new Date().toISOString() });
+    localStorage.setItem(keyMes, JSON.stringify(listaMes));
+
+    const geral = JSON.parse(localStorage.getItem(STORAGE_KEY_GERAL) || "[]");
+    geral.push({ ...payload, data: new Date().toISOString() });
+    localStorage.setItem(STORAGE_KEY_GERAL, JSON.stringify(geral));
+  }
+
+  function gerarArquivoExportacaoMes(){
+    const mes = mesChaveAtual();
+    const keyMes = keyPositivosMes();
+    const listaMes = JSON.parse(localStorage.getItem(keyMes) || "[]");
+
+    const keySistema = `pacientes_${mes}`;
+
+    const registros = listaMes.map(p => ({
+      nome: `${p.exame} ${p.nome}`.trim(),
+      telefone: p.telefone || "",
+      categoria: p.categoria || "",
+      subcategoria: p.subcategoria || ""
+    }));
+
+    const exportJSON = { [keySistema]: JSON.stringify(registros) };
+
+    const fileName = `EXPORT_${mes}.json`;
 
     const blob = new Blob([JSON.stringify(exportJSON)], { type:"application/json;charset=utf-8" });
     const a = document.createElement("a");
@@ -472,6 +497,7 @@
   function limparEVoltarSistema(){
     document.querySelectorAll('input[type="radio"]').forEach(r => r.checked=false);
     document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked=false);
+
     document.getElementById("obs_texto").value="";
     setObsPrint("");
 
@@ -490,29 +516,35 @@
   async function gerarPDF(){
     atualizar();
 
-    // ✅ exporta positivo antes do pdf
-    const concl = document.querySelector('input[name="c"]:checked');
-    if(concl && concl.value !== "NEGATIVO"){
-      const categoria = concl.getAttribute("data-tit") || "";
-      let subcategoria = concl.getAttribute("data-full") || concl.value || "";
-      subcategoria = (subcategoria || "").replace(/^—\s*/,"").trim();
+    // ✅ salva/exporta POSITIVO sem quebrar PDF
+    try{
+      const concl = document.querySelector('input[name="c"]:checked');
+      if(concl && concl.value !== "NEGATIVO"){
+        const categoria = concl.getAttribute("data-tit") || "";
+        let subcategoria = concl.getAttribute("data-full") || concl.value || "";
+        subcategoria = (subcategoria || "").replace(/^—\s*/,"").trim();
 
-      const payload = {
-        exame: init.exame,
-        nome: init.paciente,
-        telefone: init.telefone,
-        categoria,
-        subcategoria
-      };
-      salvarCasoPositivoNoStorage(payload);
-      gerarArquivoExportacao(payload);
+        const payload = {
+          exame: init.exame,
+          nome: init.paciente,
+          telefone: init.telefone,
+          categoria,
+          subcategoria
+        };
+
+        salvarCasoPositivoNoStorage(payload);
+        gerarArquivoExportacaoMes(); // ✅ sempre exporta o mês inteiro (não substitui)
+      }
+    }catch(e){
+      console.error("Erro no export positivo:", e);
+      // não trava o PDF
     }
 
+    // ✅ gera PDF sempre
     const fileName = nomeArquivoPDF();
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF("p","mm","a4");
 
-    // render fora da tela
     const clone = document.querySelector(".print-only").cloneNode(true);
     const sandbox = document.createElement("div");
     sandbox.style.position="fixed";
@@ -524,39 +556,43 @@
     sandbox.appendChild(clone);
     document.body.appendChild(sandbox);
 
-    const canvas = await html2canvas(clone, {
-      scale:2,
-      useCORS:true,
-      backgroundColor:"#ffffff"
-    });
+    try{
+      const canvas = await html2canvas(clone, {
+        scale:2,
+        useCORS:true,
+        backgroundColor:"#ffffff"
+      });
 
-    const imgData = canvas.toDataURL("image/png");
-    const pageWidth = 210, pageHeight = 297;
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const imgData = canvas.toDataURL("image/png");
+      const pageWidth = 210, pageHeight = 297;
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    let heightLeft = imgHeight;
-    let position = 0;
+      let heightLeft = imgHeight;
+      let position = 0;
 
-    doc.addImage(imgData,"PNG",0,position,imgWidth,imgHeight);
-    heightLeft -= pageHeight;
-
-    while(heightLeft > 0){
-      position = heightLeft - imgHeight;
-      doc.addPage();
       doc.addImage(imgData,"PNG",0,position,imgWidth,imgHeight);
       heightLeft -= pageHeight;
+
+      while(heightLeft > 0){
+        position = heightLeft - imgHeight;
+        doc.addPage();
+        doc.addImage(imgData,"PNG",0,position,imgWidth,imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+    }finally{
+      sandbox.remove();
     }
 
-    sandbox.remove();
     doc.save(fileName);
 
-    // ✅ garante limpeza/retorno
     setTimeout(()=>limparEVoltarSistema(), 600);
   }
 
   window.atualizar = atualizar;
   window.aplicarObs = aplicarObs;
 </script>
+
 </body>
 </html>
