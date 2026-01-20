@@ -19,6 +19,7 @@
     font-family: Arial, sans-serif;
   }
 
+  /* ===== CONTROLES ===== */
   .controles{
     position: static;
     margin-top: 18px;
@@ -42,6 +43,7 @@
   .btn-print{ background:#28a745;color:#fff; }
   .btn-clear{ margin-top:10px;background:#eee; }
 
+  /* ===== FOLHA ===== */
   .folha{
     width: 210mm;
     min-height: 297mm;
@@ -53,6 +55,7 @@
     position:relative;
   }
 
+  /* ===== TELA (FORMULÁRIO) ===== */
   .titulo-laudo{
     text-align:center;
     font-weight:800;
@@ -129,6 +132,7 @@
     margin-top:6px;
   }
 
+  /* ===== OBSERVAÇÃO (TELA) ===== */
   .obs-wrap{
     margin-top:12px;
     background:#e9eff7;
@@ -154,6 +158,7 @@
     box-sizing:border-box;
   }
 
+  /* ===== PRINT (LAUDO COMPLETO) ===== */
   .print-only{ display:none; }
 
   .cab-paciente{
@@ -213,6 +218,7 @@
   .tit-negrito{ font-weight:700; text-transform:uppercase; }
   .tit-normal-caps{ font-weight:400; text-transform:uppercase; }
   .concl-resposta-bloco{ white-space:pre-line; font-weight:400; display:block; }
+
   #obs_print_wrap{ display:none; }
 
   .rodape-prof{
@@ -222,44 +228,26 @@
     font-size:10pt;
   }
 
-  /* ✅ AQUI ESTÁ A CORREÇÃO REAL */
+  /* ✅ PRINT PERFEITO (SEM CONDENSAR) */
   @media print{
-    /* força A4 */
-    @page{ size: A4; margin: 10mm; }
-
-    html, body{
-      margin:0 !important;
-      padding:0 !important;
-      height:auto !important;
-      overflow:hidden !important;
-    }
-
+    body{ background:#fff; padding:0; }
     .controles{ display:none !important; }
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
 
-    /* ✅ remove tamanho mínimo e impede "sobras" */
+    /* ✅ CORREÇÃO REAL: não deixar min-height causar folha extra */
     .folha{
-      width:auto !important;
-      min-height:0 !important;
+      box-shadow:none;
+      width:100%;
+      margin:0;
+      padding:10mm;
+      min-height:auto !important;
       height:auto !important;
-      margin:0 !important;
-      padding:10mm !important;
-      box-shadow:none !important;
-
-      /* ✅ impede o navegador de quebrar em outra página */
-      page-break-after: avoid !important;
-      break-after: avoid-page !important;
-      page-break-inside: avoid !important;
-      break-inside: avoid !important;
-      overflow:hidden !important;
     }
 
-    /* ✅ garante que nada vai forçar uma 2ª página */
-    .cab-paciente, .secao-print, .rodape-prof, .titulo-laudo{
-      break-inside: avoid !important;
-      page-break-inside: avoid !important;
-    }
+    /* ✅ Ajuda a evitar quebra sobrando */
+    .print-only{ page-break-after:auto; }
+    @page{ size:A4; margin:10mm; }
   }
 </style>
 </head>
@@ -268,6 +256,9 @@
 
 <div class="folha">
 
+  <!-- =========================
+       ✅ TELA: FORM COMPLETO
+       ========================= -->
   <div class="no-print">
     <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
 
@@ -349,23 +340,56 @@
           <div class="lbl">CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO:</div>
         </div>
         <div class="grupo">
-          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Escamosas: possivelmente não neoplásicas (ASC-US)" value="ASC-US" onchange="atualizar()"> ESCAMOSAS (ASC-US)</label>
-          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Escamosas: não se pode afastar lesão intra-epitelial de alto grau (ASC-H)" value="ASC-H" onchange="atualizar()"> ESCAMOSAS (ASC-H)</label>
-          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: possivelmente não neoplásicas" value="GLANDULARES" onchange="atualizar()"> GLANDULARES: Possivelmente não neoplásicas</label>
-          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: não se pode afastar alto grau" value="GLANDULARES_ALTO" onchange="atualizar()"> GLANDULARES: Não se pode afastar alto grau</label>
+          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="— ESCAMOSAS: Possivelmente não neoplásicas (ASC-US)." value="ASC-US" onchange="atualizar()"> ESCAMOSAS (ASC-US)</label>
+          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="— ESCAMOSAS: Não se pode afastar lesão intra-epitelial de alto grau (ASC-H)." value="ASC-H" onchange="atualizar()"> ESCAMOSAS (ASC-H)</label>
+          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="— GLANDULARES: Possivelmente não neoplásicas." value="GLANDULARES: Possivelmente não neoplásicas" onchange="atualizar()"> GLANDULARES: Possivelmente não neoplásicas</label>
+          <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="— GLANDULARES: Não se pode afastar alto grau." value="GLANDULARES: Não se pode afastar alto grau" onchange="atualizar()"> GLANDULARES: Não se pode afastar alto grau</label>
+        </div>
+
+        <div class="linha" style="margin-top:10px;">
+          <div class="lbl">ATIPIAS EM CÉLULAS ESCAMOSAS:</div>
+        </div>
+        <div class="grupo">
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="— Lesão intra-epitelial de baixo grau (compreendendo efeito citopático pelo vírus HPV e neoplasia intra-epitelial cervical grau I - NIC I)." value="NIC I" onchange="atualizar()"> BAIXO GRAU (HPV / NIC I)</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="— Lesão intra-epitelial de alto grau (NIC II e III)." value="NIC II / III" onchange="atualizar()"> ALTO GRAU (NIC II / III)</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="— Carcinoma epidermóide invasor." value="Carcinoma" onchange="atualizar()"> Carcinoma epidermóide invasor</label>
+        </div>
+
+        <div class="linha" style="margin-top:10px;">
+          <div class="lbl">ATIPIAS EM CÉLULAS GLANDULARES:</div>
+        </div>
+        <div class="grupo">
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="— Adenocarcinoma 'in situ'." value="Adenocarcinoma 'in situ'" onchange="atualizar()"> Adenocarcinoma "in situ"</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="— Adenocarcinoma invasor, cervical." value="Adenocarcinoma cervical" onchange="atualizar()"> Adenocarcinoma invasor, cervical</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="— Adenocarcinoma invasor, endometrial." value="Adenocarcinoma endometrial" onchange="atualizar()"> Adenocarcinoma invasor, endometrial</label>
+          <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="— Adenocarcinoma invasor, SOE." value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
         </div>
       </div>
-    </div>
 
+    </div><!-- painel -->
+
+    <!-- Observação -->
     <div class="obs-wrap">
       <div class="obs-title">Observação:</div>
+
+      <div class="op-col" style="margin-bottom:10px;">
+        <label><input type="radio" name="obs_opt" value="Tratar e repetir." onchange="aplicarObs(this.value)"> Tratar e repetir.</label>
+        <label><input type="radio" name="obs_opt" value="Alterações celulares importantes. Tratar e repetir." onchange="aplicarObs(this.value)"> Alterações celulares importantes. Tratar e repetir.</label>
+        <label><input type="radio" name="obs_opt" value="Correlacionar com exames complementares." onchange="aplicarObs(this.value)"> Correlacionar com exames complementares.</label>
+        <label><input type="radio" name="obs_opt" value="Padrão epitelial hipoestrogênico." onchange="aplicarObs(this.value)"> Padrão epitelial hipoestrogênico.</label>
+        <label><input type="radio" name="obs_opt" value="Padrão epitelial ainda trófico." onchange="aplicarObs(this.value)"> Padrão epitelial ainda trófico.</label>
+      </div>
+
       <textarea id="obs_texto" placeholder="Caso necessário, digite a observação aqui..." oninput="setObsPrint(this.value)"></textarea>
     </div>
-  </div>
 
+  </div><!-- /no-print -->
+
+  <!-- =========================
+       ✅ IMPRESSÃO: LAUDO COMPLETO
+       ========================= -->
   <div class="print-only">
-    <!-- seu print-only permanece igual (já está funcionando) -->
-    <!-- (mantido o mesmo que você tem) -->
+
     <div class="cab-paciente">
       <div class="cab-row1">
         <div class="cab-left">
@@ -395,8 +419,15 @@
     <div class="linha-identificacao"><strong>CONVÊNIO:</strong>&nbsp;UNIDADE MÓVEL SESC SAÚDE MULHER</div>
     <div class="linha-identificacao"><strong>EXAME REALIZADO:</strong>&nbsp;CITOPATOLÓGICO CÉRVICO-VAGINAL/MICROFLORA</div>
 
-    <div class="linha-identificacao"><strong>DATA DA COLETA:</strong> <span id="data_coleta_print"></span></div>
-    <div class="linha-identificacao"><strong>RESPONSÁVEL:</strong> <span id="nome_resp_print"></span></div>
+    <div class="linha-identificacao">
+      <strong>DATA DA COLETA:</strong>
+      <span id="data_coleta_print"></span>
+    </div>
+
+    <div class="linha-identificacao">
+      <strong>RESPONSÁVEL:</strong>
+      <span id="nome_resp_print"></span>
+    </div>
 
     <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
 
@@ -421,7 +452,7 @@
     </div>
 
     <div class="secao-print">
-      <span class="tit-negrito">CONCLUSÃO:</span>
+      <span id="p_tit_concl" class="tit-negrito">CONCLUSÃO:</span>
       <span id="p_res_concl" class="concl-resposta-bloco"></span>
     </div>
 
@@ -464,6 +495,12 @@
     }
   }
 
+  function aplicarObs(txt){
+    const el = document.getElementById("obs_texto");
+    el.value = txt;
+    setObsPrint(txt);
+  }
+
   const params = new URLSearchParams(window.location.search);
   const init = {
     paciente: up(params.get("paciente")),
@@ -491,6 +528,7 @@
   document.getElementById("cab_cep").textContent = init.cep;
   document.getElementById("data_coleta_print").textContent = init.data_coleta;
   document.getElementById("nome_resp_print").textContent = init.responsavel;
+
   document.getElementById("obs_texto").value = init.observacao;
   setObsPrint(init.observacao);
 
@@ -500,6 +538,7 @@
 
   function atualizar(){
     const checksEpi = document.querySelectorAll('.epi:checked');
+
     if (checksEpi.length > 1) document.getElementById('zona_sim').checked = true;
     else if (checksEpi.length === 1) document.getElementById('zona_nao').checked = true;
 
@@ -544,14 +583,15 @@
       if(concl.value === "NEGATIVO"){
         document.getElementById('p_res_concl').textContent = respostaTecnica;
       }else{
-        document.getElementById('p_res_concl').textContent = categoria + ":\n" + respostaTecnica;
+        document.getElementById('p_res_concl').textContent =
+          categoria + ":\n" + respostaTecnica;
       }
     }else{
       document.getElementById('p_res_concl').textContent = "";
     }
   }
 
-  // export + nome (mantidos)
+  // ✅ exportação (mesmo padrão do seu sistema)
   function mesChaveAtual(){
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -579,8 +619,8 @@
     }));
 
     const exportJSON = { [keySistema]: JSON.stringify(registros) };
-
     const blob = new Blob([JSON.stringify(exportJSON)], { type:"application/json;charset=utf-8" });
+
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = `EXPORT_${mes}.json`;
@@ -638,6 +678,7 @@
   }
 
   window.atualizar = atualizar;
+  window.aplicarObs = aplicarObs;
 </script>
 
 </body>
