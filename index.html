@@ -13,7 +13,6 @@
       --azul2:#06233f;
 
       --ink:#06243f;
-
       --stroke: rgba(255,255,255,.28);
 
       --shadow: 0 18px 55px rgba(0,0,0,.16);
@@ -22,112 +21,140 @@
 
     *{ box-sizing:border-box; }
 
-    body{
+    /* ✅ SEM SCROLL EM ABSOLUTO NADA */
+    html, body{
+      width:100%;
+      height:100%;
       margin:0;
-      font-family: Arial, sans-serif;
-      min-height:100vh;
-      color: var(--ink);
-      background: linear-gradient(90deg, var(--verde1) 0%, var(--verde2) 22%, var(--azul1) 70%, var(--azul2) 100%);
-      overflow-x:hidden;
+      padding:0;
+      overflow: hidden !important; /* tira qualquer scroll */
     }
 
+    body{
+      font-family: Arial, sans-serif;
+      color: var(--ink);
+
+      /* ✅ degradê */
+      background: linear-gradient(90deg, var(--verde1) 0%, var(--verde2) 22%, var(--azul1) 70%, var(--azul2) 100%);
+      position: relative;
+    }
+
+    /* watermark do sesctopo */
     body::before{
       content:"";
-      position: fixed;
+      position: absolute;
       inset: 0;
-      background: url("logo/sesctopo.png") center 72% / min(980px, 92vw) no-repeat;
-      opacity: 0.08;
+      background: url("logo/sesctopo.png") center 70% / 900px no-repeat;
+      opacity: 0.09;
       pointer-events:none;
-      z-index: 0;
+      z-index:0;
     }
 
-    header, main{ position:relative; z-index:1; }
+    /* container fixo para 1920x1080 */
+    .screen{
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      padding: 22px 34px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
     /* ===========================
-       TOPO (somente SI...)
+       TOPO
     =========================== */
     header{
-      padding: 16px 24px 6px;
-    }
-
-    .headRow{
+      flex: 0 0 auto;
       display:flex;
       align-items:center;
-      gap:14px;
-      flex-wrap:wrap;
+      gap:16px;
+      padding-bottom: 4px;
     }
 
     .topLogo{
-      height: 48px;
+      height: 56px;
       width:auto;
       object-fit: contain;
       display:block;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.10));
+      filter: drop-shadow(0 12px 20px rgba(0,0,0,.10));
     }
 
     .sysOnly{
       margin:0;
-      font-size: 30px;
+      font-size: 34px;
       font-weight: 900;
       letter-spacing: 1px;
-      color: var(--ink);
       text-transform: uppercase;
-      text-shadow: 0 14px 30px rgba(0,0,0,.08);
+      color: var(--ink);
+      text-shadow: 0 16px 32px rgba(0,0,0,.10);
     }
 
     /* ===========================
-       CONTEÚDO CENTRAL
+       CENTRO
     =========================== */
     main{
-      width:min(980px, 94vw);
-      margin: 10px auto 40px;
+      flex: 1 1 auto;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height: 0; /* importante p/ não estourar altura */
     }
 
     .glass{
-      border-radius: 28px;
+      width: 980px;              /* ✅ perfeito para 1920 */
+      height: 760px;             /* ✅ cabe sem scroll */
+      border-radius: 32px;
       border: 1px solid var(--stroke);
       background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
       box-shadow: var(--shadow);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      overflow:hidden;
+      overflow: hidden;
+      display:flex;
     }
 
     .panel{
-      padding: 22px;
+      width:100%;
+      height:100%;
+      padding: 26px;
       display:flex;
       flex-direction:column;
       gap: 16px;
     }
 
     .panelTitle{
-      font-size: 26px;
+      margin:0;
+      font-size: 30px;
       font-weight: 900;
       letter-spacing: 1px;
       color: var(--ink);
-      margin: 0;
       text-transform: uppercase;
     }
 
-    /* Guia “régua” */
+    /* guia régua */
     .guideLine{
-      padding: 12px 14px;
-      border-radius: 18px;
+      padding: 14px 16px;
+      border-radius: 20px;
       border: 1px solid rgba(255,255,255,.32);
       background: rgba(255,255,255,.20);
       box-shadow: var(--shadow2);
+
       display:flex;
       align-items:center;
       justify-content:flex-start;
       flex-wrap:wrap;
-      gap: 10px;
+      gap: 12px;
+
       font-weight: 900;
       color: rgba(6,36,63,.92);
       letter-spacing: .7px;
+      flex: 0 0 auto;
     }
 
     .guideLine .tag{
-      padding: 6px 10px;
+      padding: 7px 12px;
       border-radius: 999px;
       border: 1px solid rgba(6,36,63,.18);
       background: rgba(255,255,255,.18);
@@ -140,18 +167,22 @@
       font-weight: 900;
     }
 
+    /* textarea sem scroll na página (apenas ela interna pode ser editada) */
     textarea{
       width:100%;
-      min-height: 310px;
-      resize: vertical;
+      flex: 1 1 auto;
+      min-height: 0;                 /* ✅ evita estourar */
+      resize: none;                  /* ✅ sem puxar tamanho */
       border-radius: 22px;
       border: 1px solid rgba(255,255,255,.34);
       background: rgba(255,255,255,.16);
       box-shadow: var(--shadow2);
-      padding: 16px;
+      padding: 18px;
       outline:none;
-      font-size: 16px;
+      font-size: 17px;
       color: var(--ink);
+      line-height: 1.35;
+      overflow: auto; /* rola só dentro se texto passar (sem scroll da página) */
     }
 
     textarea::placeholder{ color: rgba(6,36,63,.55); }
@@ -174,35 +205,35 @@
       background: linear-gradient(90deg, #0d3a66, #06243f);
       box-shadow: 0 22px 38px rgba(6,36,63,.25);
       transition: transform .08s ease, filter .2s ease;
+      flex: 0 0 auto;
     }
     .btn:hover{ filter: brightness(1.05); }
     .btn:active{ transform: translateY(1px); }
 
     .formRow{
       display:grid;
-      grid-template-columns: 1fr 240px;
-      gap: 14px;
-    }
-    @media(max-width:720px){
-      .formRow{ grid-template-columns: 1fr; }
+      grid-template-columns: 1fr 260px;
+      gap: 16px;
+      flex: 0 0 auto;
     }
 
     label{
       display:block;
       font-weight: 900;
-      margin-bottom: 6px;
+      margin-bottom: 7px;
       color: var(--ink);
+      font-size: 16px;
     }
 
     input{
       width:100%;
-      padding: 12px 12px;
+      padding: 13px 14px;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.34);
       background: rgba(255,255,255,.18);
       box-shadow: var(--shadow2);
       outline:none;
-      font-size: 15px;
+      font-size: 16px;
       color: var(--ink);
     }
     input:focus{
@@ -210,56 +241,57 @@
       box-shadow: 0 0 0 4px rgba(6,36,63,.10), var(--shadow2);
     }
 
-    /* ✅ garante que não apareça “footHint” de versões antigas */
-    .footHint{ display:none !important; }
+    /* mata definitivamente qualquer sobra antiga */
+    .footHint, .checks, .statusHint, .hintFooter{ display:none !important; }
   </style>
 </head>
 
 <body>
+  <div class="screen">
 
-  <header>
-    <div class="headRow">
+    <header>
       <img class="topLogo" src="logo/sesctopo.png" alt="SESC Topo">
       <h1 class="sysOnly">SI - SISTEMA DE INFORMAÇÃO . LAUDOS.</h1>
-    </div>
-  </header>
+    </header>
 
-  <main>
-    <section class="glass panel" aria-label="Digitação rápida">
-      <h2 class="panelTitle">Digitação rápida</h2>
+    <main>
+      <section class="glass panel" aria-label="Digitação rápida">
+        <h2 class="panelTitle">Digitação rápida</h2>
 
-      <div class="guideLine" aria-label="Guia de digitação">
-        <span class="tag">DC</span><span class="sep">|</span>
-        <span class="tag">DN</span><span class="sep">|</span>
-        <span class="tag">CN</span><span class="sep">|</span>
-        <span class="tag">TEL</span><span class="sep">|</span>
-        <span class="tag">RUA</span><span class="sep">|</span>
-        <span class="tag">CEP</span><span class="sep">|</span>
-        <span class="tag">RES</span>
-        <span class="sep">=</span>
-        <span class="tag">SNM</span><span class="sep">|</span>
-        <span class="tag">EAM</span>
-      </div>
-
-      <textarea id="textoDigitacao" placeholder="Cole aqui os dados do paciente conforme a ordem acima..."></textarea>
-
-      <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR</button>
-
-      <div class="formRow">
-        <div>
-          <label>Paciente</label>
-          <input id="nome" placeholder="NOME COMPLETO" />
+        <div class="guideLine" aria-label="Guia de digitação">
+          <span class="tag">DC</span><span class="sep">|</span>
+          <span class="tag">DN</span><span class="sep">|</span>
+          <span class="tag">CN</span><span class="sep">|</span>
+          <span class="tag">TEL</span><span class="sep">|</span>
+          <span class="tag">RUA</span><span class="sep">|</span>
+          <span class="tag">CEP</span><span class="sep">|</span>
+          <span class="tag">RES</span>
+          <span class="sep">=</span>
+          <span class="tag">SNM</span><span class="sep">|</span>
+          <span class="tag">EAM</span>
         </div>
-        <div>
-          <label>Nº Exame</label>
-          <input id="exame" placeholder="000156/2026" />
+
+        <textarea id="textoDigitacao" placeholder="Cole aqui os dados do paciente conforme a ordem acima..."></textarea>
+
+        <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR</button>
+
+        <div class="formRow">
+          <div>
+            <label>Paciente</label>
+            <input id="nome" placeholder="NOME COMPLETO" />
+          </div>
+          <div>
+            <label>Nº Exame</label>
+            <input id="exame" placeholder="000156/2026" />
+          </div>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
+    </main>
+
+  </div>
 
   <script>
-    // Layout ok. Depois corrigimos o extrair.
+    // Layout pronto. Depois fazemos a correção do extrair.
   </script>
 </body>
 </html>
