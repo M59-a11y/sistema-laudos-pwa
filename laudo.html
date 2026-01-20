@@ -475,7 +475,6 @@
     }));
 
     const exportJSON = { [keySistema]: JSON.stringify(registros) };
-
     const fileName = `EXPORT_${mes}.json`;
 
     const blob = new Blob([JSON.stringify(exportJSON)], { type:"application/json;charset=utf-8" });
@@ -513,81 +512,121 @@
     if(window.history.length > 1){ window.history.back(); return; }
   }
 
+  /* ==========================================================
+     ✅ GERAR PDF SEMPRE (CORRIGIDO PARA PRINT-ONLY)
+     ========================================================== */
   async function gerarPDF(){
     atualizar();
 
-    // ✅ salva/exporta POSITIVO sem quebrar PDF
-    try{
-      const concl = document.querySelector('input[name="c"]:checked');
-      if(concl && concl.value !== "NEGATIVO"){
-        const categoria = concl.getAttribute("data-tit") || "";
-        let subcategoria = concl.getAttribute("data-full") || concl.value || "";
-        subcategoria = (subcategoria || "").replace(/^—\s*/,"").trim();
-
-        const payload = {
-          exame: init.exame,
-          nome: init.paciente,
-          telefone: init.telefone,
-          categoria,
-          subcategoria
-        };
-
-        salvarCasoPositivoNoStorage(payload);
-        gerarArquivoExportacaoMes(); // ✅ sempre exporta o mês inteiro (não substitui)
-      }
-    }catch(e){
-      console.error("Erro no export positivo:", e);
-      // não trava o PDF
-    }
-
-    // ✅ gera PDF sempre
+    // ✅ 1) SEMPRE gera PDF primeiro
     const fileName = nomeArquivoPDF();
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF("p","mm","a4");
 
-    const clone = document.querySelector(".print-only").cloneNode(true);
+    const original = document.querySelector(".print-only");
+    if(!original){
+      alert("Erro: não encontrei a área do laudo (.print-only).");
+      return;
+    }
+
+    const clone = original.cloneNode(true);
+
+    // ✅ força o clone visível (resolve bug do display:none)
+    clone.style.display = "block";
+    clone.style.visibility = "visible";
+    clone.style.opacity = "1";
+
     const sandbox = document.createElement("div");
-    sandbox.style.position="fixed";
-    sandbox.style.left="-99999px";
-    sandbox.style.top="0";
-    sandbox.style.width="210mm";
-    sandbox.style.background="white";
-    sandbox.style.padding="10mm";
+    sandbox.style.position = "fixed";
+    sandbox.style.left = "0";
+    sandbox.style.top = "0";
+    sandbox.style.width = "210mm";
+    sandbox.style.minHeight = "297mm";
+    sandbox.style.background = "white";
+    sandbox.style.padding = "10mm";
+    sandbox.style.zIndex = "-9999";
+    sandbox.style.pointerEvents = "none";
     sandbox.appendChild(clone);
     document.body.appendChild(sandbox);
 
     try{
+      await new Promise(r => setTimeout(r, 120));
+
       const canvas = await html2canvas(clone, {
-        scale:2,
-        useCORS:true,
-        backgroundColor:"#ffffff"
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        windowWidth: clone.scrollWidth,
+        windowHeight: clone.scrollHeight
       });
 
       const imgData = canvas.toDataURL("image/png");
-      const pageWidth = 210, pageHeight = 297;
+
+      const pageWidth = 210;
+      const pageHeight = 297;
       const imgWidth = pageWidth;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
       let heightLeft = imgHeight;
       let position = 0;
 
-      doc.addImage(imgData,"PNG",0,position,imgWidth,imgHeight);
+      doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
 
       while(heightLeft > 0){
         position = heightLeft - imgHeight;
         doc.addPage();
-        doc.addImage(imgData,"PNG",0,position,imgWidth,imgHeight);
+        doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
       }
+
+    }catch(err){
+      console.error("❌ ERRO PDF:", err);
+      alert("❌ Erro ao gerar PDF. Aperte F12 > Console para ver.");
+      sandbox.remove();
+      return;
 
     }finally{
       sandbox.remove();
     }
 
+    // ✅ salva PDF
     doc.save(fileName);
 
-    setTimeout(()=>limparEVoltarSistema(), 600);
+    // ✅ 2) exporta positivo (depois do PDF)
+    setTimeout(() => {
+      try{
+        const concl = document.querySelector('input[name="c"]:checked');
+        if(concl && concl.value !== "NEGATIVO"){
+          const categoria = concl.getAttribute("data-tit") || "";
+          let subcategoria = concl.getAttribute("data-full") || concl.value || "";
+          subcategoria = (subcategoria || "").replace(/^—\s*/,"").trim();
+
+          const payload = {
+            exame: init.exame,
+            nome: init.paciente,
+            telefone: init.telefone,
+            categoria,
+            subcategoria
+          };
+
+          salvarCasoPositivoNoStorage(payload);
+          gerarArquivoExportacaoMes();
+        }
+      }catch(e){
+        console.error("Erro export positivo:", e);
+      }
+    }, 600);
+
+    // ✅ 3) limpar e voltar
+    setTimeout(() => {
+      try{
+        limparEVoltarSistema();
+      }catch(e){
+        console.error("Erro limpar/voltar:", e);
+      }
+    }, 1100);
   }
 
   window.atualizar = atualizar;
