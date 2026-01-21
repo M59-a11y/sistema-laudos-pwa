@@ -36,14 +36,21 @@
       position: relative;
     }
 
+    /* ✅ LOGO NO FUNDO (marca d’água) */
     body::before{
       content:"";
       position: absolute;
       inset: 0;
-      background: url("logo/sesctopo.png") center 70% / 900px no-repeat;
-      opacity: 0.09;
+
+      /* imagem no fundo */
+      background: url("logo/sesctopo.png") center center / 980px no-repeat;
+
+      /* mais "marca d’água" */
+      opacity: 0.07;
+
       pointer-events:none;
       z-index:0;
+      filter: blur(.2px);
     }
 
     header, main{ position:relative; z-index:1; }
@@ -61,30 +68,32 @@
       flex: 0 0 auto;
       display:flex;
       align-items:center;
-      gap:16px;
+
+      /* ✅ agora sem logo no topo */
+      justify-content:flex-start;
+
       padding-bottom: 4px;
     }
-    .topLogo{
-      height: 56px;
-      width:auto;
-      object-fit: contain;
-      display:block;
-      filter: drop-shadow(0 12px 20px rgba(0,0,0,.10));
-    }
 
-    /* ✅ NOVO TÍTULO PROFISSIONAL (não altera funcionalidades) */
+    /* ✅ título alinhado à esquerda */
     .sysOnly{
       margin:0;
       display:flex;
       align-items:baseline;
       gap:12px;
       flex-wrap:wrap;
+
       font-weight:900;
       letter-spacing:.8px;
       text-transform:uppercase;
       color: var(--ink);
       text-shadow: 0 16px 32px rgba(0,0,0,.10);
+
+      /* ✅ garante que fique colado na esquerda */
+      width: 100%;
+      justify-content:flex-start;
     }
+
     .sysOnly .t1{ font-size: 28px; }
     .sysOnly .dot{
       font-size: 22px;
@@ -209,9 +218,8 @@
   <div class="screen">
 
     <header>
-      <img class="topLogo" src="logo/sesctopo.png" alt="SESC Topo">
+      <!-- ✅ removido logo do topo -->
 
-      <!-- ✅ título reformulado (sem afetar JS) -->
       <h1 class="sysOnly">
         <span class="t1">SI — SISTEMA DE INFORMAÇÃO</span>
         <span class="dot" aria-hidden="true">●</span>
