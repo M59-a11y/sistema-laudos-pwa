@@ -13,7 +13,7 @@
       --azul2:#06233f;
 
       --stroke: rgba(255,255,255,.20);
-      --shadow: 0 16px 44px rgba(0,0,0,.22);
+      --shadow: 0 18px 55px rgba(0,0,0,.22);
       --shadow2: 0 10px 22px rgba(0,0,0,.16);
     }
 
@@ -41,7 +41,7 @@
       content:"";
       position:absolute;
       inset:0;
-      background: url("logotipo/logotipo.png") center 55% / 720px no-repeat;
+      background: url("logotipo/logotipo.png") center 55% / 760px no-repeat;
       opacity: 0.24;
       pointer-events:none;
       z-index:0;
@@ -66,14 +66,14 @@
     .screen{
       width:100%;
       height:100%;
-      padding: 12px 22px;
+      padding: 14px 24px;
       display:flex;
       flex-direction:column;
-      gap: 8px;
+      gap: 10px;
     }
 
     /* ===========================
-       HEADER COMPACTO
+       HEADER
        =========================== */
     header{
       flex:0 0 auto;
@@ -112,7 +112,7 @@
       box-shadow: 0 10px 20px rgba(0,0,0,.14);
     }
 
-    /* ✅ DEV CARD SEM BACKDROP (sem efeito fantasma) */
+    /* ✅ DEV CARD sem “efeito fantasma” */
     .devCard{
       display:flex;
       flex-direction:column;
@@ -120,11 +120,12 @@
       gap:2px;
       padding: 7px 12px;
       border-radius: 14px;
-      background: rgba(6, 35, 63, 0.85);
+      background: rgba(6, 35, 63, 0.88);
       border: 1px solid rgba(255,255,255,.18);
       box-shadow: 0 10px 20px rgba(0,0,0,.18);
       backdrop-filter:none !important;
       -webkit-backdrop-filter:none !important;
+      user-select:none;
     }
     .devCard .nome{
       font-size: 11px;
@@ -142,7 +143,7 @@
     }
 
     /* ===========================
-       ✅ MAIN NÃO ESTICA MAIS
+       ✅ CARD MAIS PARA O MEIO DA TELA
        =========================== */
     main{
       flex: 1 1 auto;
@@ -150,15 +151,17 @@
       align-items:flex-start;
       justify-content:center;
       min-height: 0;
-      padding-top: 6px;
+
+      /* ✅ isso baixa o card mais para o meio */
+      padding-top: 48px;
     }
 
     /* ===========================
-       ✅ GLASS FIXO E PEQUENO
+       CARD PRINCIPAL
        =========================== */
     .glass{
-      width: min(980px, 100%);
-      height: 420px;              /* ✅ menor DE VERDADE */
+      width: min(1180px, 100%);
+      height: 520px;  /* ✅ maior para caber tudo sem rolagem */
       border-radius: 26px;
       border: 1px solid var(--stroke);
       background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.06));
@@ -172,15 +175,15 @@
     .panel{
       width:100%;
       height:100%;
-      padding: 14px 16px;         /* ✅ menor */
+      padding: 18px 18px;
       display:flex;
       flex-direction:column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .panelTitle{
       margin:0;
-      font-size: 20px;
+      font-size: 28px;
       font-weight: 900;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -188,11 +191,9 @@
       text-shadow: 0 10px 24px rgba(0,0,0,.30);
     }
 
-    /* ===========================
-       GUIA
-       =========================== */
+    /* guia */
     .guideLine{
-      padding: 8px 10px;
+      padding: 10px 12px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.09);
@@ -200,23 +201,21 @@
       display:flex;
       align-items:center;
       flex-wrap:wrap;
-      gap: 8px;
+      gap: 10px;
       font-weight: 900;
       color: rgba(255,255,255,.92);
       letter-spacing: .7px;
       flex: 0 0 auto;
     }
-
     .guideLine .tag{
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.12);
       white-space: nowrap;
       color:#fff;
-      font-size: 13px;
+      font-size: 14px;
     }
-
     .guideLine .sep{
       opacity:.55;
       font-weight:900;
@@ -224,19 +223,19 @@
     }
 
     /* ===========================
-       ✅ TEXTAREA FIXO (SEM FLEX)
+       ✅ TEXTAREA GRANDE SEM SCROLL
        =========================== */
     textarea{
       width:100%;
-      height: 170px;          /* ✅ fixo */
-      min-height: 170px;
-      max-height: 170px;
+      height: 285px;            /* ✅ grande (como no PDF) */
+      min-height: 285px;
+      max-height: 285px;
 
       resize:none;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.18);
 
-      background: rgba(0,0,0,.16);
+      background: rgba(0,0,0,.14);
       box-shadow: 0 12px 22px rgba(0,0,0,.14);
 
       padding: 14px;
@@ -244,28 +243,30 @@
       font-size: 15px;
       color:#fff;
       line-height: 1.35;
-      overflow:auto;
-      flex: 0 0 auto;         /* ✅ impede crescer */
+
+      /* ✅ some com a rolagem */
+      overflow: hidden;
     }
     textarea::placeholder{ color: rgba(255,255,255,.64); }
 
     /* ===========================
-       ✅ BOTÃO MAIS FINO
+       ✅ BOTÃO MENOR E NO CENTRO
        =========================== */
     .btn{
-      width:100%;
+      align-self: center; /* ✅ centraliza */
+      width: min(680px, 92%); /* ✅ não ocupa tudo */
       border:none;
       border-radius: 18px;
-      padding: 12px 14px;
+      padding: 12px 16px;
       cursor:pointer;
       font-size: 18px;
       font-weight: 900;
       letter-spacing: .3px;
       color:#041b2f;
+
       background: linear-gradient(90deg, #00e09c, #1376b8);
       box-shadow: 0 16px 26px rgba(0,0,0,.18);
       transition: transform .08s ease, filter .2s ease;
-      flex: 0 0 auto;
     }
     .btn:hover{ filter: brightness(1.03); }
     .btn:active{ transform: translateY(1px); }
@@ -273,17 +274,19 @@
     /* ===========================
        RESPONSIVO
        =========================== */
-    @media (max-width: 920px){
+    @media (max-width: 980px){
       header{ flex-direction:column; align-items:flex-start; gap:8px; }
       .devCard{ align-items:flex-start; }
-      .glass{ height: 460px; }
-      textarea{ height: 190px; min-height:190px; max-height:190px; }
+      main{ padding-top: 26px; }
+      .glass{ height: 560px; }
+      textarea{ height: 320px; min-height: 320px; max-height: 320px; overflow:auto; }
+      /* no celular precisa rolar mesmo */
     }
 
     @media (max-width: 520px){
       .screen{ padding: 10px 12px; }
-      .glass{ height: 500px; }
-      textarea{ height: 220px; min-height:220px; max-height:220px; }
+      .glass{ height: 620px; }
+      textarea{ height: 360px; min-height: 360px; max-height: 360px; overflow:auto; }
     }
   </style>
 </head>
