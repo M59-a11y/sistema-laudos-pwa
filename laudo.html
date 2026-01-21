@@ -442,6 +442,34 @@
     @page{ size:A4; margin:0; }
   }
 
+  /* ✅ ================================
+     ✅ AJUSTE PARA TELA DIVIDIDA
+     ✅ (não afeta o PRINT)
+     ✅ ================================ */
+  @media screen{
+    body{ padding:10px !important; }
+    .watermark{ display:none !important; }
+    .shell{ max-width: 100% !important; }
+
+    /* some elementos inúteis */
+    .hdr{ display:none !important; }
+    .card-h .pill{ display:none !important; }
+
+    /* sobe o card e deixa mais escuro */
+    .card{
+      margin-top:0 !important;
+      border:1px solid rgba(255,255,255,.16) !important;
+      background: linear-gradient(180deg, rgba(0,0,0,.20), rgba(255,255,255,.06)) !important;
+    }
+
+    .card-b{ padding:12px !important; }
+    .folha{
+      min-height:auto !important;
+      padding: 10mm 10mm !important;
+      border-radius: 18px !important;
+    }
+  }
+
   /* ===== PRINT LAYOUT (INTACTO) ===== */
   .cab-paciente{
     border-top: 3px solid #00a651;
@@ -850,10 +878,14 @@
 
   function atualizar(){
     const checksEpi = document.querySelectorAll('.epi:checked');
+    const zSim = document.getElementById("zona_sim");
+    const zNao = document.getElementById("zona_nao");
 
+    /* ✅ NOVA REGRA: 2+ epitélios = SIM / 1 epitélio = NÃO */
     if(checksEpi.length >= 2){
-      const zSim = document.getElementById("zona_sim");
       if(zSim && !zSim.checked) zSim.checked = true;
+    }else if(checksEpi.length === 1){
+      if(zNao && !zNao.checked) zNao.checked = true;
     }
 
     const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = val || ""; };
@@ -1038,16 +1070,12 @@
           document.title = tituloOriginal;
           iframe.remove();
 
-          /* ✅ TELA DIVIDIDA: AVISA O SISTEMA PRINCIPAL PARA LIMPAR O TEXTAREA */
+          /* ✅ avisa o sistema principal para limpar o textarea */
           try{
             if(window.parent && window.parent !== window){
               window.parent.postMessage({ type:"LAUDO_IMPRESSO" }, "*");
             }
           }catch(e){}
-
-          // ✅ NÃO volta mais (porque já está do lado)
-          // voltarSistema();
-
         }, 900);
 
       }, 120);
