@@ -59,18 +59,91 @@
       z-index:0;
     }
 
-    header, main{ position:relative; z-index:1; }
-
-    .screen{
+    /* ✅ LAYOUT SPLIT */
+    .app{
+      position:relative;
+      z-index:1;
       width:100%;
       height:100%;
+      display:grid;
+      grid-template-columns: 1fr 52%;
+      gap: 14px;
       padding: 14px 24px;
+    }
+
+    /* ✅ Painel esquerdo */
+    .left{
+      min-width:0;
+      height:100%;
       display:flex;
       flex-direction:column;
       gap: 10px;
+      overflow:hidden;
     }
 
-    /* HEADER */
+    /* ✅ Painel direito */
+    .right{
+      min-width:0;
+      height:100%;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .rightTop{
+      flex:0 0 auto;
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.12);
+      background: rgba(6,35,63,.45);
+    }
+    .rightTop strong{
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:900;
+    }
+    .mini{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .mini button{
+      border:none;
+      cursor:pointer;
+      padding:8px 10px;
+      border-radius:12px;
+      font-weight:900;
+      letter-spacing:.03em;
+      color:#041b2f;
+      background: linear-gradient(90deg, #00e09c, #1376b8);
+      box-shadow: 0 10px 18px rgba(0,0,0,.14);
+      font-size:12px;
+    }
+    .mini button:active{ transform:translateY(1px); }
+
+    .frameWrap{
+      flex:1 1 auto;
+      min-height:0;
+      background: rgba(0,0,0,.10);
+    }
+
+    #iframeLaudo{
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+      background:#fff;
+    }
+
+    /* HEADER do sistema */
     header{
       flex:0 0 auto;
       display:flex;
@@ -107,7 +180,6 @@
       box-shadow: 0 10px 20px rgba(0,0,0,.14);
     }
 
-    /* DEV CARD */
     .devCard{
       display:flex;
       flex-direction:column;
@@ -118,8 +190,6 @@
       background: rgba(6, 35, 63, 0.88);
       border: 1px solid rgba(255,255,255,.18);
       box-shadow: 0 10px 20px rgba(0,0,0,.18);
-      backdrop-filter:none !important;
-      -webkit-backdrop-filter:none !important;
       user-select:none;
     }
     .devCard .nome{
@@ -137,18 +207,19 @@
       text-transform:uppercase;
     }
 
-    /* CARD CENTRAL */
+    /* Card central */
     main{
       flex: 1 1 auto;
       display:flex;
       align-items:flex-start;
       justify-content:center;
-      min-height: 0;
+      min-height:0;
       padding-top: 46px;
     }
 
     .glass{
-      width: min(1180px, 100%);
+      width: 100%;
+      max-width: 1180px;
       height: 520px;
       border-radius: 26px;
       border: 1px solid var(--stroke);
@@ -209,7 +280,6 @@
       color: rgba(255,255,255,.75);
     }
 
-    /* TEXTAREA FIXO */
     textarea{
       width:100%;
       height: 280px;
@@ -232,7 +302,6 @@
     }
     textarea::placeholder{ color: rgba(255,255,255,.64); }
 
-    /* BOTÃO CENTRAL */
     .btn{
       align-self: center;
       width: min(680px, 92%);
@@ -252,17 +321,15 @@
     .btn:active{ transform: translateY(1px); }
 
     /* RESPONSIVO */
-    @media (max-width: 980px){
-      header{ flex-direction:column; align-items:flex-start; gap:8px; }
-      .devCard{ align-items:flex-start; }
+    @media (max-width: 1100px){
+      .app{ grid-template-columns: 1fr; padding: 12px; }
+      .right{ height: 62vh; }
       main{ padding-top: 22px; }
       .glass{ height: 560px; }
-
       textarea{ overflow:auto; }
     }
 
     @media (max-width: 520px){
-      .screen{ padding: 10px 12px; }
       .glass{ height: 620px; }
       textarea{ overflow:auto; }
     }
@@ -270,43 +337,60 @@
 </head>
 
 <body>
-  <div class="screen">
+  <div class="app">
 
-    <header>
-      <h1 class="sysOnly">
-        <span class="t1">SI — SISTEMA DE INFORMAÇÃO</span>
-        <span class="dot" aria-hidden="true">●</span>
-        <span class="t2">LAUDOS</span>
-      </h1>
+    <!-- ✅ ESQUERDA (SISTEMA) -->
+    <div class="left">
+      <header>
+        <h1 class="sysOnly">
+          <span class="t1">SI — SISTEMA DE INFORMAÇÃO</span>
+          <span class="dot" aria-hidden="true">●</span>
+          <span class="t2">LAUDOS</span>
+        </h1>
 
-      <div class="devCard">
-        <div class="nome">MARCOS PONTES</div>
-        <div class="cargo">DESENVOLVEDOR</div>
-      </div>
-    </header>
-
-    <main>
-      <section class="glass panel">
-        <h2 class="panelTitle">Digitação rápida</h2>
-
-        <div class="guideLine">
-          <span class="tag">DC</span><span class="sep">|</span>
-          <span class="tag">DN</span><span class="sep">|</span>
-          <span class="tag">CN</span><span class="sep">|</span>
-          <span class="tag">TEL</span><span class="sep">|</span>
-          <span class="tag">RUA</span><span class="sep">|</span>
-          <span class="tag">CEP</span><span class="sep">|</span>
-          <span class="tag">RES</span>
-          <span class="sep">=</span>
-          <span class="tag">SNM</span><span class="sep">|</span>
-          <span class="tag">EAM</span>
+        <div class="devCard">
+          <div class="nome">MARCOS PONTES</div>
+          <div class="cargo">DESENVOLVEDOR</div>
         </div>
+      </header>
 
-        <textarea id="textoDigitacao" placeholder="Cole aqui os dados do paciente conforme a ordem acima..."></textarea>
+      <main>
+        <section class="glass panel">
+          <h2 class="panelTitle">Digitação rápida</h2>
 
-        <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO</button>
-      </section>
-    </main>
+          <div class="guideLine">
+            <span class="tag">DC</span><span class="sep">|</span>
+            <span class="tag">DN</span><span class="sep">|</span>
+            <span class="tag">CN</span><span class="sep">|</span>
+            <span class="tag">TEL</span><span class="sep">|</span>
+            <span class="tag">RUA</span><span class="sep">|</span>
+            <span class="tag">CEP</span><span class="sep">|</span>
+            <span class="tag">RES</span>
+            <span class="sep">=</span>
+            <span class="tag">SNM</span><span class="sep">|</span>
+            <span class="tag">EAM</span>
+          </div>
+
+          <textarea id="textoDigitacao" placeholder="Cole aqui os dados do paciente conforme a ordem acima..."></textarea>
+
+          <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO</button>
+        </section>
+      </main>
+    </div>
+
+    <!-- ✅ DIREITA (LAUDO) -->
+    <aside class="right">
+      <div class="rightTop">
+        <strong>LAUDO — EMISSÃO</strong>
+        <div class="mini">
+          <button type="button" id="btnFoco">Voltar p/ Sistema</button>
+          <button type="button" id="btnRecarregar">Recarregar Laudo</button>
+        </div>
+      </div>
+      <div class="frameWrap">
+        <iframe id="iframeLaudo" title="Laudo"></iframe>
+      </div>
+    </aside>
 
   </div>
 
@@ -404,7 +488,7 @@
       };
     }
 
-    function abrirLaudo(dados){
+    function abrirLaudoNoPainel(dados){
       localStorage.setItem("SI_DADOS_LAUDO", JSON.stringify({ ...dados, ts: Date.now() }));
 
       const params = new URLSearchParams();
@@ -421,8 +505,13 @@
       if(dados.responsavel)     params.set("responsavel", dados.responsavel);
       if(dados.observacao)      params.set("observacao", dados.observacao);
 
-      params.set("return", window.location.href);
-      window.location.assign(`${LAUDO_URL}?${params.toString()}`);
+      const url = `${LAUDO_URL}?${params.toString()}`;
+      $("iframeLaudo").src = url;
+    }
+
+    function prepararProximoPaciente(){
+      $("textoDigitacao").value = "";
+      $("textoDigitacao").focus();
     }
 
     $("btnExtrair").addEventListener("click", ()=>{
@@ -444,13 +533,30 @@
         if(!ok) return;
       }
 
-      abrirLaudo(dados);
+      abrirLaudoNoPainel(dados);
+      // ✅ após abrir o laudo, foco fica no sistema (você cola outro se quiser)
+      $("textoDigitacao").focus();
     });
 
     document.addEventListener("keydown", (e)=>{
       if(e.ctrlKey && e.key === "Enter"){
         e.preventDefault();
         $("btnExtrair").click();
+      }
+    });
+
+    // ✅ botão utilitário
+    $("btnFoco").addEventListener("click", prepararProximoPaciente);
+    $("btnRecarregar").addEventListener("click", ()=>{
+      const fr = $("iframeLaudo");
+      if(fr && fr.src) fr.contentWindow.location.reload();
+    });
+
+    /* ✅ RECEBE AVISO DO LAUDO APÓS IMPRIMIR */
+    window.addEventListener("message", (ev)=>{
+      if(!ev.data || typeof ev.data !== "object") return;
+      if(ev.data.type === "LAUDO_IMPRESSO"){
+        prepararProximoPaciente();
       }
     });
   </script>
