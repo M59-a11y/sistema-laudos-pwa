@@ -66,14 +66,14 @@
     .screen{
       width:100%;
       height:100%;
-      padding: 12px 22px; /* ✅ menor */
+      padding: 12px 22px;
       display:flex;
       flex-direction:column;
-      gap: 8px;           /* ✅ menor */
+      gap: 8px;
     }
 
     /* ===========================
-       HEADER (BEM COMPACTO)
+       HEADER COMPACTO
        =========================== */
     header{
       flex:0 0 auto;
@@ -97,7 +97,7 @@
       text-shadow: 0 12px 28px rgba(0,0,0,.32);
     }
 
-    .sysOnly .t1{ font-size: 22px; } /* ✅ menor */
+    .sysOnly .t1{ font-size: 22px; }
     .sysOnly .dot{
       font-size: 16px;
       opacity: .82;
@@ -112,30 +112,20 @@
       box-shadow: 0 10px 20px rgba(0,0,0,.14);
     }
 
-    /* ===========================
-       ✅ DEV CARD SEM "SOMBRA TRANSPARENTE"
-       (sem backdrop-filter)
-       =========================== */
+    /* ✅ DEV CARD SEM BACKDROP (sem efeito fantasma) */
     .devCard{
       display:flex;
       flex-direction:column;
       align-items:flex-end;
       gap:2px;
-
       padding: 7px 12px;
       border-radius: 14px;
-
-      /* ✅ fundo sólido para não criar reflexo/ghost */
       background: rgba(6, 35, 63, 0.85);
-
       border: 1px solid rgba(255,255,255,.18);
       box-shadow: 0 10px 20px rgba(0,0,0,.18);
-
-      /* ✅ remove qualquer efeito fantasma */
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
     }
-
     .devCard .nome{
       font-size: 11px;
       font-weight: 900;
@@ -152,7 +142,7 @@
     }
 
     /* ===========================
-       CARD PRINCIPAL BEM MENOR
+       ✅ MAIN NÃO ESTICA MAIS
        =========================== */
     main{
       flex: 1 1 auto;
@@ -160,12 +150,15 @@
       align-items:flex-start;
       justify-content:center;
       min-height: 0;
-      padding-top: 4px;
+      padding-top: 6px;
     }
 
+    /* ===========================
+       ✅ GLASS FIXO E PEQUENO
+       =========================== */
     .glass{
-      width: min(960px, 100%);
-      height: 460px;        /* ✅ bem menor */
+      width: min(980px, 100%);
+      height: 420px;              /* ✅ menor DE VERDADE */
       border-radius: 26px;
       border: 1px solid var(--stroke);
       background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.06));
@@ -179,15 +172,15 @@
     .panel{
       width:100%;
       height:100%;
-      padding: 16px 18px;  /* ✅ menor */
+      padding: 14px 16px;         /* ✅ menor */
       display:flex;
       flex-direction:column;
-      gap: 10px;           /* ✅ menor */
+      gap: 10px;
     }
 
     .panelTitle{
       margin:0;
-      font-size: 22px;     /* ✅ menor */
+      font-size: 20px;
       font-weight: 900;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -196,10 +189,10 @@
     }
 
     /* ===========================
-       GUIA MAIS FINO
+       GUIA
        =========================== */
     .guideLine{
-      padding: 9px 11px;
+      padding: 8px 10px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.09);
@@ -219,7 +212,6 @@
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.12);
-      box-shadow: 0 6px 12px rgba(0,0,0,.08);
       white-space: nowrap;
       color:#fff;
       font-size: 13px;
@@ -232,13 +224,13 @@
     }
 
     /* ===========================
-       TEXTAREA MAIS MENOR
+       ✅ TEXTAREA FIXO (SEM FLEX)
        =========================== */
     textarea{
       width:100%;
-      flex: 1 1 auto;
-      height: 140px;      /* ✅ menor */
-      min-height: 120px;  /* ✅ menor */
+      height: 170px;          /* ✅ fixo */
+      min-height: 170px;
+      max-height: 170px;
 
       resize:none;
       border-radius: 18px;
@@ -253,19 +245,20 @@
       color:#fff;
       line-height: 1.35;
       overflow:auto;
+      flex: 0 0 auto;         /* ✅ impede crescer */
     }
     textarea::placeholder{ color: rgba(255,255,255,.64); }
 
     /* ===========================
-       BOTÃO MAIS FINO
+       ✅ BOTÃO MAIS FINO
        =========================== */
     .btn{
       width:100%;
       border:none;
       border-radius: 18px;
-      padding: 12px 14px;   /* ✅ menor */
+      padding: 12px 14px;
       cursor:pointer;
-      font-size: 18px;      /* ✅ menor */
+      font-size: 18px;
       font-weight: 900;
       letter-spacing: .3px;
       color:#041b2f;
@@ -283,12 +276,14 @@
     @media (max-width: 920px){
       header{ flex-direction:column; align-items:flex-start; gap:8px; }
       .devCard{ align-items:flex-start; }
-      .glass{ height: 470px; }
+      .glass{ height: 460px; }
+      textarea{ height: 190px; min-height:190px; max-height:190px; }
     }
 
     @media (max-width: 520px){
       .screen{ padding: 10px 12px; }
-      .glass{ height: 520px; }
+      .glass{ height: 500px; }
+      textarea{ height: 220px; min-height:220px; max-height:220px; }
     }
   </style>
 </head>
