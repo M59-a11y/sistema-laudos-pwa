@@ -36,21 +36,26 @@
       position: relative;
     }
 
-    /* ✅ LOGO NO FUNDO (marca d’água) */
+    /* ✅ LOGO NO FUNDO (AGORA VISÍVEL) */
     body::before{
       content:"";
       position: absolute;
       inset: 0;
 
-      /* imagem no fundo */
-      background: url("logo/sesctopo.png") center center / 980px no-repeat;
+      /* ✅ Ajustado para aparecer bem */
+      background: url("logo/sesctopo.png") center center / 700px no-repeat;
 
-      /* mais "marca d’água" */
-      opacity: 0.07;
+      /* ✅ aumentei bastante para ficar visível */
+      opacity: 0.22;
 
       pointer-events:none;
       z-index:0;
-      filter: blur(.2px);
+
+      /* ✅ realce do logo */
+      filter: contrast(1.3) brightness(1.08);
+
+      /* ✅ efeito excelente para “marca d’água” */
+      mix-blend-mode: screen;
     }
 
     header, main{ position:relative; z-index:1; }
@@ -68,28 +73,21 @@
       flex: 0 0 auto;
       display:flex;
       align-items:center;
-
-      /* ✅ agora sem logo no topo */
       justify-content:flex-start;
-
       padding-bottom: 4px;
     }
 
-    /* ✅ título alinhado à esquerda */
     .sysOnly{
       margin:0;
       display:flex;
       align-items:baseline;
       gap:12px;
       flex-wrap:wrap;
-
       font-weight:900;
       letter-spacing:.8px;
       text-transform:uppercase;
-      color: var(--ink);
+      color: #06243f;
       text-shadow: 0 16px 32px rgba(0,0,0,.10);
-
-      /* ✅ garante que fique colado na esquerda */
       width: 100%;
       justify-content:flex-start;
     }
@@ -218,8 +216,6 @@
   <div class="screen">
 
     <header>
-      <!-- ✅ removido logo do topo -->
-
       <h1 class="sysOnly">
         <span class="t1">SI — SISTEMA DE INFORMAÇÃO</span>
         <span class="dot" aria-hidden="true">●</span>
@@ -256,7 +252,6 @@
     const LAUDO_URL = "laudo.html";
     const $ = (id)=>document.getElementById(id);
 
-    // ✅ mapa fixo: sigla -> nome completo
     const MAPA_RESP = {
       "EAM": "EDVÂNIA APARECIDA MENDES DE AZEVÊDO",
       "SNM": "SHEINA N. MORAIS RAMALHO"
@@ -315,7 +310,6 @@
         if(/^cidade\s*:/i.test(ln)){ cidade = ln.replace(/^cidade\s*:\s*/i, "").trim(); continue; }
         if(/^cep\s*:/i.test(ln)){ cep = ln.replace(/^cep\s*:\s*/i, "").trim(); continue; }
 
-        // ✅ digita só a sigla -> vira nome completo automaticamente
         if(/^(EAM|SNM)$/i.test(ln)){
           const sigla = ln.toUpperCase().trim();
           responsavel = MAPA_RESP[sigla] || sigla;
