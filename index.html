@@ -26,7 +26,7 @@
       height:100%;
       margin:0;
       padding:0;
-      overflow: hidden !important; /* ✅ sem scroll */
+      overflow: hidden !important;
     }
 
     body{
@@ -93,9 +93,9 @@
       width: 980px;
       height: 760px;
       border-radius: 32px;
-      border: 1px solid var(--stroke);
+      border: 1px solid rgba(255,255,255,.28);
       background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
-      box-shadow: var(--shadow);
+      box-shadow: 0 18px 55px rgba(0,0,0,.16);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       overflow: hidden;
@@ -125,7 +125,7 @@
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,.32);
       background: rgba(255,255,255,.20);
-      box-shadow: var(--shadow2);
+      box-shadow: 0 10px 28px rgba(0,0,0,.12);
       display:flex;
       align-items:center;
       flex-wrap:wrap;
@@ -156,7 +156,7 @@
       border-radius: 22px;
       border: 1px solid rgba(255,255,255,.34);
       background: rgba(255,255,255,.16);
-      box-shadow: var(--shadow2);
+      box-shadow: 0 10px 28px rgba(0,0,0,.12);
       padding: 18px;
       outline:none;
       font-size: 17px;
@@ -188,7 +188,6 @@
 
 <body>
   <div class="screen">
-
     <header>
       <img class="topLogo" src="logo/sesctopo.png" alt="SESC Topo">
       <h1 class="sysOnly">SI - SISTEMA DE INFORMAÇÃO . LAUDOS.</h1>
@@ -216,22 +215,24 @@
         <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO</button>
       </section>
     </main>
-
   </div>
 
   <script>
     const LAUDO_URL = "laudo.html";
     const $ = (id)=>document.getElementById(id);
 
+    // ✅ mapa fixo: sigla -> nome completo
+    const MAPA_RESP = {
+      "EAM": "EDVÂNIA APARECIDA MENDES DE AZEVÊDO",
+      "SNM": "SHEINA N. MORAIS RAMALHO"
+    };
+
     function soDigitos(s){ return (s || "").replace(/\D+/g, ""); }
 
     function formatarDataBr(d){
       const x = soDigitos(d);
       if(x.length === 8){
-        const dd = x.slice(0,2);
-        const mm = x.slice(2,4);
-        const yyyy = x.slice(4,8);
-        return `${dd}/${mm}/${yyyy}`;
+        return `${x.slice(0,2)}/${x.slice(2,4)}/${x.slice(4,8)}`;
       }
       const s = (d || "").trim();
       if(/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return s;
@@ -254,12 +255,10 @@
       const l1 = linhas[0] || "";
       const exame = detectarExameNoTexto(l1) || detectarExameNoTexto(texto);
 
-      // Nome = linha 1 sem exame
       let paciente = l1;
       if(exame){
         paciente = l1.replace(new RegExp("(\\d{3,6})\\s*[\\/\\.\\-]\\s*(\\d{4})"), "").trim();
       }
-      paciente = paciente.trim();
 
       const data_coleta = formatarDataBr(linhas[1] || "");
       const data_nascimento = formatarDataBr(linhas[2] || "");
@@ -276,40 +275,26 @@
       for(let i=5; i<linhas.length; i++){
         const ln = linhas[i];
 
-        if(/^rua\s*:/i.test(ln)){
-          rua = ln.replace(/^rua\s*:\s*/i, "").trim();
-          continue;
-        }
-        if(/^bairro\s*:/i.test(ln)){
-          bairro = ln.replace(/^bairro\s*:\s*/i, "").trim();
-          continue;
-        }
-        if(/^cidade\s*:/i.test(ln)){
-          cidade = ln.replace(/^cidade\s*:\s*/i, "").trim();
-          continue;
-        }
-        if(/^cep\s*:/i.test(ln)){
-          cep = ln.replace(/^cep\s*:\s*/i, "").trim();
+        if(/^rua\s*:/i.test(ln)){ rua = ln.replace(/^rua\s*:\s*/i, "").trim(); continue; }
+        if(/^bairro\s*:/i.test(ln)){ bairro = ln.replace(/^bairro\s*:\s*/i, "").trim(); continue; }
+        if(/^cidade\s*:/i.test(ln)){ cidade = ln.replace(/^cidade\s*:\s*/i, "").trim(); continue; }
+        if(/^cep\s*:/i.test(ln)){ cep = ln.replace(/^cep\s*:\s*/i, "").trim(); continue; }
+
+        // ✅ se digitar só a sigla, converte para nome completo automaticamente
+        if(/^(EAM|SNM)$/i.test(ln)){
+          const sigla = ln.toUpperCase().trim();
+          responsavel = MAPA_RESP[sigla] || sigla;
           continue;
         }
 
-        // ✅ responsável: aceita "EAM = nome" ou "SNM = nome"
-        const mResp = ln.match(/^(EAM|SNM)\s*=\s*(.+)$/i);
-        if(mResp){
-          const nomeCompleto = (mResp[2] || "").trim();
-          if(nomeCompleto) responsavel = nomeCompleto;
-          continue;
+        // ✅ se sobrar texto extra grande, vira observação
+        if(!observacao && ln.length > 8){
+          observacao = ln;
         }
-
-        // ignora "EAM" ou "SNM" isolado
-        if(/^(EAM|SNM)$/i.test(ln)) continue;
-
-        // se sobrar texto grande, vira observação
-        if(!observacao && ln.length > 8) observacao = ln;
       }
 
       return {
-        paciente,
+        paciente: (paciente || "").trim(),
         exame,
         data_coleta,
         data_nascimento,
@@ -327,10 +312,7 @@
     }
 
     function abrirLaudo(dados){
-      localStorage.setItem("SI_DADOS_LAUDO", JSON.stringify({
-        ...dados,
-        ts: Date.now()
-      }));
+      localStorage.setItem("SI_DADOS_LAUDO", JSON.stringify({ ...dados, ts: Date.now() }));
 
       const params = new URLSearchParams();
       if(dados.paciente)        params.set("paciente", dados.paciente);
