@@ -457,7 +457,7 @@
       position:relative;
       z-index:2;
       margin: 0;
-      padding: 50mm 18mm 38mm 18mm; /* ✅ era 22mm */
+      padding: 50mm 18mm 38mm 18mm;
       box-sizing:border-box;
       font-family:"Arial Narrow", Arial, sans-serif;
     }
@@ -475,39 +475,53 @@
     @page{ size:A4; margin:0; }
   }
 
-  /* ===== PRINT LAYOUT (INTACTO) ===== */
+  /* ===== PRINT LAYOUT (AJUSTADO PARA FICAR MAIS WORD) ===== */
+
   .cab-paciente{
     border-top: 3px solid #00a651;
     border-bottom: 3px solid #00a651;
-    padding: 10px 0;
-    margin: 0 0 14px;
+    padding: 12px 0;
+    margin: 0 0 18px;
   }
-  .cab-row1{ display:flex; justify-content:space-between; gap:20px; }
+  .cab-row1{ display:flex; justify-content:space-between; gap:24px; }
   .cab-left{ flex:1; }
-  .cab-right{ min-width:220px; text-align:right; }
+  .cab-right{ min-width:240px; text-align:right; }
 
+  /* ✅ rótulos estilo Word: menores e bem definidos */
   .cab-lbl2{
-    font-size:13pt;
-    font-weight:700;
+    font-size:11pt;
+    font-weight:800;
+    letter-spacing:.03em;
     text-transform:uppercase;
     font-family:"Arial Narrow", Arial, sans-serif;
   }
 
-  .cab-nome, .cab-exame{
-    font-size:12.6pt;
-    font-weight:700;
+  /* ✅ nome e exame: mais destaque */
+  .cab-nome{
+    font-size:14.5pt;
+    font-weight:900;
     text-transform:uppercase;
     font-family:"Arial Narrow", Arial, sans-serif;
-    line-height:1.2;
+    line-height:1.15;
+    margin-top:2px;
+  }
+  .cab-exame{
+    font-size:13.8pt;
+    font-weight:900;
+    text-transform:uppercase;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    line-height:1.15;
+    margin-top:2px;
   }
 
+  /* ✅ bloco inferior: mais “ar” e alinhado */
   .cab-row2{
-    margin-top:10px;
+    margin-top:12px;
     display:grid;
     grid-template-columns: 1.2fr 0.8fr;
     gap: 6px 60px;
     font-family:"Arial Narrow";
-    font-size:8pt;
+    font-size:8.4pt;
     text-transform:uppercase;
     font-weight:400;
   }
@@ -516,31 +530,59 @@
     font-family:"Arial Narrow", Arial, sans-serif;
     font-size:11.5pt;
     text-transform:uppercase;
-    margin-bottom:4px;
+    margin-bottom:5px;
     display:flex;
     gap:6px;
     align-items:baseline;
     white-space:nowrap;
   }
 
+  /* ✅ mais respiro e leitura igual Word */
   .secao-print{
-    margin-bottom:12px;
-    line-height:1.55;
+    margin: 14px 0 14px;
+    line-height:1.65;
     font-family:"Arial Narrow", sans-serif;
-    font-size:11.5pt;
+    font-size:11.7pt;
     text-align:justify;
   }
 
-  .tit-negrito{ font-weight:800; text-transform:uppercase; }
-  .tit-normal-caps{ font-weight:400; text-transform:uppercase; }
-  .concl-resposta-bloco{ white-space:pre-line; font-weight:400; display:block; margin-top:2px; }
+  .tit-negrito{
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+  }
+  .tit-normal-caps{
+    font-weight:500;
+    text-transform:uppercase;
+  }
 
-  #obs_print{ white-space: pre-line; }
+  /* ✅ diagnóstico mais fluido */
+  #p_res_diag{
+    display:inline;
+    margin-left:6px;
+  }
+
+  /* ✅ bloco conclusão com recuo leve */
+  .concl-resposta-bloco{
+    white-space:pre-line;
+    font-weight:500;
+    display:block;
+    margin-top:4px;
+    padding-left:6px;
+  }
+
+  #obs_print{
+    white-space: pre-line;
+    display:block;
+    margin-top:4px;
+    padding-left:6px;
+  }
   #obs_print_wrap{ display:block; }
   #obs_print_wrap.vazio{ display:none; }
 
+  /* ✅ rodapé mais institucional */
   .rodape-prof{
-    margin-top:14px; /* ✅ sobe um pouco */
+    margin-top:18px;
     text-align:center;
     font-family:"Arial Narrow", Arial, sans-serif;
     font-size:11.5pt;
@@ -549,10 +591,10 @@
   .assinatura-wrap{
     display:flex;
     justify-content:center;
-    margin: 12px 0 10px;
+    margin: 14px 0 10px;
   }
   .assinatura-img{
-    width: 200px;
+    width: 205px;
     height:auto;
     object-fit:contain;
     display:block;
@@ -717,7 +759,6 @@
 
           <!-- ✅ selo central (opcional) -->
           <div class="print-seal">
-            <!-- se não quiser, basta comentar esta linha -->
             <img src="logo/logotipo.png" alt="Selo">
           </div>
 
@@ -771,13 +812,13 @@
 
             <div class="secao-print">
               <span id="p_tit_diag" class="tit-negrito">DIAGNÓSTICO DESCRITIVO:</span>
-              <div style="display:block;margin-top:5px;">
+              <div style="display:block;margin-top:6px;">
                 <span id="p_subtit_diag" class="tit-normal-caps" style="display:none;">ALTERAÇÕES CELULARES BENIGNAS REATIVAS OU REPARATIVAS:</span>
                 <span id="p_res_diag"></span>
               </div>
             </div>
 
-            <div class="secao-print" style="margin-top:-5px;">
+            <div class="secao-print" style="margin-top:-2px;">
               <span class="tit-normal-caps">MICROBIOLOGIA:</span>
               <span id="p_res_micro"></span>
             </div>
@@ -802,7 +843,6 @@
               <div style="font-weight:800;">Dra. Daniele Carvalho Macêdo</div>
               <div>CRM 12077 PB</div>
 
-              <!-- ✅ Caixa legal estilo Word -->
               <div class="legal-box">
                 A AVALIAÇÃO DO RESULTADO DESTE(S) EXAME(S) E A CONCLUSÃO DIAGNÓSTICA DEVEM SER FEITOS PELO MÉDICO: DEPENDEM DE DADOS CLÍNICOS E OUTRO(S) EXAMES DO PACIENTE.
               </div>
