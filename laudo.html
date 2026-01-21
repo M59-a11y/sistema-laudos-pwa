@@ -374,7 +374,7 @@
   .print-top-info{
     display:none;
     position:absolute;
-    top:14mm;          /* mesmo topo visual do timbre */
+    top:14mm;
     right:18mm;
     width:175px;
     font-family:"Arial Narrow", Arial, sans-serif;
@@ -394,25 +394,16 @@
 
   @media print{
     body{ background:#fff; padding:0; margin:0; }
-
-    /* ✅ remove QUALQUER efeito da tela no PDF */
     body::after{ content:none !important; display:none !important; }
     .watermark{ display:none !important; }
     .hdr, .card{ display:none !important; }
 
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
-
-    /* ✅ mostra bloco */
     .print-top-info{ display:block !important; }
 
-    /* ✅ remove overlay da folha na impressão */
-    .folha::before{
-      content:none !important;
-      display:none !important;
-    }
+    .folha::before{ content:none !important; display:none !important; }
 
-    /* ✅ AJUSTE DEFINITIVO DO TIMBRE DO PDF */
     .print-bg{
       position:fixed;
       inset:0;
@@ -425,8 +416,6 @@
       width:100%;
       height:100%;
       object-fit:cover;
-
-      /* ✅ O SEGREDO: timbre leve e profissional (sem "camada pesada") */
       opacity: .26 !important;
       filter: contrast(1.05) brightness(1.18) saturate(.95) !important;
     }
@@ -559,9 +548,6 @@
     <div class="card-b">
       <div class="folha">
 
-        <!-- =========================
-             ✅ TELA: FORMULÁRIO (INTACTO)
-             ========================= -->
         <div class="no-print">
           <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
 
@@ -696,7 +682,6 @@
             <img src="img/SESC_1.png" alt="Timbre">
           </div>
 
-          <!-- ✅ BLOCO TOPO DIREITO (SÓ PRINT) -->
           <div class="print-top-info">
             <div class="row"><span>Emissão:</span><span id="printData"></span></div>
             <div class="row"><span>Hora:</span><span id="printHora"></span></div>
@@ -794,19 +779,14 @@
   }
   function pad2(n){ return String(n).padStart(2,'0'); }
 
-  /* ✅ BLOCO TOPO DIREITO DO PRINT */
   function atualizarBlocoPrintTopo(){
     const agora = new Date();
     const data = pad2(agora.getDate()) + '/' + pad2(agora.getMonth()+1) + '/' + agora.getFullYear();
     const hora = pad2(agora.getHours()) + ':' + pad2(agora.getMinutes()) + ':' + pad2(agora.getSeconds());
-
     const elData = document.getElementById("printData");
     const elHora = document.getElementById("printHora");
-    const elPag  = document.getElementById("printPagina");
-
     if(elData) elData.textContent = data;
     if(elHora) elHora.textContent = hora;
-    if(elPag && !elPag.textContent) elPag.textContent = "1";
   }
 
   function syncObservacao(){
@@ -845,30 +825,27 @@
     observacao: (params.get("observacao") || "").trim()
   };
 
-  function setText(id, value){
-    const el = document.getElementById(id);
-    if(el) el.textContent = value || "";
-  }
-
   function preencherCabecalhoPrint(){
-    setText("cab_nome", init.paciente);
-    setText("cab_exame", init.exame);
-    setText("cab_nasc", init.data_nascimento);
-    setText("cab_sus", init.cartao_sus);
-    setText("cab_tel", init.telefone);
-    setText("cab_rua", init.rua);
-    setText("cab_bairro", init.bairro);
-    setText("cab_cidade", init.cidade);
-    setText("cab_cep", init.cep);
+    const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = val || ""; };
 
-    setText("data_coleta_print", init.data_coleta);
-    setText("nome_resp_print", init.responsavel);
+    set("cab_nome", init.paciente);
+    set("cab_exame", init.exame);
+    set("cab_nasc", init.data_nascimento);
+    set("cab_sus", init.cartao_sus);
+    set("cab_tel", init.telefone);
+    set("cab_rua", init.rua);
+    set("cab_bairro", init.bairro);
+    set("cab_cidade", init.cidade);
+    set("cab_cep", init.cep);
+
+    set("data_coleta_print", init.data_coleta);
+    set("nome_resp_print", init.responsavel);
 
     const now = new Date();
     const dia = now.getDate();
     const mes = now.toLocaleDateString("pt-BR",{month:"long"});
     const ano = now.getFullYear();
-    setText("rodape_data", `João Pessoa, ${dia} de ${mes} de ${ano}`);
+    set("rodape_data", `João Pessoa, ${dia} de ${mes} de ${ano}`);
   }
 
   function atualizar(){
@@ -879,11 +856,11 @@
       if(zSim && !zSim.checked) zSim.checked = true;
     }
 
-    setText('p_adeq', document.querySelector('input[name="adeq"]:checked')?.value || '');
+    const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = val || ""; };
 
-    setText('p_epi', Array.from(checksEpi).map(c => c.value).join(", "));
-
-    setText('p_zona', document.querySelector('input[name="zona"]:checked')?.value || '');
+    set('p_adeq', document.querySelector('input[name="adeq"]:checked')?.value || '');
+    set('p_epi', Array.from(checksEpi).map(c => c.value).join(", "));
+    set('p_zona', document.querySelector('input[name="zona"]:checked')?.value || '');
 
     const norm = document.getElementById('chk_norm')?.checked;
     const alts = Array.from(document.querySelectorAll('.alt:checked')).map(c => c.value);
@@ -909,7 +886,7 @@
     const micros = Array.from(document.querySelectorAll('.micro:checked'))
       .map(c => c.getAttribute('data-full') || c.value);
 
-    setText('p_res_micro', micros.join(", ") + (micros.length ? "." : ""));
+    set('p_res_micro', micros.join(", ") + (micros.length ? "." : ""));
 
     const concl = document.querySelector('input[name="c"]:checked');
     const elTitConcl = document.getElementById('p_tit_concl');
@@ -972,21 +949,6 @@
     const exameSeguro = (init.exame || "").trim().replaceAll("/", ".");
     const nome = (init.paciente || "PACIENTE").trim().toUpperCase();
     return sanitizeFileName(`${exameSeguro} ${nome}`);
-  }
-
-  function voltarSistema(){
-    const returnUrl = params.get("return");
-
-    if(window.opener && !window.opener.closed){
-      try{
-        if(returnUrl) window.opener.location.href = returnUrl;
-        window.close();
-        return;
-      }catch(e){}
-    }
-
-    if(returnUrl){ window.location.href = returnUrl; return; }
-    if(window.history.length > 1){ window.history.back(); return; }
   }
 
   function imprimirLaudo(){
@@ -1075,7 +1037,17 @@
         setTimeout(() => {
           document.title = tituloOriginal;
           iframe.remove();
-          voltarSistema();
+
+          /* ✅ TELA DIVIDIDA: AVISA O SISTEMA PRINCIPAL PARA LIMPAR O TEXTAREA */
+          try{
+            if(window.parent && window.parent !== window){
+              window.parent.postMessage({ type:"LAUDO_IMPRESSO" }, "*");
+            }
+          }catch(e){}
+
+          // ✅ NÃO volta mais (porque já está do lado)
+          // voltarSistema();
+
         }, 900);
 
       }, 120);
