@@ -28,7 +28,7 @@
     }
 
     /* ===========================
-       FUNDO PROFISSIONAL + LOGO MAIS VISÍVEL
+       FUNDO PROFISSIONAL + LOGOTIPO CORRETO
        =========================== */
     body{
       font-family: Arial, sans-serif;
@@ -37,23 +37,27 @@
       position: relative;
     }
 
-    /* logo fundo mais visível e profissional */
+    /* ✅ FUNDO USANDO A IMAGEM DA PASTA /logotipo */
     body::before{
       content:"";
       position: absolute;
       inset: 0;
 
-      background: url("logo/sesctopo.png") center 58% / 850px no-repeat;
-      opacity: 0.22;
+      /* ✅ TROQUE AQUI PELO NOME REAL DO ARQUIVO SE FOR DIFERENTE */
+      background: url("logotipo/logotipo.png") center 58% / 860px no-repeat;
+
+      /* ✅ mais visível */
+      opacity: 0.23;
 
       pointer-events:none;
       z-index:0;
 
-      filter: contrast(1.25) brightness(1.1);
+      /* ✅ dá definição / aspecto profissional */
+      filter: contrast(1.25) brightness(1.08);
       mix-blend-mode: screen;
     }
 
-    /* camada extra escura para dar cara “premium” */
+    /* ✅ Camada extra para profundidade premium */
     body::after{
       content:"";
       position:absolute;
@@ -78,7 +82,7 @@
     }
 
     /* ===========================
-       HEADER MAIS PROFISSIONAL
+       HEADER
        =========================== */
     header{
       flex: 0 0 auto;
@@ -121,7 +125,7 @@
     }
 
     /* ===========================
-       CARD DEV (MARCOS PONTES)
+       CARD DEV
        =========================== */
     .devCard{
       display:flex;
@@ -201,7 +205,7 @@
     }
 
     /* ===========================
-       GUIA DE SIGLAS
+       GUIA
        =========================== */
     .guideLine{
       padding: 14px 16px;
@@ -236,7 +240,7 @@
     }
 
     /* ===========================
-       ÁREA DE DIGITAÇÃO MENOR
+       TEXTAREA MENOR
        =========================== */
     textarea{
       width:100%;
@@ -296,7 +300,6 @@
         <span class="t2">LAUDOS</span>
       </h1>
 
-      <!-- ✅ CARD DISCRETO -->
       <div class="devCard">
         <div class="nome">MARCOS PONTES</div>
         <div class="cargo">DESENVOLVEDOR</div>
@@ -332,7 +335,6 @@
     const LAUDO_URL = "laudo.html";
     const $ = (id)=>document.getElementById(id);
 
-    // ✅ mapa fixo: sigla -> nome completo
     const MAPA_RESP = {
       "EAM": "EDVÂNIA APARECIDA MENDES DE AZEVÊDO",
       "SNM": "SHEINA N. MORAIS RAMALHO"
@@ -391,7 +393,6 @@
         if(/^cidade\s*:/i.test(ln)){ cidade = ln.replace(/^cidade\s*:\s*/i, "").trim(); continue; }
         if(/^cep\s*:/i.test(ln)){ cep = ln.replace(/^cep\s*:\s*/i, "").trim(); continue; }
 
-        // ✅ digita só a sigla -> vira nome completo automaticamente
         if(/^(EAM|SNM)$/i.test(ln)){
           const sigla = ln.toUpperCase().trim();
           responsavel = MAPA_RESP[sigla] || sigla;
