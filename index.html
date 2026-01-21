@@ -3,299 +3,275 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SI - SISTEMA DE INFORMAÇÃO . LAUDOS.</title>
+  <title>Laudo</title>
 
   <style>
     :root{
-      --verde1:#73FF9A;
-      --verde2:#30E18B;
-      --azul1:#0e4d7d;
-      --azul2:#06233f;
-
-      --ink:#06243f;
-      --stroke: rgba(255,255,255,.28);
-
-      --shadow: 0 18px 55px rgba(0,0,0,.16);
-      --shadow2: 0 10px 28px rgba(0,0,0,.12);
+      --blue1:#0d3a66;
+      --blue2:#06243f;
+      --panel:#ffffff;
+      --muted:#4b667d;
+      --border:#d8e6f3;
+      --shadow: 0 16px 45px rgba(0,0,0,.12);
     }
 
     *{ box-sizing:border-box; }
 
-    /* ✅ SEM SCROLL EM ABSOLUTO NADA */
-    html, body{
-      width:100%;
-      height:100%;
-      margin:0;
-      padding:0;
-      overflow: hidden !important;
-    }
-
     body{
+      margin:0;
       font-family: Arial, sans-serif;
-      color: var(--ink);
-      background: linear-gradient(90deg, var(--verde1) 0%, var(--verde2) 22%, var(--azul1) 70%, var(--azul2) 100%);
-      position: relative;
+      background: linear-gradient(120deg, #eef7ff, #f5fbff);
+      padding: 18px;
     }
 
-    /* watermark */
-    body::before{
-      content:"";
-      position: absolute;
-      inset: 0;
-      background: url("logo/sesctopo.png") center 70% / 900px no-repeat;
-      opacity: 0.09;
-      pointer-events:none;
-      z-index:0;
-    }
-
-    header, main{ position:relative; z-index:1; }
-
-    .screen{
-      width: 100%;
-      height: 100%;
-      padding: 22px 34px;
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-    }
-
-    /* TOPO */
-    header{
-      flex: 0 0 auto;
-      display:flex;
-      align-items:center;
-      gap:16px;
-      padding-bottom: 4px;
-    }
-    .topLogo{
-      height: 56px;
-      width:auto;
-      object-fit: contain;
-      display:block;
-      filter: drop-shadow(0 12px 20px rgba(0,0,0,.10));
-    }
-    .sysOnly{
-      margin:0;
-      font-size: 34px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--ink);
-      text-shadow: 0 16px 32px rgba(0,0,0,.10);
-    }
-
-    /* CENTRO */
-    main{
-      flex: 1 1 auto;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height: 0;
-    }
-
-    .glass{
-      width: 980px;
-      height: 760px;
-      border-radius: 32px;
-      border: 1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+    .page{
+      width: min(1100px, 96vw);
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
       box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      overflow: hidden;
-      display:flex;
+      overflow:hidden;
     }
 
-    .panel{
-      width:100%;
-      height:100%;
-      padding: 26px;
-      display:flex;
-      flex-direction:column;
-      gap: 16px;
-    }
-
-    .panelTitle{
-      margin:0;
-      font-size: 30px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      color: var(--ink);
-      text-transform: uppercase;
-    }
-
-    /* guia régua */
-    .guideLine{
-      padding: 14px 16px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,.32);
-      background: rgba(255,255,255,.20);
-      box-shadow: var(--shadow2);
-
+    header{
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
       display:flex;
       align-items:center;
-      justify-content:flex-start;
+      justify-content:space-between;
+      gap:10px;
       flex-wrap:wrap;
-      gap: 12px;
+      background: linear-gradient(90deg, rgba(13,58,102,.06), rgba(6,36,63,.03));
+    }
 
+    .title{
       font-weight: 900;
-      color: rgba(6,36,63,.92);
-      letter-spacing: .7px;
-      flex: 0 0 auto;
+      color: var(--blue2);
+      font-size: 20px;
+      letter-spacing: .4px;
     }
-    .guideLine .tag{
-      padding: 7px 12px;
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      cursor:pointer;
       border-radius: 999px;
-      border: 1px solid rgba(6,36,63,.18);
-      background: rgba(255,255,255,.18);
-      box-shadow: 0 10px 20px rgba(0,0,0,.08);
-      white-space: nowrap;
-    }
-    .guideLine .sep{
-      opacity: .55;
+      padding: 10px 14px;
       font-weight: 900;
+      letter-spacing: .2px;
+      color:#fff;
+      background: linear-gradient(90deg, var(--blue1), var(--blue2));
+      box-shadow: 0 10px 25px rgba(6,36,63,.15);
+    }
+    .btn.gray{
+      background: linear-gradient(90deg, #607d8b, #455a64);
+    }
+
+    .content{
+      padding: 18px;
+      display:grid;
+      gap:14px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 260px;
+      gap:14px;
+    }
+    @media(max-width:900px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    label{
+      font-weight: 900;
+      color: var(--blue2);
+      margin-bottom: 6px;
+      display:block;
+    }
+
+    input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      outline:none;
+      font-size: 15px;
+      background:#fff;
     }
 
     textarea{
       width:100%;
-      flex: 1 1 auto;
-      min-height: 0;
-      resize: none;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.34);
-      background: rgba(255,255,255,.16);
-      box-shadow: var(--shadow2);
-      padding: 18px;
+      min-height: 520px;
+      resize: vertical;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 14px;
       outline:none;
-      font-size: 17px;
-      color: var(--ink);
-      line-height: 1.35;
-      overflow: auto;
+      font-size: 15px;
+      line-height:1.4;
+      background:#fff;
+      font-family: Arial, sans-serif;
     }
 
-    textarea::placeholder{ color: rgba(6,36,63,.55); }
-
-    textarea:focus{
-      border-color: rgba(6,36,63,.28);
-      box-shadow: 0 0 0 4px rgba(6,36,63,.10), var(--shadow2);
+    /* ✅ Cabeçalho impresso */
+    .printHeader{
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: #f8fbff;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .printHeader b{ color: var(--blue2); }
+    .printHeader .item{
+      font-weight: 800;
+      color: #163a57;
     }
 
-    .btn{
-      width:100%;
-      border:none;
-      border-radius: 22px;
-      padding: 18px 18px;
-      cursor:pointer;
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: .3px;
-      color:#fff;
-      background: linear-gradient(90deg, #0d3a66, #06243f);
-      box-shadow: 0 22px 38px rgba(6,36,63,.25);
-      transition: transform .08s ease, filter .2s ease;
-      flex: 0 0 auto;
+    /* ✅ Conteúdo impresso do laudo */
+    #printConteudo{
+      display:none; /* aparece só no print */
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fff;
+      white-space: pre-wrap;  /* mantém quebras de linha */
+      line-height: 1.45;
+      font-size: 15px;
+      color: #0c2a44;
+      min-height: 520px;
     }
-    .btn:hover{ filter: brightness(1.05); }
-    .btn:active{ transform: translateY(1px); }
 
-    /* ✅ ANTI-SOBRA: caso ainda exista no seu HTML antigo */
-    .formRow, .checks, .footHint, .statusHint, .hintFooter{ display:none !important; }
+    .note{
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    /* ===========================
+       ✅ IMPRESSÃO
+    =========================== */
+    @media print{
+      body{ background:#fff; padding:0; }
+      header{ display:none; }
+      .page{ border:none; box-shadow:none; border-radius:0; }
+
+      /* esconde campos de edição no papel */
+      .note, .grid, textarea { display:none !important; }
+
+      /* mostra a versão imprimível */
+      #printConteudo{ display:block; border:none; padding:0; min-height:auto; }
+      .printHeader{ border:none; padding:0 0 10px 0; border-radius:0; }
+    }
   </style>
 </head>
 
 <body>
-  <div class="screen">
-
+  <div class="page">
     <header>
-      <img class="topLogo" src="logo/sesctopo.png" alt="SESC Topo">
-      <h1 class="sysOnly">SI - SISTEMA DE INFORMAÇÃO . LAUDOS.</h1>
+      <div class="title">Laudo — Digitação e Impressão</div>
+      <div class="actions">
+        <button class="btn gray" id="btnVoltar" type="button">Voltar</button>
+        <button class="btn" id="btnImprimir" type="button">Imprimir</button>
+      </div>
     </header>
 
-    <main>
-      <section class="glass panel" aria-label="Digitação rápida">
-        <h2 class="panelTitle">Digitação rápida</h2>
+    <div class="content">
 
-        <div class="guideLine" aria-label="Guia de digitação">
-          <span class="tag">DC</span><span class="sep">|</span>
-          <span class="tag">DN</span><span class="sep">|</span>
-          <span class="tag">CN</span><span class="sep">|</span>
-          <span class="tag">TEL</span><span class="sep">|</span>
-          <span class="tag">RUA</span><span class="sep">|</span>
-          <span class="tag">CEP</span><span class="sep">|</span>
-          <span class="tag">RES</span>
-          <span class="sep">=</span>
-          <span class="tag">SNM</span><span class="sep">|</span>
-          <span class="tag">EAM</span>
+      <!-- ✅ Cabeçalho que imprime -->
+      <div class="printHeader" id="printHeader">
+        <div class="item"><b>Paciente:</b> <span id="printNome">—</span></div>
+        <div class="item"><b>Nº Exame:</b> <span id="printExame">—</span></div>
+      </div>
+
+      <!-- área editável -->
+      <div class="grid">
+        <div>
+          <label>Nome do Paciente</label>
+          <input id="nome" placeholder="Nome do paciente"/>
         </div>
+        <div>
+          <label>Nº Exame</label>
+          <input id="exame" placeholder="000156/2026"/>
+        </div>
+      </div>
 
-        <textarea id="textoDigitacao" placeholder="Cole aqui os dados do paciente conforme a ordem acima..."></textarea>
+      <div>
+        <label>Digitação do Laudo</label>
+        <textarea id="conteudo" placeholder="Digite aqui o conteúdo do laudo..."></textarea>
+      </div>
 
-        <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO</button>
-      </section>
-    </main>
+      <!-- ✅ Versão imprimível do conteúdo -->
+      <div id="printConteudo"></div>
 
+      <div class="note">
+        Dica: Tudo que você digitar no laudo será impresso exatamente como aparece.
+      </div>
+
+    </div>
   </div>
 
   <script>
-    // ✅ Ajuste se seu laudo tiver outro nome/caminho
-    const LAUDO_URL = "laudo.html";
-
     const $ = (id)=>document.getElementById(id);
 
-    function detectarExame(texto){
-      // aceita 000156/2026 ou 000156.2026 ou 000156-2026
-      const m = texto.match(/(\d{3,6})\s*[\/\.\-]\s*(\d{4})/);
-      if(!m) return "";
-      return `${m[1].padStart(6,"0")}/${m[2]}`;
+    function getQuery(){
+      const q = {};
+      const params = new URLSearchParams(location.search);
+      for(const [k,v] of params.entries()) q[k] = v;
+      return q;
     }
 
-    function extrairNome(texto){
-      // pega a primeira linha não vazia como nome
-      const linhas = texto.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
-      return linhas[0] || "";
+    function carregarDados(){
+      let dados = null;
+      try{
+        dados = JSON.parse(localStorage.getItem("SI_DADOS_LAUDO") || "null");
+      }catch(e){ dados = null; }
+
+      const q = getQuery();
+
+      const nome  = (q.nome  || (dados && dados.nome)  || "").trim();
+      const exame = (q.exame || (dados && dados.exame) || "").trim();
+
+      $("nome").value  = nome;
+      $("exame").value = exame;
+
+      // se quiser, pode pré preencher o texto bruto:
+      // $("conteudo").value = (dados && dados.textoBruto) ? dados.textoBruto : "";
+
+      syncParaImpressao();
     }
 
-    function abrirLaudoSeguro(dados){
-      // ✅ método mais robusto: salva no localStorage
-      // (laudo.html pode ler isso mesmo sem query)
-      localStorage.setItem("SI_DADOS_LAUDO", JSON.stringify({
-        ...dados,
-        ts: Date.now()
-      }));
+    function syncParaImpressao(){
+      $("printNome").textContent  = $("nome").value.trim() || "—";
+      $("printExame").textContent = $("exame").value.trim() || "—";
 
-      // ✅ envia também via query como redundância
-      const params = new URLSearchParams();
-      if(dados.nome) params.set("nome", dados.nome);
-      if(dados.exame) params.set("exame", dados.exame);
-
-      window.location.assign(`${LAUDO_URL}?${params.toString()}`);
+      // ✅ copia o que está no textarea para o bloco imprimível
+      const txt = $("conteudo").value || "";
+      $("printConteudo").textContent = txt;
     }
 
-    $("btnExtrair").addEventListener("click", ()=>{
-      const texto = $("textoDigitacao").value.trim();
-      if(!texto){
-        alert("Cole os dados da digitação rápida.");
-        return;
-      }
+    $("nome").addEventListener("input", syncParaImpressao);
+    $("exame").addEventListener("input", syncParaImpressao);
+    $("conteudo").addEventListener("input", syncParaImpressao);
 
-      const nome = extrairNome(texto);
-      const exame = detectarExame(texto);
-
-      abrirLaudoSeguro({
-        nome,
-        exame,
-        textoBruto: texto,
-        origem: "principal"
-      });
+    $("btnImprimir").addEventListener("click", ()=>{
+      syncParaImpressao(); // ✅ garante antes do print
+      window.print();
     });
 
-    // ✅ atalho teclado: CTRL+ENTER para abrir laudo
-    document.addEventListener("keydown", (e)=>{
-      if(e.ctrlKey && e.key === "Enter"){
-        e.preventDefault();
-        $("btnExtrair").click();
-      }
+    $("btnVoltar").addEventListener("click", ()=>{
+      window.location.href = "index.html";
     });
+
+    carregarDados();
   </script>
 </body>
 </html>
