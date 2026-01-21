@@ -126,7 +126,7 @@
   .card-b{
     padding:16px;
     display:grid;
-    grid-template-columns: 1fr 380px;
+    grid-template-columns: 1fr; /* ✅ agora é 1 coluna (sem lateral) */
     gap:16px;
   }
 
@@ -144,19 +144,12 @@
     overflow:hidden;
   }
 
-  /* ✅ controles na lateral (bem parecido com software) */
-  .controles{
-    position: sticky;
-    top: 16px;
-    align-self:start;
-
-    border-radius: var(--r22);
-    border:1px solid rgba(255,255,255,.18);
-    background: rgba(0,0,0,.22);
-    padding:14px;
-    box-shadow: var(--shadow2);
+  /* ✅ botão imprimir no fim do formulário */
+  .actions-bottom{
+    margin-top:14px;
+    display:flex;
+    justify-content:center;
   }
-
   .btn{
     width:100%;
     padding:12px;
@@ -165,7 +158,12 @@
     border:none;
     border-radius:14px;
   }
-  .btn-print{ background:#28a745;color:#fff; }
+  .btn-print{
+    max-width:420px;
+    background:#28a745;
+    color:#fff;
+    box-shadow: 0 10px 24px rgba(0,0,0,.22);
+  }
 
   /* ===== SEU FORMULÁRIO (INTACTO) ===== */
   .titulo-laudo{
@@ -274,7 +272,7 @@
 
   @media print{
     body{ background:#fff; padding:0; margin:0; }
-    .hdr, .card, .controles, .watermark{ display:none !important; }
+    .hdr, .card, .watermark{ display:none !important; }
 
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
@@ -381,19 +379,13 @@
   .assinatura-wrap{
     display:flex;
     justify-content:center;
-    margin: 12px 0 10px; /* controla espaço */
+    margin: 12px 0 10px;
   }
   .assinatura-img{
-    width: 200px;     /* ajuste de tamanho */
+    width: 200px;
     height:auto;
     object-fit:contain;
     display:block;
-  }
-
-  @media (max-width: 1100px){
-    body{padding:12px;}
-    .card-b{grid-template-columns:1fr; }
-    .controles{position:static;}
   }
 </style>
 </head>
@@ -420,7 +412,6 @@
     </div>
 
     <div class="card-b">
-      <!-- ====== SUA FOLHA (mantida) ====== -->
       <div class="folha">
 
         <!-- =========================
@@ -548,6 +539,12 @@
 
             <textarea id="obs_texto_tela" placeholder="Caso necessário, digite a observação aqui..."></textarea>
           </div>
+
+          <!-- ✅ BOTÃO IMPRIMIR AGORA NO FIM DO FORMULÁRIO -->
+          <div class="actions-bottom">
+            <button class="btn btn-print" onclick="imprimirLaudo()">IMPRIMIR / SALVAR PDF</button>
+          </div>
+
         </div>
 
         <!-- =========================
@@ -626,7 +623,6 @@
             <div class="rodape-prof">
               <div id="rodape_data"></div>
 
-              <!-- ✅ assinatura centralizada ENTRE João Pessoa e o nome -->
               <div class="assinatura-wrap">
                 <img src="assinatura/ass.png" alt="Assinatura" class="assinatura-img">
               </div>
@@ -639,11 +635,6 @@
         </div>
 
       </div>
-
-      <!-- ✅ Controles (somente IMPRIMIR agora) -->
-      <div class="controles no-print">
-        <button class="btn btn-print" onclick="imprimirLaudo()">IMPRIMIR / SALVAR PDF</button>
-      </div>
     </div>
   </div>
 </div>
@@ -652,11 +643,6 @@
   function up(v){ return (v||"").toUpperCase().trim(); }
   function sanitizeFileName(name){
     return (name||"").replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim();
-  }
-
-  function forceReflow(){
-    void document.documentElement.offsetHeight;
-    void document.body.offsetHeight;
   }
 
   /* ✅ Observação sincronizada */
@@ -705,7 +691,7 @@
     document.getElementById("cab_rua").textContent = init.rua;
     document.getElementById("cab_bairro").textContent = init.bairro;
     document.getElementById("cab_cidade").textContent = init.cidade;
-    document.get.getElementById("cab_cep").textContent = init.cep;
+    document.getElementById("cab_cep").textContent = init.cep; /* ✅ corrigido */
 
     document.getElementById("data_coleta_print").textContent = init.data_coleta;
     document.getElementById("nome_resp_print").textContent = init.responsavel;
@@ -946,6 +932,16 @@
     obs.addEventListener("input", () => syncObservacao());
     syncObservacao();
   })();
+
+  // ✅ GARANTIR QUE CTRL+P / MENU IMPRIMIR NUNCA SAIA EM BRANCO
+  window.addEventListener("beforeprint", () => {
+    try{
+      atualizar();
+      syncObservacao();
+    }catch(e){
+      console.error("Erro beforeprint:", e);
+    }
+  });
 
   window.atualizar = atualizar;
 </script>
