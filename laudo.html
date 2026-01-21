@@ -7,17 +7,30 @@
 
 <style>
   :root{
-    /* Identidade visual */
+    --blue:#336699;
+    --panel:#eef2f7;
+
+    /* ✅ Identidade visual do sistema principal */
     --bgA:#baf2c7;
     --bgB:#0a2a47;
     --bgC:#061a2e;
 
+    --glass:rgba(255,255,255,.12);
+    --glass2:rgba(255,255,255,.06);
+    --line:rgba(255,255,255,.18);
+
+    --txt:#f5fbff;
+    --muted:rgba(255,255,255,.78);
+
     --shadow:0 18px 55px rgba(0,0,0,.30);
     --shadow2:0 10px 28px rgba(0,0,0,.22);
+
     --r22:22px;
 
+    --brandGreen:#00e09c;
+    --brandGreen2:#73ff9a;
+
     --paperBorder: rgba(255,255,255,.26);
-    --verde:#00a651;
   }
 
   *{box-sizing:border-box}
@@ -25,14 +38,14 @@
 
   body{
     margin:0;
-    padding:12px; /* ✅ menor para split */
+    padding:18px;
     font-family:"Segoe UI", Roboto, Arial, sans-serif;
     background: linear-gradient(90deg, var(--bgA) 0%, var(--bgB) 60%, var(--bgC) 100%);
     position:relative;
     overflow-x:hidden;
   }
 
-  /* Marca d’água (tela) */
+  /* ✅ Marca d’água (tela) */
   .watermark{
     position:fixed;
     top:70px;
@@ -48,7 +61,7 @@
     mix-blend-mode: screen;
   }
 
-  /* brilho (tela) */
+  /* ✅ brilho (tela) */
   body::after{
     content:"";
     position:fixed;
@@ -68,65 +81,133 @@
     z-index:1;
   }
 
-  /* ✅ Topo compacto (tela dividida) */
-  .topbar{
-    border-radius: 22px;
-    border:1px solid rgba(255,255,255,.18);
-    background: linear-gradient(180deg, rgba(3,22,38,.55), rgba(3,22,38,.32));
-    box-shadow: var(--shadow2);
-    padding: 12px 16px;
+  /* ✅ HEADER NOVO (TELA) */
+  .hdr{
+    height:78px;
+    padding:14px 20px;
     display:flex;
-    justify-content:space-between;
     align-items:center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  .topbar strong{
-    color:#fff;
-    letter-spacing:.14em;
-    font-weight:900;
-    text-transform:uppercase;
-    font-size: 13px;
-    white-space:nowrap;
-  }
-  .topbar span{
-    color: rgba(255,255,255,.78);
-    font-size: 12px;
-    letter-spacing:.06em;
-    white-space:nowrap;
+    justify-content:space-between;
+
+    border:1px solid rgba(255,255,255,.16);
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+    border-radius: var(--r22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow2);
+    position:relative;
+    overflow:hidden;
   }
 
-  /* Card */
+  .hdr::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    background: radial-gradient(circle at 15% 25%, rgba(0,224,156,.16), transparent 42%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .brand{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    min-width:320px;
+    position:relative;
+    z-index:1;
+  }
+
+  .brand strong{
+    font-size:18px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    font-weight:900;
+    color: rgba(255,255,255,.96);
+    text-shadow: 0 12px 28px rgba(0,0,0,.30);
+  }
+  .brand span{
+    font-size:12px;
+    color:rgba(255,255,255,.74);
+    letter-spacing:.06em;
+  }
+
+  .pill{
+    padding:9px 12px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.16);
+    background: rgba(6,35,63,.55);
+    font-size:12px;color:rgba(255,255,255,.90);
+    letter-spacing:.06em;user-select:none;
+    box-shadow: 0 10px 20px rgba(0,0,0,.14);
+    position:relative;
+    z-index:1;
+  }
+
+  /* ✅ CARD (TELA) */
   .card{
+    margin-top:14px;
     border-radius: var(--r22);
     border:1px solid rgba(255,255,255,.20);
     background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
     box-shadow: var(--shadow);
     overflow:hidden;
   }
-  .card-b{
-    padding:12px;
-    display:grid;
-    grid-template-columns: 1fr;
-    gap:12px;
+
+  .card-h{
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid rgba(255,255,255,.10);
+    color:var(--txt);
+    position:relative;
   }
 
-  /* Folha (tela) */
+  .card-h::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: linear-gradient(90deg, rgba(0,224,156,.10), rgba(0,0,0,0));
+    pointer-events:none;
+  }
+
+  .card-h h1{
+    margin:0;
+    font-size:14px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    font-weight:900;
+    position:relative;
+    z-index:1;
+  }
+
+  .card-b{
+    padding:16px;
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:16px;
+  }
+
+  /* ✅ FOLHA (TELA) */
   .folha{
     width: 100%;
-    min-height: calc(100vh - 120px);
+    min-height: 297mm;
+    margin:0;
+
     background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.86));
     border: 1px solid var(--paperBorder);
     border-radius: 22px;
+
     box-shadow:
-      0 18px 44px rgba(0,0,0,.18),
+      0 22px 56px rgba(0,0,0,.20),
       inset 0 1px 0 rgba(255,255,255,.70);
-    padding: 14px 16px; /* ✅ compacto */
+
+    box-sizing:border-box;
+    padding:14mm 18mm;
     position:relative;
-    overflow:auto;
+    overflow:hidden;
   }
 
-  /* overlay premium (tela) */
+  /* ✅ overlay premium (SÓ NA TELA) */
   .folha::before{
     content:"";
     position:absolute;
@@ -137,14 +218,38 @@
     pointer-events:none;
     z-index:0;
   }
+
   .folha > *{ position:relative; z-index:1; }
 
-  /* ===== FORM ===== */
+  .actions-bottom{
+    margin-top:14px;
+    display:flex;
+    justify-content:center;
+  }
+  .btn{
+    width:100%;
+    padding:12px;
+    font-weight:900;
+    cursor:pointer;
+    border:none;
+    border-radius:16px;
+  }
+  .btn-print{
+    max-width:440px;
+    background: linear-gradient(90deg, #00e09c, #1376b8);
+    color:#06233f;
+    box-shadow: 0 18px 34px rgba(0,0,0,.22);
+    letter-spacing:.05em;
+  }
+  .btn-print:hover{ filter: brightness(1.04); }
+  .btn-print:active{ transform: translateY(1px); }
+
+  /* ===== SEU FORMULÁRIO (INTACTO) ===== */
   .titulo-laudo{
     text-align:center;
     font-weight:900;
     font-size:13pt;
-    margin: 6px 0 12px;
+    margin: 8px 0 14px;
     text-transform:uppercase;
     font-family:"Arial Narrow", Arial, sans-serif;
     color:#05253f;
@@ -155,7 +260,7 @@
     background: rgba(238,242,247,.74);
     border: 1px solid rgba(6,35,63,.18);
     border-radius:16px;
-    padding:14px 14px 8px;
+    padding:16px 16px 10px;
     box-shadow: 0 14px 28px rgba(0,0,0,.10);
   }
 
@@ -167,7 +272,7 @@
   .sec:first-child{ border-top:none; padding-top:0; margin-top:0; }
 
   .sec-title{
-    color: var(--verde);
+    color: #00a651;
     font-weight:900;
     font-size:11pt;
     text-transform:uppercase;
@@ -194,8 +299,13 @@
     color:#05253f;
   }
 
-  .op-row{ display:flex; gap:16px; flex-wrap:wrap; }
-  .op-row label, .op-col label{
+  .op-row{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .op-row label,
+  .op-col label{
     display:flex;
     gap:8px;
     cursor:pointer;
@@ -206,11 +316,22 @@
 
   input[type="radio"], input[type="checkbox"]{
     transform: translateY(2px);
-    accent-color: var(--verde);
+    accent-color: #00a651;
   }
 
-  .op-col{ display:flex; flex-direction:column; gap:8px; margin-top:8px; }
-  .grupo{ margin-left:18px; display:flex; flex-direction:column; gap:8px; margin-top:6px; }
+  .op-col{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:8px;
+  }
+  .grupo{
+    margin-left:18px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:6px;
+  }
 
   .obs-wrap{
     margin-top:12px;
@@ -229,13 +350,14 @@
   }
   #obs_texto_tela{
     width:100%;
-    min-height:92px;
+    min-height:110px;
     resize:vertical;
     padding:12px;
     border-radius:14px;
     border:1px solid rgba(6,35,63,.18);
     font-family:"Arial Narrow", Arial, sans-serif;
     font-size:11pt;
+    box-sizing:border-box;
     outline:none;
     background: rgba(255,255,255,.92);
     color:#05253f;
@@ -245,33 +367,10 @@
     box-shadow: 0 0 0 4px rgba(0,166,81,.14);
   }
 
-  .actions-bottom{
-    margin-top:12px;
-    display:flex;
-    justify-content:center;
-  }
-  .btn{
-    width:100%;
-    padding:12px;
-    font-weight:900;
-    cursor:pointer;
-    border:none;
-    border-radius:16px;
-  }
-  .btn-print{
-    max-width:440px;
-    background: linear-gradient(90deg, #00e09c, #1376b8);
-    color:#06233f;
-    box-shadow: 0 18px 34px rgba(0,0,0,.22);
-    letter-spacing:.05em;
-  }
-  .btn-print:hover{ filter: brightness(1.04); }
-  .btn-print:active{ transform: translateY(1px); }
-
-  /* ===== PRINT ===== */
+  /* ===== PRINT (INTACTO / PDF PERFEITO) ===== */
   .print-only{ display:none; }
 
-  /* Bloco topo direito */
+  /* ✅ BLOCO DO CANTO SUPERIOR DIREITO (SÓ PRINT/PDF) */
   .print-top-info{
     display:none;
     position:absolute;
@@ -289,13 +388,29 @@
     justify-content:space-between;
     gap:10px;
   }
-  .print-top-info .row span:last-child{ font-weight:700; }
+  .print-top-info .row span:last-child{
+    font-weight:700;
+  }
 
+  /* ✅ BOX LEGAL (WORD) */
+  .legal-box{
+    margin-top:10px;
+    border: 2px solid #00a651;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:9pt;
+    text-transform:uppercase;
+    text-align:justify;
+    line-height:1.35;
+  }
+
+  /* ✅ AJUSTE RODAPÉ (FICA MAIS ACIMA, ESTILO WORD) */
   @media print{
     body{ background:#fff; padding:0; margin:0; }
     body::after{ content:none !important; display:none !important; }
     .watermark{ display:none !important; }
-    .topbar, .card{ display:none !important; }
+    .hdr, .card{ display:none !important; }
 
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
@@ -303,7 +418,6 @@
 
     .folha::before{ content:none !important; display:none !important; }
 
-    /* Timbre */
     .print-bg{
       position:fixed;
       inset:0;
@@ -320,49 +434,71 @@
       filter: contrast(1.05) brightness(1.18) saturate(.95) !important;
     }
 
+    /* ✅ Selo central opcional (mais institucional) */
+    .print-seal{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:1;
+      pointer-events:none;
+      opacity:.08; /* bem leve */
+    }
+    .print-seal img{
+      width: 420px;
+      max-width: 70%;
+      height:auto;
+      filter: contrast(1.05) saturate(1.05);
+    }
+
+    /* ✅ MAIS padding embaixo: sobe rodapé (igual Word) */
     .print-page{
       position:relative;
       z-index:2;
-      width:210mm;
-      height:297mm;   /* ✅ trava 1 página */
-      overflow:hidden;/* ✅ nunca quebra */
-      margin:0;
+      margin: 0;
+      padding: 50mm 18mm 38mm 18mm; /* ✅ era 22mm */
       box-sizing:border-box;
-      padding: 50mm 18mm 22mm 18mm;
       font-family:"Arial Narrow", Arial, sans-serif;
+    }
+
+    .folha{
+      box-shadow:none !important;
+      width:auto !important;
+      min-height:auto !important;
+      padding:0 !important;
+      border-radius:0 !important;
+      background:#fff !important;
+      border:none !important;
     }
 
     @page{ size:A4; margin:0; }
   }
 
-  /* ===== PRINT LAYOUT ===== */
-
-  /* Cabeçalho paciente */
+  /* ===== PRINT LAYOUT (INTACTO) ===== */
   .cab-paciente{
-    border-top: 3px solid var(--verde);
-    border-bottom: 3px solid var(--verde);
+    border-top: 3px solid #00a651;
+    border-bottom: 3px solid #00a651;
     padding: 10px 0;
-    margin: 0 0 12px;
+    margin: 0 0 14px;
   }
   .cab-row1{ display:flex; justify-content:space-between; gap:20px; }
   .cab-left{ flex:1; }
   .cab-right{ min-width:220px; text-align:right; }
 
-  /* ✅ RÓTULOS SEM NEGRITO (como no escopo) */
   .cab-lbl2{
-    font-size:12pt;
-    font-weight:400; /* ✅ sem negrito */
+    font-size:13pt;
+    font-weight:700;
     text-transform:uppercase;
     font-family:"Arial Narrow", Arial, sans-serif;
   }
 
-  /* ✅ VALORES com destaque */
   .cab-nome, .cab-exame{
-    font-size:12.8pt;
-    font-weight:800;
+    font-size:12.6pt;
+    font-weight:700;
     text-transform:uppercase;
     font-family:"Arial Narrow", Arial, sans-serif;
-    line-height:1.18;
+    line-height:1.2;
   }
 
   .cab-row2{
@@ -371,99 +507,55 @@
     grid-template-columns: 1.2fr 0.8fr;
     gap: 6px 60px;
     font-family:"Arial Narrow";
-    font-size:8.6pt;
+    font-size:8pt;
     text-transform:uppercase;
     font-weight:400;
   }
 
   .linha-identificacao{
     font-family:"Arial Narrow", Arial, sans-serif;
-    font-size:10pt;
+    font-size:11.5pt;
     text-transform:uppercase;
     margin-bottom:4px;
     display:flex;
     gap:6px;
     align-items:baseline;
     white-space:nowrap;
-    font-weight:400; /* ✅ sem negrito */
-  }
-  .linha-identificacao strong{ font-weight:700; } /* só rótulo se quiser */
-
-  /* Título principal */
-  .titulo-print{
-    text-align:center;
-    font-family:"Arial Narrow", Arial, sans-serif;
-    font-weight:900;
-    letter-spacing:.05em;
-    font-size:14pt;
-    text-transform:uppercase;
-    margin: 12px 0 10px; /* ✅ mais espaço do responsável */
-    color:#05253f;
   }
 
-  /* Conteúdo */
   .secao-print{
-    margin-bottom:10px;
-    line-height:1.52;
+    margin-bottom:12px;
+    line-height:1.55;
     font-family:"Arial Narrow", sans-serif;
-    font-size:10.5pt; /* ✅ padrão escopo */
+    font-size:11.5pt;
     text-align:justify;
   }
 
-  /* ✅ Títulos reais */
-  .tit-negrito{
-    font-weight:900;
-    text-transform:uppercase;
-    font-size:11.6pt;
-  }
-  .tit-normal-caps{
-    font-weight:400;
-    text-transform:uppercase;
-  }
-
-  /* ✅ “Representatividade” levemente menor */
-  .mini-field{
-    font-size:9.8pt;
-  }
-
+  .tit-negrito{ font-weight:800; text-transform:uppercase; }
+  .tit-normal-caps{ font-weight:400; text-transform:uppercase; }
   .concl-resposta-bloco{ white-space:pre-line; font-weight:400; display:block; margin-top:2px; }
 
   #obs_print{ white-space: pre-line; }
   #obs_print_wrap{ display:block; }
   #obs_print_wrap.vazio{ display:none; }
 
-  /* ✅ Rodapé fixo (1 página) */
   .rodape-prof{
-    position:absolute;
-    left:18mm;
-    right:18mm;
-    bottom:18mm;
+    margin-top:14px; /* ✅ sobe um pouco */
     text-align:center;
     font-family:"Arial Narrow", Arial, sans-serif;
-    font-size:10.8pt;
+    font-size:11.5pt;
   }
 
   .assinatura-wrap{
     display:flex;
     justify-content:center;
-    margin: 8px 0 6px; /* ✅ mais próximo */
+    margin: 12px 0 10px;
   }
   .assinatura-img{
     width: 200px;
     height:auto;
     object-fit:contain;
     display:block;
-  }
-
-  .medica{
-    margin-top:0;
-    line-height:1.15;
-  }
-  .medica .nome{
-    font-weight:900;
-  }
-  .medica .crm{
-    font-weight:700;
   }
 </style>
 </head>
@@ -472,20 +564,23 @@
 <div class="watermark" aria-hidden="true"></div>
 
 <div class="shell">
-
-  <!-- ✅ Topo compacto -->
-  <div class="topbar no-print">
-    <div>
-      <strong>LAUDO — DIGITAÇÃO</strong>
+  <div class="hdr no-print">
+    <div class="brand">
+      <strong>LAUDO • DIGITAÇÃO</strong>
       <span>SI — Sistema de Informação • Laudos</span>
     </div>
+    <div class="pill">Tela do Laudo</div>
   </div>
 
   <div class="card">
+    <div class="card-h no-print">
+      <h1>LAUDO DO EXAME CITOPATOLÓGICO</h1>
+      <div class="pill">Somente visual • Funções intactas</div>
+    </div>
+
     <div class="card-b">
       <div class="folha">
 
-        <!-- ========================= TELA ========================= -->
         <div class="no-print">
           <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
 
@@ -620,6 +715,12 @@
             <img src="img/SESC_1.png" alt="Timbre">
           </div>
 
+          <!-- ✅ selo central (opcional) -->
+          <div class="print-seal">
+            <!-- se não quiser, basta comentar esta linha -->
+            <img src="logo/logotipo.png" alt="Selo">
+          </div>
+
           <div class="print-top-info">
             <div class="row"><span>Emissão:</span><span id="printData"></span></div>
             <div class="row"><span>Hora:</span><span id="printHora"></span></div>
@@ -659,30 +760,30 @@
             <div class="linha-identificacao"><strong>DATA DA COLETA:</strong>&nbsp;<span id="data_coleta_print"></span></div>
             <div class="linha-identificacao"><strong>RESPONSÁVEL:</strong>&nbsp;<span id="nome_resp_print"></span></div>
 
-            <div class="titulo-print">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
+            <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
 
             <div class="secao-print">
               <span class="tit-negrito">AVALIAÇÃO PRÉ-ANALÍTICA</span><br>
               <span class="tit-normal-caps">ADEQUABILIDADE DO MATERIAL:</span> <span id="p_adeq"></span><br>
               <span class="tit-normal-caps">EPITÉLIOS REPRESENTADOS NA AMOSTRA:</span> <span id="p_epi"></span><br>
-              <span class="tit-normal-caps mini-field">REPRESENTATIVIDADE DA ZONA DE TRANSFORMAÇÃO:</span> <span id="p_zona" class="mini-field"></span>
+              <span class="tit-normal-caps">REPRESENTATIVIDADE DA ZONA DE TRANSFORMAÇÃO:</span> <span id="p_zona"></span>
             </div>
 
             <div class="secao-print">
-              <span id="p_tit_diag" class="tit-negrito">DIAGNÓSTICO DESCRITIVO</span>
-              <div style="display:block;margin-top:4px;">
+              <span id="p_tit_diag" class="tit-negrito">DIAGNÓSTICO DESCRITIVO:</span>
+              <div style="display:block;margin-top:5px;">
                 <span id="p_subtit_diag" class="tit-normal-caps" style="display:none;">ALTERAÇÕES CELULARES BENIGNAS REATIVAS OU REPARATIVAS:</span>
                 <span id="p_res_diag"></span>
               </div>
             </div>
 
-            <div class="secao-print" style="margin-top:-4px;">
+            <div class="secao-print" style="margin-top:-5px;">
               <span class="tit-normal-caps">MICROBIOLOGIA:</span>
               <span id="p_res_micro"></span>
             </div>
 
             <div class="secao-print">
-              <span id="p_tit_concl" class="tit-negrito">CONCLUSÃO</span>
+              <span id="p_tit_concl" class="tit-negrito">CONCLUSÃO:</span>
               <span id="p_res_concl" class="concl-resposta-bloco"></span>
             </div>
 
@@ -691,7 +792,6 @@
               <span id="obs_print"></span>
             </div>
 
-            <!-- ✅ Rodapé fixo -->
             <div class="rodape-prof">
               <div id="rodape_data"></div>
 
@@ -699,9 +799,12 @@
                 <img src="assinatura/ass.png" alt="Assinatura" class="assinatura-img">
               </div>
 
-              <div class="medica">
-                <div class="nome">Dra. Daniele Carvalho Macêdo</div>
-                <div class="crm">CRM 12077 PB</div>
+              <div style="font-weight:800;">Dra. Daniele Carvalho Macêdo</div>
+              <div>CRM 12077 PB</div>
+
+              <!-- ✅ Caixa legal estilo Word -->
+              <div class="legal-box">
+                A AVALIAÇÃO DO RESULTADO DESTE(S) EXAME(S) E A CONCLUSÃO DIAGNÓSTICA DEVEM SER FEITOS PELO MÉDICO: DEPENDEM DE DADOS CLÍNICOS E OUTRO(S) EXAMES DO PACIENTE.
               </div>
             </div>
 
@@ -789,29 +892,23 @@
     set("rodape_data", `João Pessoa, ${dia} de ${mes} de ${ano}`);
   }
 
-  /* ✅ regra automática zona:
-     - 1 epitélio -> NÃO
-     - 2+ -> SIM
-     - 0 -> não força
-  */
-  function autoZonaPorEpit(){
+  function atualizar(){
     const checksEpi = document.querySelectorAll('.epi:checked');
+
+    /* ✅ REGRA NOVA (PEDIDA):
+       - 2 ou mais epitélios => marca SIM
+       - 1 epitélio => marca NÃO
+       - 0 => não mexe
+    */
     const zSim = document.getElementById("zona_sim");
     const zNao = document.getElementById("zona_nao");
 
-    if(!zSim || !zNao) return;
-
     if(checksEpi.length >= 2){
-      zSim.checked = true;
+      if(zSim && !zSim.checked) zSim.checked = true;
     }else if(checksEpi.length === 1){
-      zNao.checked = true;
+      if(zNao && !zNao.checked) zNao.checked = true;
     }
-  }
 
-  function atualizar(){
-    autoZonaPorEpit();
-
-    const checksEpi = document.querySelectorAll('.epi:checked');
     const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = val || ""; };
 
     set('p_adeq', document.querySelector('input[name="adeq"]:checked')?.value || '');
@@ -851,10 +948,10 @@
     if(concl){
       const categoria = concl.getAttribute('data-tit') || "CONCLUSÃO";
       const respostaTecnica = concl.getAttribute('data-full') || concl.value || "";
-      if(elTitConcl) elTitConcl.textContent = (concl.value === "NEGATIVO") ? "CONCLUSÃO" : categoria;
+      if(elTitConcl) elTitConcl.textContent = (concl.value === "NEGATIVO") ? "CONCLUSÃO:" : (categoria + ":");
       if(elResConcl) elResConcl.textContent = respostaTecnica;
     }else{
-      if(elTitConcl) elTitConcl.textContent = "CONCLUSÃO";
+      if(elTitConcl) elTitConcl.textContent = "CONCLUSÃO:";
       if(elResConcl) elResConcl.textContent = "";
     }
 
@@ -994,7 +1091,7 @@
           document.title = tituloOriginal;
           iframe.remove();
 
-          /* ✅ tela dividida: avisa o sistema principal para limpar */
+          /* ✅ TELA DIVIDIDA: AVISA O SISTEMA PRINCIPAL PARA LIMPAR O TEXTAREA */
           try{
             if(window.parent && window.parent !== window){
               window.parent.postMessage({ type:"LAUDO_IMPRESSO" }, "*");
@@ -1013,13 +1110,20 @@
   (function initObs(){
     const obs = document.getElementById("obs_texto_tela");
     if(!obs) return;
+
     if(init.observacao && !obs.value) obs.value = init.observacao;
+
     obs.addEventListener("input", () => syncObservacao());
     syncObservacao();
   })();
 
   window.addEventListener("beforeprint", () => {
-    try{ atualizar(); syncObservacao(); }catch(e){ console.error("Erro beforeprint:", e); }
+    try{
+      atualizar();
+      syncObservacao();
+    }catch(e){
+      console.error("Erro beforeprint:", e);
+    }
   });
 
   window.atualizar = atualizar;
