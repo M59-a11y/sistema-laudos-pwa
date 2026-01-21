@@ -209,10 +209,10 @@
       color: rgba(255,255,255,.75);
     }
 
-    /* ✅ TEXTAREA FIXO (SEM FLEX / SEM CRESCER) */
+    /* TEXTAREA FIXO */
     textarea{
       width:100%;
-      height: 280px;            /* ✅ FIXO (AJUSTE AQUI SE QUISER) */
+      height: 280px;
       min-height: 280px;
       max-height: 280px;
 
@@ -227,8 +227,8 @@
       color:#fff;
       line-height: 1.35;
 
-      overflow: hidden; /* ✅ SEM BARRA DE ROLAGEM */
-      flex: 0 0 auto;   /* ✅ impede o flex de esticar */
+      overflow: hidden;
+      flex: 0 0 auto;
     }
     textarea::placeholder{ color: rgba(255,255,255,.64); }
 
@@ -258,7 +258,6 @@
       main{ padding-top: 22px; }
       .glass{ height: 560px; }
 
-      /* celular precisa permitir scroll */
       textarea{ overflow:auto; }
     }
 
@@ -315,6 +314,7 @@
     const LAUDO_URL = "laudo.html";
     const $ = (id)=>document.getElementById(id);
 
+    // ✅ mapa fixo: sigla -> nome completo
     const MAPA_RESP = {
       "EAM": "EDVÂNIA APARECIDA MENDES DE AZEVÊDO",
       "SNM": "SHEINA N. MORAIS RAMALHO"
@@ -332,10 +332,11 @@
       return s;
     }
 
+    /* ✅ CORRIGIDO: NÃO adiciona zero à esquerda */
     function detectarExameNoTexto(texto){
       const m = (texto || "").match(/(\d{3,6})\s*[\/\.\-]\s*(\d{4})/);
       if(!m) return "";
-      return `${m[1].padStart(6,"0")}/${m[2]}`;
+      return `${m[1]}/${m[2]}`; // ✅ mantém exatamente o número digitado
     }
 
     function parseDigitacaoRapida(texto){
@@ -373,6 +374,7 @@
         if(/^cidade\s*:/i.test(ln)){ cidade = ln.replace(/^cidade\s*:\s*/i, "").trim(); continue; }
         if(/^cep\s*:/i.test(ln)){ cep = ln.replace(/^cep\s*:\s*/i, "").trim(); continue; }
 
+        // ✅ digita só a sigla -> vira nome completo automaticamente
         if(/^(EAM|SNM)$/i.test(ln)){
           const sigla = ln.toUpperCase().trim();
           responsavel = MAPA_RESP[sigla] || sigla;
