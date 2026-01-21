@@ -166,8 +166,6 @@
     border-radius:14px;
   }
   .btn-print{ background:#28a745;color:#fff; }
-  .btn-word{ margin-top:10px;background:#1f6feb;color:#fff; }
-  .btn-clear{ margin-top:10px;background:#eee; }
 
   /* ===== SEU FORMULÁRIO (INTACTO) ===== */
   .titulo-laudo{
@@ -642,11 +640,9 @@
 
       </div>
 
-      <!-- ✅ Controles -->
+      <!-- ✅ Controles (somente IMPRIMIR agora) -->
       <div class="controles no-print">
         <button class="btn btn-print" onclick="imprimirLaudo()">IMPRIMIR / SALVAR PDF</button>
-        <button class="btn btn-word" onclick="baixarWordEVoltar()">BAIXAR WORD (.DOC)</button>
-        <button class="btn btn-clear" onclick="location.reload()">LIMPAR</button>
       </div>
     </div>
   </div>
@@ -709,7 +705,7 @@
     document.getElementById("cab_rua").textContent = init.rua;
     document.getElementById("cab_bairro").textContent = init.bairro;
     document.getElementById("cab_cidade").textContent = init.cidade;
-    document.getElementById("cab_cep").textContent = init.cep;
+    document.get.getElementById("cab_cep").textContent = init.cep;
 
     document.getElementById("data_coleta_print").textContent = init.data_coleta;
     document.getElementById("nome_resp_print").textContent = init.responsavel;
@@ -936,53 +932,6 @@
 
       }, 120);
     }, 650);
-  }
-
-  function buildWordHTML(){
-    atualizar();
-    syncObservacao();
-
-    const bloco = document.querySelector(".print-only .print-page");
-    const clone = bloco.cloneNode(true);
-    clone.style.display = "block";
-    return clone.outerHTML;
-  }
-
-  function baixarWordEVoltar(){
-    atualizar();
-    syncObservacao();
-
-    try{
-      const concl = document.querySelector('input[name="c"]:checked');
-      if(concl && concl.value !== "NEGATIVO"){
-        const payload = {
-          exame: init.exame,
-          nome: init.paciente,
-          telefone: init.telefone,
-          categoria: concl.getAttribute("data-tit") || "",
-          subcategoria: (concl.getAttribute("data-full") || concl.value || "").trim()
-        };
-        salvarCasoPositivoNoStorage(payload);
-        gerarArquivoExportacaoMes();
-      }
-    }catch(e){ console.error(e); }
-
-    const htmlWord = buildWordHTML();
-    const doc =
-`<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>Laudo</title></head>
-<body>${htmlWord}</body></html>`;
-
-    const blob = new Blob(['\ufeff', doc], { type: "application/msword" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${nomeArquivoSugerido()}.doc`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(a.href);
-
-    setTimeout(() => voltarSistema(), 700);
   }
 
   // ✅ init
