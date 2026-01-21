@@ -220,16 +220,12 @@
   </div>
 
   <script>
-    const LAUDO_URL = "laudo.html"; // ✅ arquivo do laudo (mesma pasta)
+    const LAUDO_URL = "laudo.html";
     const $ = (id)=>document.getElementById(id);
 
-    /* ============================
-       ✅ Utilitários de extração
-    ============================ */
     function soDigitos(s){ return (s || "").replace(/\D+/g, ""); }
 
     function formatarDataBr(d){
-      // "08012026" -> "08/01/2026"
       const x = soDigitos(d);
       if(x.length === 8){
         const dd = x.slice(0,2);
@@ -237,33 +233,17 @@
         const yyyy = x.slice(4,8);
         return `${dd}/${mm}/${yyyy}`;
       }
-      // se já vier "08/01/2026"
       const s = (d || "").trim();
       if(/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return s;
       return s;
     }
 
     function detectarExameNoTexto(texto){
-      // aceita 78985/2026, 78985.2026, 78985-2026 etc.
       const m = (texto || "").match(/(\d{3,6})\s*[\/\.\-]\s*(\d{4})/);
       if(!m) return "";
       return `${m[1].padStart(6,"0")}/${m[2]}`;
     }
 
-    /* ============================
-       ✅ Parser (compatível com SEU formato real)
-       Exemplo:
-       ANA MARIA DA SILVA 78985/2026
-       08012026
-       15011978
-       50037048449
-       83987254285
-       Rua: Laura Tavares Formiga, 181
-       Bairro: Mangabeira
-       Cidade: João Pessoa/PB
-       CEP: 58057-153
-       EAM
-    ============================ */
     function parseDigitacaoRapida(texto){
       const linhas = (texto || "")
         .replace(/\r/g, "\n")
@@ -274,25 +254,24 @@
       const l1 = linhas[0] || "";
       const exame = detectarExameNoTexto(l1) || detectarExameNoTexto(texto);
 
-      // ✅ Nome = linha 1 sem o exame
+      // Nome = linha 1 sem exame
       let paciente = l1;
       if(exame){
         paciente = l1.replace(new RegExp("(\\d{3,6})\\s*[\\/\\.\\-]\\s*(\\d{4})"), "").trim();
       }
       paciente = paciente.trim();
 
-      // Linhas fixas
       const data_coleta = formatarDataBr(linhas[1] || "");
       const data_nascimento = formatarDataBr(linhas[2] || "");
       const cartao_sus = soDigitos(linhas[3] || "");
       const telefone = soDigitos(linhas[4] || "");
 
-      // Endereço / extras
       let rua = "";
       let bairro = "";
       let cidade = "";
       let cep = "";
       let responsavel = "";
+      let observacao = "";
 
       for(let i=5; i<linhas.length; i++){
         const ln = linhas[i];
@@ -314,13 +293,20 @@
           continue;
         }
 
-        // ✅ o que sobrar (tipo "EAM") vira responsável
-        if(!responsavel && ln.length <= 60){
-          responsavel = ln.trim();
+        // ✅ responsável: aceita "EAM = nome" ou "SNM = nome"
+        const mResp = ln.match(/^(EAM|SNM)\s*=\s*(.+)$/i);
+        if(mResp){
+          const nomeCompleto = (mResp[2] || "").trim();
+          if(nomeCompleto) responsavel = nomeCompleto;
+          continue;
         }
-      }
 
-      const observacao = ""; // seu formato atual não usa observação aqui
+        // ignora "EAM" ou "SNM" isolado
+        if(/^(EAM|SNM)$/i.test(ln)) continue;
+
+        // se sobrar texto grande, vira observação
+        if(!observacao && ln.length > 8) observacao = ln;
+      }
 
       return {
         paciente,
@@ -340,21 +326,13 @@
       };
     }
 
-    /* ============================
-       ✅ Abrir Laudo (mesma aba)
-       + backup localStorage
-       + parâmetros compatíveis com laudo
-       + return para voltar após imprimir
-    ============================ */
     function abrirLaudo(dados){
-      // ✅ backup
       localStorage.setItem("SI_DADOS_LAUDO", JSON.stringify({
         ...dados,
         ts: Date.now()
       }));
 
       const params = new URLSearchParams();
-
       if(dados.paciente)        params.set("paciente", dados.paciente);
       if(dados.exame)           params.set("exame", dados.exame);
       if(dados.data_coleta)     params.set("data_coleta", dados.data_coleta);
@@ -368,16 +346,11 @@
       if(dados.responsavel)     params.set("responsavel", dados.responsavel);
       if(dados.observacao)      params.set("observacao", dados.observacao);
 
-      // ✅ retorno automático após imprimir
       params.set("return", window.location.href);
 
-      // ✅ abre normalmente (sem popup)
       window.location.assign(`${LAUDO_URL}?${params.toString()}`);
     }
 
-    /* ============================
-       ✅ Ação do botão
-    ============================ */
     $("btnExtrair").addEventListener("click", ()=>{
       const texto = $("textoDigitacao").value.trim();
       if(!texto){
@@ -388,7 +361,7 @@
       const dados = parseDigitacaoRapida(texto);
 
       if(!dados.paciente){
-        alert("Não consegui identificar o nome da paciente. Verifique se a primeira linha contém o nome.");
+        alert("Não consegui identificar o nome da paciente.");
         return;
       }
 
@@ -400,7 +373,6 @@
       abrirLaudo(dados);
     });
 
-    // ✅ Atalho: CTRL + ENTER
     document.addEventListener("keydown", (e)=>{
       if(e.ctrlKey && e.key === "Enter"){
         e.preventDefault();
