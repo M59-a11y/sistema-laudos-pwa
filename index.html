@@ -59,16 +59,18 @@
       z-index:0;
     }
 
-    /* ✅ LAYOUT SPLIT */
+    /* ✅ LAYOUT SPLIT (PROFISSIONAL) */
     .app{
       position:relative;
       z-index:1;
       width:100%;
       height:100%;
       display:grid;
-      grid-template-columns: 1fr 52%;
+
+      /* ✅ esquerda e direita equilibrados */
+      grid-template-columns: minmax(480px, 1fr) minmax(460px, 52%);
       gap: 14px;
-      padding: 14px 24px;
+      padding: 14px 18px;
     }
 
     /* ✅ Painel esquerdo */
@@ -126,6 +128,7 @@
       background: linear-gradient(90deg, #00e09c, #1376b8);
       box-shadow: 0 10px 18px rgba(0,0,0,.14);
       font-size:12px;
+      white-space:nowrap;
     }
     .mini button:active{ transform:translateY(1px); }
 
@@ -165,14 +168,14 @@
       text-shadow: 0 12px 28px rgba(0,0,0,.32);
     }
 
-    .sysOnly .t1{ font-size: 22px; }
+    .sysOnly .t1{ font-size: 20px; } /* ✅ menor no split */
     .sysOnly .dot{
-      font-size: 16px;
+      font-size: 14px;
       opacity: .82;
       transform: translateY(-1px);
     }
     .sysOnly .t2{
-      font-size: 22px;
+      font-size: 20px;
       padding: 3px 12px;
       border-radius: 999px;
       background: rgba(255,255,255,.14);
@@ -207,20 +210,28 @@
       text-transform:uppercase;
     }
 
-    /* Card central */
+    /* ✅ MAIN: ocupa o restante */
     main{
       flex: 1 1 auto;
+      min-height: 0;
       display:flex;
-      align-items:flex-start;
+      align-items:stretch;
       justify-content:center;
-      min-height:0;
-      padding-top: 46px;
+
+      /* ✅ menos “empurrão” */
+      padding-top: 10px;
     }
 
+    /* ✅ CARD CENTRAL ajustado */
     .glass{
       width: 100%;
       max-width: 1180px;
-      height: 520px;
+
+      /* ✅ se adapta à tela */
+      height: auto;
+      min-height: 0;
+      max-height: calc(100vh - 110px);
+
       border-radius: 26px;
       border: 1px solid var(--stroke);
       background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.06));
@@ -228,26 +239,34 @@
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       overflow: hidden;
+
       display:flex;
     }
 
     .panel{
       width:100%;
       height:100%;
-      padding: 18px 18px;
+      min-height:0;
+
+      padding: 14px 16px;
       display:flex;
       flex-direction:column;
-      gap: 12px;
+
+      /* ✅ controla espaçamento profissional */
+      gap: 10px;
+
+      overflow:auto; /* ✅ se precisar, rola sem esconder botão */
     }
 
     .panelTitle{
       margin:0;
-      font-size: 28px;
+      font-size: 22px; /* ✅ menor e elegante */
       font-weight: 900;
       letter-spacing: 1px;
       text-transform: uppercase;
       color:#fff;
       text-shadow: 0 10px 24px rgba(0,0,0,.30);
+      line-height:1.05;
     }
 
     .guideLine{
@@ -272,7 +291,7 @@
       background: rgba(0,0,0,.12);
       white-space: nowrap;
       color:#fff;
-      font-size: 14px;
+      font-size: 13px; /* ✅ menor no split */
     }
     .guideLine .sep{
       opacity:.55;
@@ -280,11 +299,12 @@
       color: rgba(255,255,255,.75);
     }
 
+    /* ✅ TEXTAREA: flexível e profissional */
     textarea{
       width:100%;
-      height: 280px;
-      min-height: 280px;
-      max-height: 280px;
+      flex: 1 1 auto;
+      min-height: 220px;
+      max-height: 360px;
 
       resize:none;
       border-radius: 18px;
@@ -297,19 +317,20 @@
       color:#fff;
       line-height: 1.35;
 
-      overflow: hidden;
-      flex: 0 0 auto;
+      overflow:auto;
     }
     textarea::placeholder{ color: rgba(255,255,255,.64); }
 
+    /* ✅ BOTÃO: sempre aparece */
     .btn{
+      flex:0 0 auto;
       align-self: center;
       width: min(680px, 92%);
       border:none;
       border-radius: 18px;
       padding: 12px 16px;
       cursor:pointer;
-      font-size: 18px;
+      font-size: 16px; /* ✅ proporcional */
       font-weight: 900;
       letter-spacing: .3px;
       color:#041b2f;
@@ -320,18 +341,20 @@
     .btn:hover{ filter: brightness(1.03); }
     .btn:active{ transform: translateY(1px); }
 
-    /* RESPONSIVO */
-    @media (max-width: 1100px){
-      .app{ grid-template-columns: 1fr; padding: 12px; }
+    /* ✅ RESPONSIVO */
+    @media (max-width: 1180px){
+      .app{
+        grid-template-columns: 1fr;
+        padding: 12px;
+      }
       .right{ height: 62vh; }
-      main{ padding-top: 22px; }
-      .glass{ height: 560px; }
-      textarea{ overflow:auto; }
+      main{ padding-top: 12px; }
+      .glass{ max-height: none; }
+      textarea{ max-height: 420px; }
     }
 
     @media (max-width: 520px){
-      .glass{ height: 620px; }
-      textarea{ overflow:auto; }
+      textarea{ min-height: 240px; }
     }
   </style>
 </head>
@@ -355,25 +378,27 @@
       </header>
 
       <main>
-        <section class="glass panel">
-          <h2 class="panelTitle">Digitação rápida</h2>
+        <section class="glass">
+          <div class="panel">
+            <h2 class="panelTitle">Digitação rápida</h2>
 
-          <div class="guideLine">
-            <span class="tag">DC</span><span class="sep">|</span>
-            <span class="tag">DN</span><span class="sep">|</span>
-            <span class="tag">CN</span><span class="sep">|</span>
-            <span class="tag">TEL</span><span class="sep">|</span>
-            <span class="tag">RUA</span><span class="sep">|</span>
-            <span class="tag">CEP</span><span class="sep">|</span>
-            <span class="tag">RES</span>
-            <span class="sep">=</span>
-            <span class="tag">SNM</span><span class="sep">|</span>
-            <span class="tag">EAM</span>
+            <div class="guideLine">
+              <span class="tag">DC</span><span class="sep">|</span>
+              <span class="tag">DN</span><span class="sep">|</span>
+              <span class="tag">CN</span><span class="sep">|</span>
+              <span class="tag">TEL</span><span class="sep">|</span>
+              <span class="tag">RUA</span><span class="sep">|</span>
+              <span class="tag">CEP</span><span class="sep">|</span>
+              <span class="tag">RES</span>
+              <span class="sep">=</span>
+              <span class="tag">SNM</span><span class="sep">|</span>
+              <span class="tag">EAM</span>
+            </div>
+
+            <textarea id="textoDigitacao" placeholder="Cole aqui os dados do paciente conforme a ordem acima..."></textarea>
+
+            <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO</button>
           </div>
-
-          <textarea id="textoDigitacao" placeholder="Cole aqui os dados do paciente conforme a ordem acima..."></textarea>
-
-          <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO</button>
         </section>
       </main>
     </div>
@@ -383,8 +408,8 @@
       <div class="rightTop">
         <strong>LAUDO — EMISSÃO</strong>
         <div class="mini">
-          <button type="button" id="btnFoco">Voltar p/ Sistema</button>
-          <button type="button" id="btnRecarregar">Recarregar Laudo</button>
+          <button type="button" id="btnFoco">Limpar e foco</button>
+          <button type="button" id="btnRecarregar">Recarregar laudo</button>
         </div>
       </div>
       <div class="frameWrap">
@@ -416,11 +441,10 @@
       return s;
     }
 
-    /* ✅ CORRIGIDO: NÃO adiciona zero à esquerda */
     function detectarExameNoTexto(texto){
       const m = (texto || "").match(/(\d{3,6})\s*[\/\.\-]\s*(\d{4})/);
       if(!m) return "";
-      return `${m[1]}/${m[2]}`; // ✅ mantém exatamente o número digitado
+      return `${m[1]}/${m[2]}`;
     }
 
     function parseDigitacaoRapida(texto){
@@ -458,7 +482,6 @@
         if(/^cidade\s*:/i.test(ln)){ cidade = ln.replace(/^cidade\s*:\s*/i, "").trim(); continue; }
         if(/^cep\s*:/i.test(ln)){ cep = ln.replace(/^cep\s*:\s*/i, "").trim(); continue; }
 
-        // ✅ digita só a sigla -> vira nome completo automaticamente
         if(/^(EAM|SNM)$/i.test(ln)){
           const sigla = ln.toUpperCase().trim();
           responsavel = MAPA_RESP[sigla] || sigla;
@@ -482,9 +505,7 @@
         cidade,
         cep,
         responsavel,
-        observacao,
-        textoBruto: texto,
-        origem: "principal"
+        observacao
       };
     }
 
@@ -505,8 +526,7 @@
       if(dados.responsavel)     params.set("responsavel", dados.responsavel);
       if(dados.observacao)      params.set("observacao", dados.observacao);
 
-      const url = `${LAUDO_URL}?${params.toString()}`;
-      $("iframeLaudo").src = url;
+      $("iframeLaudo").src = `${LAUDO_URL}?${params.toString()}`;
     }
 
     function prepararProximoPaciente(){
@@ -534,7 +554,6 @@
       }
 
       abrirLaudoNoPainel(dados);
-      // ✅ após abrir o laudo, foco fica no sistema (você cola outro se quiser)
       $("textoDigitacao").focus();
     });
 
@@ -545,14 +564,12 @@
       }
     });
 
-    // ✅ botão utilitário
     $("btnFoco").addEventListener("click", prepararProximoPaciente);
     $("btnRecarregar").addEventListener("click", ()=>{
       const fr = $("iframeLaudo");
       if(fr && fr.src) fr.contentWindow.location.reload();
     });
 
-    /* ✅ RECEBE AVISO DO LAUDO APÓS IMPRIMIR */
     window.addEventListener("message", (ev)=>{
       if(!ev.data || typeof ev.data !== "object") return;
       if(ev.data.type === "LAUDO_IMPRESSO"){
