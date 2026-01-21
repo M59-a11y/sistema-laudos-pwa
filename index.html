@@ -220,34 +220,138 @@
   </div>
 
   <script>
-    const LAUDO_URL = "laudo.html"; // ✅ arquivo do laudo
-
+    const LAUDO_URL = "laudo.html"; // ✅ arquivo do laudo (mesma pasta)
     const $ = (id)=>document.getElementById(id);
 
+    function normalizeSpaces(s){
+      return (s || "").replace(/\s+/g, " ").trim();
+    }
+
     function detectarExame(texto){
-      const m = texto.match(/(\d{3,6})\s*[\/\.\-]\s*(\d{4})/);
+      // aceita: 000156/2026, 000156.2026, 156-2026 etc.
+      const m = (texto || "").match(/(\d{3,6})\s*[\/\.\-]\s*(\d{4})/);
       if(!m) return "";
       return `${m[1].padStart(6,"0")}/${m[2]}`;
     }
 
     function extrairNome(texto){
-      const linhas = texto.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+      // assume: 1ª linha é nome
+      const linhas = (texto || "").split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
       return linhas[0] || "";
     }
 
+    function splitPorSeparadores(texto){
+      const bruto = (texto || "").replace(/\r/g, "\n").trim();
+
+      // 1) padrão principal: "|"
+      if(bruto.includes("|")){
+        return bruto.split("|").map(p=>normalizeSpaces(p)).filter(Boolean);
+      }
+
+      // 2) tab
+      if(bruto.includes("\t")){
+        return bruto.split("\t").map(p=>normalizeSpaces(p)).filter(Boolean);
+      }
+
+      // 3) linhas
+      const linhas = bruto.split("\n").map(p=>normalizeSpaces(p)).filter(Boolean);
+      if(linhas.length >= 7) return linhas;
+
+      // 4) fallback: múltiplos espaços
+      return bruto.split(/\s{2,}/).map(p=>normalizeSpaces(p)).filter(Boolean);
+    }
+
+    function parseDigitacaoRapida(texto){
+      // Ordem:
+      // DC | DN | CN | TEL | RUA | CEP | RES = SNM | EAM
+      const nome = extrairNome(texto);
+      const exame = detectarExame(texto);
+
+      // remove 1ª linha (nome)
+      const linhas = texto.replace(/\r/g, "\n").split("\n");
+      const resto = linhas.slice(1).join("\n").trim();
+
+      const partes = splitPorSeparadores(resto);
+
+      let data_coleta = "";
+      let data_nascimento = "";
+      let cartao_sus = "";
+      let telefone = "";
+      let rua = "";
+      let cep = "";
+      let responsavel = "";
+      let observacao = "";
+
+      if(partes.length >= 7){
+        data_coleta     = partes[0] || "";
+        data_nascimento = partes[1] || "";
+        cartao_sus      = partes[2] || "";
+        telefone        = partes[3] || "";
+        rua             = partes[4] || "";
+        cep             = partes[5] || "";
+        responsavel     = partes[6] || "";
+
+        if(partes.length >= 8){
+          observacao = partes.slice(7).join(" | ");
+        }
+      }else{
+        // fallback
+        const datas = (texto.match(/\b\d{2}\/\d{2}\/\d{4}\b/g) || []);
+        data_coleta = datas[0] || "";
+        data_nascimento = datas[1] || "";
+
+        const cepM = texto.match(/\b\d{5}\-?\d{3}\b/);
+        cep = cepM ? cepM[0] : "";
+      }
+
+      rua = rua.replace(/^RUA[:\s]*/i, "").trim();
+      responsavel = responsavel.replace(/^RES[:\s]*/i, "").trim();
+
+      return {
+        paciente: nome,
+        exame,
+        data_coleta,
+        data_nascimento,
+        cartao_sus,
+        telefone,
+        rua,
+        bairro: "",
+        cidade: "",
+        cep,
+        responsavel,
+        observacao,
+        textoBruto: texto,
+        origem: "principal"
+      };
+    }
+
     function abrirLaudo(dados){
-      // ✅ mais confiável: localStorage
+      // ✅ backup confiável (seu sistema já usava, mantive)
       localStorage.setItem("SI_DADOS_LAUDO", JSON.stringify({
         ...dados,
         ts: Date.now()
       }));
 
-      // ✅ redundância: querystring pequena
+      // ✅ compatível com seu laudo atualizado
       const params = new URLSearchParams();
-      if (dados.nome) params.set("nome", dados.nome);
-      if (dados.exame) params.set("exame", dados.exame);
 
-      // ✅ abre mesma aba (sem popup e sem bloqueio)
+      if(dados.paciente)        params.set("paciente", dados.paciente);
+      if(dados.exame)           params.set("exame", dados.exame);
+      if(dados.data_coleta)     params.set("data_coleta", dados.data_coleta);
+      if(dados.data_nascimento) params.set("data_nascimento", dados.data_nascimento);
+      if(dados.cartao_sus)      params.set("cartao_sus", dados.cartao_sus);
+      if(dados.telefone)        params.set("telefone", dados.telefone);
+      if(dados.rua)             params.set("rua", dados.rua);
+      if(dados.bairro)          params.set("bairro", dados.bairro);
+      if(dados.cidade)          params.set("cidade", dados.cidade);
+      if(dados.cep)             params.set("cep", dados.cep);
+      if(dados.responsavel)     params.set("responsavel", dados.responsavel);
+      if(dados.observacao)      params.set("observacao", dados.observacao);
+
+      // ✅ retorno automático após imprimir
+      params.set("return", window.location.href);
+
+      // ✅ abre normalmente (mesma aba) — SEM POPOUT
       window.location.assign(`${LAUDO_URL}?${params.toString()}`);
     }
 
@@ -258,15 +362,19 @@
         return;
       }
 
-      const nome  = extrairNome(texto);
-      const exame = detectarExame(texto);
+      const dados = parseDigitacaoRapida(texto);
 
-      abrirLaudo({
-        nome,
-        exame,
-        textoBruto: texto,
-        origem: "principal"
-      });
+      if(!dados.paciente){
+        alert("Não consegui identificar o nome da paciente. Coloque o nome na primeira linha.");
+        return;
+      }
+
+      if(!dados.exame){
+        const ok = confirm("Não identifiquei o número do exame automaticamente. Deseja continuar mesmo assim?");
+        if(!ok) return;
+      }
+
+      abrirLaudo(dados);
     });
 
     // Atalho: CTRL + ENTER
