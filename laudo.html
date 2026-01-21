@@ -370,6 +370,28 @@
   /* ===== PRINT (INTACTO / PDF PERFEITO) ===== */
   .print-only{ display:none; }
 
+  /* ✅ BLOCO DO CANTO SUPERIOR DIREITO (SÓ PRINT/PDF) */
+  .print-top-info{
+    display:none;
+    position:absolute;
+    top:14mm;          /* mesmo topo visual do timbre */
+    right:18mm;
+    width:175px;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:9pt;
+    line-height:1.35;
+    text-transform:uppercase;
+    z-index:5;
+  }
+  .print-top-info .row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .print-top-info .row span:last-child{
+    font-weight:700;
+  }
+
   @media print{
     body{ background:#fff; padding:0; margin:0; }
 
@@ -380,6 +402,9 @@
 
     .no-print{ display:none !important; }
     .print-only{ display:block !important; }
+
+    /* ✅ mostra bloco */
+    .print-top-info{ display:block !important; }
 
     /* ✅ remove overlay da folha na impressão */
     .folha::before{
@@ -671,6 +696,14 @@
             <img src="img/SESC_1.png" alt="Timbre">
           </div>
 
+          <!-- ✅ BLOCO TOPO DIREITO (SÓ PRINT) -->
+          <div class="print-top-info">
+            <div class="row"><span>Emissão:</span><span id="printData"></span></div>
+            <div class="row"><span>Hora:</span><span id="printHora"></span></div>
+            <div class="row"><span>Página:</span><span id="printPagina">1</span></div>
+            <div class="row"><span>UF:</span><span>PB</span></div>
+          </div>
+
           <div class="print-page">
             <div class="cab-paciente">
               <div class="cab-row1">
@@ -759,6 +792,22 @@
   function sanitizeFileName(name){
     return (name||"").replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim();
   }
+  function pad2(n){ return String(n).padStart(2,'0'); }
+
+  /* ✅ BLOCO TOPO DIREITO DO PRINT */
+  function atualizarBlocoPrintTopo(){
+    const agora = new Date();
+    const data = pad2(agora.getDate()) + '/' + pad2(agora.getMonth()+1) + '/' + agora.getFullYear();
+    const hora = pad2(agora.getHours()) + ':' + pad2(agora.getMinutes()) + ':' + pad2(agora.getSeconds());
+
+    const elData = document.getElementById("printData");
+    const elHora = document.getElementById("printHora");
+    const elPag  = document.getElementById("printPagina");
+
+    if(elData) elData.textContent = data;
+    if(elHora) elHora.textContent = hora;
+    if(elPag && !elPag.textContent) elPag.textContent = "1";
+  }
 
   function syncObservacao(){
     const txt = (document.getElementById("obs_texto_tela")?.value || "").trim();
@@ -796,25 +845,30 @@
     observacao: (params.get("observacao") || "").trim()
   };
 
-  function preencherCabecalhoPrint(){
-    document.getElementById("cab_nome").textContent = init.paciente;
-    document.getElementById("cab_exame").textContent = init.exame;
-    document.getElementById("cab_nasc").textContent = init.data_nascimento;
-    document.getElementById("cab_sus").textContent = init.cartao_sus;
-    document.getElementById("cab_tel").textContent = init.telefone;
-    document.getElementById("cab_rua").textContent = init.rua;
-    document.getElementById("cab_bairro").textContent = init.bairro;
-    document.getElementById("cab_cidade").textContent = init.cidade;
-    document.getElementById("cab_cep").textContent = init.cep;
+  function setText(id, value){
+    const el = document.getElementById(id);
+    if(el) el.textContent = value || "";
+  }
 
-    document.getElementById("data_coleta_print").textContent = init.data_coleta;
-    document.getElementById("nome_resp_print").textContent = init.responsavel;
+  function preencherCabecalhoPrint(){
+    setText("cab_nome", init.paciente);
+    setText("cab_exame", init.exame);
+    setText("cab_nasc", init.data_nascimento);
+    setText("cab_sus", init.cartao_sus);
+    setText("cab_tel", init.telefone);
+    setText("cab_rua", init.rua);
+    setText("cab_bairro", init.bairro);
+    setText("cab_cidade", init.cidade);
+    setText("cab_cep", init.cep);
+
+    setText("data_coleta_print", init.data_coleta);
+    setText("nome_resp_print", init.responsavel);
 
     const now = new Date();
     const dia = now.getDate();
     const mes = now.toLocaleDateString("pt-BR",{month:"long"});
     const ano = now.getFullYear();
-    document.getElementById("rodape_data").textContent = `João Pessoa, ${dia} de ${mes} de ${ano}`;
+    setText("rodape_data", `João Pessoa, ${dia} de ${mes} de ${ano}`);
   }
 
   function atualizar(){
@@ -825,16 +879,13 @@
       if(zSim && !zSim.checked) zSim.checked = true;
     }
 
-    document.getElementById('p_adeq').textContent =
-      document.querySelector('input[name="adeq"]:checked')?.value || '';
+    setText('p_adeq', document.querySelector('input[name="adeq"]:checked')?.value || '');
 
-    document.getElementById('p_epi').textContent =
-      Array.from(checksEpi).map(c => c.value).join(", ");
+    setText('p_epi', Array.from(checksEpi).map(c => c.value).join(", "));
 
-    document.getElementById('p_zona').textContent =
-      document.querySelector('input[name="zona"]:checked')?.value || '';
+    setText('p_zona', document.querySelector('input[name="zona"]:checked')?.value || '');
 
-    const norm = document.getElementById('chk_norm').checked;
+    const norm = document.getElementById('chk_norm')?.checked;
     const alts = Array.from(document.querySelectorAll('.alt:checked')).map(c => c.value);
 
     const pTitDiag = document.getElementById('p_tit_diag');
@@ -842,24 +893,23 @@
     const pResDiag = document.getElementById('p_res_diag');
 
     if(alts.length > 0){
-      pTitDiag.style.display = "inline";
-      pSubtitDiag.style.display = "inline";
-      pResDiag.textContent = " " + alts.join(", ") + ".";
+      if(pTitDiag) pTitDiag.style.display = "inline";
+      if(pSubtitDiag) pSubtitDiag.style.display = "inline";
+      if(pResDiag) pResDiag.textContent = " " + alts.join(", ") + ".";
     }else if(norm){
-      pTitDiag.style.display = "none";
-      pSubtitDiag.style.display = "none";
-      pResDiag.textContent = "DENTRO DOS LIMITES DA NORMALIDADE NO MATERIAL EXAMINADO.";
+      if(pTitDiag) pTitDiag.style.display = "none";
+      if(pSubtitDiag) pSubtitDiag.style.display = "none";
+      if(pResDiag) pResDiag.textContent = "DENTRO DOS LIMITES DA NORMALIDADE NO MATERIAL EXAMINADO.";
     }else{
-      pTitDiag.style.display = "inline";
-      pSubtitDiag.style.display = "none";
-      pResDiag.textContent = "";
+      if(pTitDiag) pTitDiag.style.display = "inline";
+      if(pSubtitDiag) pSubtitDiag.style.display = "none";
+      if(pResDiag) pResDiag.textContent = "";
     }
 
     const micros = Array.from(document.querySelectorAll('.micro:checked'))
       .map(c => c.getAttribute('data-full') || c.value);
 
-    document.getElementById('p_res_micro').textContent =
-      micros.join(", ") + (micros.length ? "." : "");
+    setText('p_res_micro', micros.join(", ") + (micros.length ? "." : ""));
 
     const concl = document.querySelector('input[name="c"]:checked');
     const elTitConcl = document.getElementById('p_tit_concl');
@@ -868,15 +918,16 @@
     if(concl){
       const categoria = concl.getAttribute('data-tit') || "CONCLUSÃO";
       const respostaTecnica = concl.getAttribute('data-full') || concl.value || "";
-      elTitConcl.textContent = (concl.value === "NEGATIVO") ? "CONCLUSÃO:" : (categoria + ":");
-      elResConcl.textContent = respostaTecnica;
+      if(elTitConcl) elTitConcl.textContent = (concl.value === "NEGATIVO") ? "CONCLUSÃO:" : (categoria + ":");
+      if(elResConcl) elResConcl.textContent = respostaTecnica;
     }else{
-      elTitConcl.textContent = "CONCLUSÃO:";
-      elResConcl.textContent = "";
+      if(elTitConcl) elTitConcl.textContent = "CONCLUSÃO:";
+      if(elResConcl) elResConcl.textContent = "";
     }
 
     preencherCabecalhoPrint();
     syncObservacao();
+    atualizarBlocoPrintTopo();
   }
 
   function mesChaveAtual(){
@@ -1032,6 +1083,7 @@
   }
 
   preencherCabecalhoPrint();
+  atualizarBlocoPrintTopo();
 
   (function initObs(){
     const obs = document.getElementById("obs_texto_tela");
