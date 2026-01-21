@@ -71,14 +71,33 @@
       display:block;
       filter: drop-shadow(0 12px 20px rgba(0,0,0,.10));
     }
+
+    /* ✅ NOVO TÍTULO PROFISSIONAL (não altera funcionalidades) */
     .sysOnly{
       margin:0;
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      display:flex;
+      align-items:baseline;
+      gap:12px;
+      flex-wrap:wrap;
+      font-weight:900;
+      letter-spacing:.8px;
+      text-transform:uppercase;
       color: var(--ink);
       text-shadow: 0 16px 32px rgba(0,0,0,.10);
+    }
+    .sysOnly .t1{ font-size: 28px; }
+    .sysOnly .dot{
+      font-size: 22px;
+      opacity: .75;
+      transform: translateY(-2px);
+    }
+    .sysOnly .t2{
+      font-size: 30px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.22);
+      border: 1px solid rgba(6,36,63,.18);
+      box-shadow: 0 10px 20px rgba(0,0,0,.08);
     }
 
     main{
@@ -93,9 +112,9 @@
       width: 980px;
       height: 760px;
       border-radius: 32px;
-      border: 1px solid rgba(255,255,255,.28);
+      border: 1px solid var(--stroke);
       background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
-      box-shadow: 0 18px 55px rgba(0,0,0,.16);
+      box-shadow: var(--shadow);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       overflow: hidden;
@@ -125,7 +144,7 @@
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,.32);
       background: rgba(255,255,255,.20);
-      box-shadow: 0 10px 28px rgba(0,0,0,.12);
+      box-shadow: var(--shadow2);
       display:flex;
       align-items:center;
       flex-wrap:wrap;
@@ -156,7 +175,7 @@
       border-radius: 22px;
       border: 1px solid rgba(255,255,255,.34);
       background: rgba(255,255,255,.16);
-      box-shadow: 0 10px 28px rgba(0,0,0,.12);
+      box-shadow: var(--shadow2);
       padding: 18px;
       outline:none;
       font-size: 17px;
@@ -188,9 +207,16 @@
 
 <body>
   <div class="screen">
+
     <header>
       <img class="topLogo" src="logo/sesctopo.png" alt="SESC Topo">
-      <h1 class="sysOnly">SI - SISTEMA DE INFORMAÇÃO . LAUDOS.</h1>
+
+      <!-- ✅ título reformulado (sem afetar JS) -->
+      <h1 class="sysOnly">
+        <span class="t1">SI — SISTEMA DE INFORMAÇÃO</span>
+        <span class="dot" aria-hidden="true">●</span>
+        <span class="t2">LAUDOS</span>
+      </h1>
     </header>
 
     <main>
@@ -215,6 +241,7 @@
         <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO</button>
       </section>
     </main>
+
   </div>
 
   <script>
@@ -280,14 +307,13 @@
         if(/^cidade\s*:/i.test(ln)){ cidade = ln.replace(/^cidade\s*:\s*/i, "").trim(); continue; }
         if(/^cep\s*:/i.test(ln)){ cep = ln.replace(/^cep\s*:\s*/i, "").trim(); continue; }
 
-        // ✅ se digitar só a sigla, converte para nome completo automaticamente
+        // ✅ digita só a sigla -> vira nome completo automaticamente
         if(/^(EAM|SNM)$/i.test(ln)){
           const sigla = ln.toUpperCase().trim();
           responsavel = MAPA_RESP[sigla] || sigla;
           continue;
         }
 
-        // ✅ se sobrar texto extra grande, vira observação
         if(!observacao && ln.length > 8){
           observacao = ln;
         }
@@ -364,5 +390,3 @@
   </script>
 </body>
 </html>
-
-
